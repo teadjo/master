@@ -1,0 +1,29 @@
+.comment-container {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #667eea;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.comment-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.comment-container p {
+    margin: 0 0 12px 0;
+    line-height: 1.5;
+}
+
+.comment-container p:first-child {
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 8px;
+}
+
+.comment-container p:nth-child(2) {
+    color: #4a5568;
+    font-size: 1rem;
+}

@@ -1,0 +1,472 @@
+/* Apply.css */
+.competition-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%);
+}
+
+/* Hero Section */
+.competition-hero {
+    background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 50%, #2d1b69 100%);
+    color: white;
+    padding: 4rem 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.competition-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.05)" points="0,1000 1000,0 1000,1000"/></svg>');
+    background-size: cover;
+}
+
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.competition-title1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin: 0 0 1rem 0;
+    background: linear-gradient(135deg, #ffffff, #e0e0e0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+}
+
+.competition-description1 {
+    font-size: 1.3rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0 0 2rem 0;
+    line-height: 1.6;
+    max-width: 800px;
+}
+
+.competition-status {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    backdrop-filter: blur(10px);
+}
+
+.status-badge.active {
+    background: rgba(46, 204, 113, 0.2);
+    border: 1px solid rgba(46, 204, 113, 0.4);
+    color: #2ecc71;
+}
+
+.status-badge.ended {
+    background: rgba(108, 117, 125, 0.2);
+    border: 1px solid rgba(108, 117, 125, 0.4);
+    color: #6c757d;
+}
+
+.days-left {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.apply-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #8A2BE2, #4B0082);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+}
+
+.apply-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+    background: linear-gradient(135deg, #9b45f0, #5a14a8);
+}
+
+/* Sections */
+section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #2c303d;
+    margin: 0 0 1rem 0;
+    background: linear-gradient(135deg, #8A2BE2, #4B0082);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.section-header p {
+    color: #666668;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+/* Competitors Section */
+.competitors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+.competitor-card {
+    transition: transform 0.3s ease;
+}
+
+.competitor-card:hover {
+    transform: translateY(-5px);
+}
+
+.empty-competitors {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 20px;
+    border: 2px dashed #e0e0e0;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.empty-competitors h3 {
+    color: #2c303d;
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+}
+
+.empty-competitors p {
+    color: #666668;
+    margin: 0;
+}
+
+/* Winner Section */
+/* Simplified Winner Section */
+.winner-section {
+    background: linear-gradient(135deg, #fffaf0, #fff5e6);
+    border-radius: 20px;
+    margin: 2rem auto;
+    border: 1px solid #ffe4b3;
+    padding: 2rem;
+}
+
+.winner-content-simple {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+.winner-image-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.winner-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: 3px solid white;
+    transition: transform 0.3s ease;
+}
+
+.winner-image:hover {
+    transform: scale(1.02);
+}
+
+.winner-info-simple h3 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #2c303d;
+    margin: 0 0 1rem 0;
+    background: linear-gradient(135deg, #8A2BE2, #4B0082);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.winner-work {
+    font-size: 1.3rem;
+    color: #666668;
+    margin: 0 0 1rem 0;
+    font-weight: 600;
+}
+
+.winner-category {
+    font-size: 1.1rem;
+    color: #8A2BE2;
+    font-weight: 600;
+    margin: 0 0 1.5rem 0;
+    padding: 0.5rem 1rem;
+    background: rgba(138, 43, 226, 0.1);
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.winner-description {
+    font-size: 1.1rem;
+    color: #666668;
+    line-height: 1.6;
+    margin: 1.5rem 0 0 0;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    border-left: 4px solid #8A2BE2;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive Design za Winner Section */
+@media screen and (max-width: 968px) {
+    .winner-content-simple {
+        grid-template-columns: 300px 1fr;
+        gap: 2rem;
+    }
+    
+    .winner-image-container {
+        max-width: 300px;
+    }
+    
+    .winner-image {
+        height: 300px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .winner-content-simple {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+    
+    .winner-image-container {
+        max-width: 400px;
+    }
+    
+    .winner-image {
+        height: 350px;
+    }
+    
+    .winner-info-simple h3 {
+        font-size: 1.7rem;
+    }
+    
+    .winner-work {
+        font-size: 1.1rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .winner-section {
+        padding: 1.5rem;
+        margin: 1rem auto;
+    }
+    
+    .winner-image-container {
+        max-width: 100%;
+    }
+    
+    .winner-image {
+        height: 250px;
+    }
+    
+    .winner-info-simple h3 {
+        font-size: 1.5rem;
+    }
+    
+    .winner-description {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+}
+
+/* Awards Section */
+.awards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.award-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.award-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+}
+
+.award-card.first-place::before {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+}
+
+.award-card.second-place::before {
+    background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
+}
+
+.award-card.third-place::before {
+    background: linear-gradient(135deg, #CD7F32, #A0522D);
+}
+
+.award-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+.award-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+}
+
+.award-content h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #2c303d;
+    margin: 0 0 1rem 0;
+}
+
+.award-prize {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #8A2BE2;
+    margin: 0 0 1rem 0;
+}
+
+.award-name {
+    color: #666668;
+    font-size: 1.1rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .competition-hero {
+        padding: 3rem 1.5rem;
+    }
+    
+    .competition-title {
+        font-size: 2.5rem;
+    }
+    
+    .competition-description {
+        font-size: 1.1rem;
+    }
+    
+    .competition-status {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    section {
+        padding: 3rem 1.5rem;
+    }
+    
+    .section-header h2 {
+        font-size: 2rem;
+    }
+    
+    .winner-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+    
+    .awards-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .competition-hero {
+        padding: 2rem 1rem;
+    }
+    
+    .competition-title {
+        font-size: 2rem;
+    }
+    
+    section {
+        padding: 2rem 1rem;
+    }
+    
+    .competitors-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .award-card {
+        padding: 2rem 1.5rem;
+    }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.competitor-card,
+.award-card,
+.winner-content {
+    animation: fadeInUp 0.6s ease-out;
+}
