@@ -40,11 +40,11 @@ function Navbar() {
     
     const fetchCategory = async () => {
       try{
-        const getCategory = await axios(`${API}/category/`);
+        const getCategory = await api.get(`${API}/category/`);
         console.log("DATA TYPE:", typeof getCategory, getCategory)
         setCategory(normalizeArray(getCategory.data));
       } catch (error) {
-        window.alert("Error!!!");
+        console.log("error", error)
       }
     }
     fetchCategory();

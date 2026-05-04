@@ -11,6 +11,7 @@ api.interceptors.response.use(
   error => {
     if (!navigator.onLine) {
       console.log('Offline mode - nema API');
+      
     }
     return Promise.reject(error);
   }

@@ -1,7 +1,8 @@
 import React from 'react'
 import './Login.css'
 import { useState } from "react";
-import axios from "axios";
+import Toast from '../Toast';
+import { useToast } from './../ToastContext';
 
 function Login() {
     let [state, setState] = useState({Type: 1, slika:null});
@@ -9,14 +10,22 @@ function Login() {
     const [isLoginFormVisible, setLoginFormVisible] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [previewImage, setPreviewImage] = useState(null);
+    const [toast, setToast] = useState({ show: false, message: '', type: 'error' });
 
     const API = import.meta.env.VITE_API_URL
+    
+    const { showToast } = useToast();
+    const closeToast = () => {
+        setToast({ show: false, message: '', type: 'error' });
+    };
     
     const handleToggleForm = () => {
         setLoginFormVisible(!isLoginFormVisible);
         // Resetuj formu pri prebacivanju
         setState({Type: 1,slika:null});
         setPreviewImage(null);
+        // Resetuj toast
+        closeToast();
     };
 
     function onChangeUsername(e) {
@@ -67,12 +76,12 @@ function Login() {
 
         const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
         if (!allowedTypes.includes(file.type)) {
-            alert('Dozvoljeni formati: JPG, PNG, GIF, WEBP');
+            showToast('Dozvoljeni formati: JPG, PNG, GIF, WEBP', 'error');
             return;
         }
 
         if (file.size > 5 * 1024 * 1024) {
-            alert('Slika mora biti manja od 5MB');
+            showToast('Slika mora biti manja od 5MB', 'error');
             return;
         }
 
@@ -110,14 +119,14 @@ function Login() {
                 }
                 console.log(state)
                 
-                const response = await axios.post(`${API}/add/`, formData, {
+                const response = await api.post(`${API}/add/`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         }
                     });
                 
                 if (typeof response.data === 'undefined' || !response.data.token) {
-                    window.alert("Neuspješna registracija");
+                    showToast("Neuspješna registracija. Pokušajte ponovo.", "error");
                 } else {
                     localStorage.setItem("token", response.data.token);
                     localStorage.setItem("userID", response.data.id);
@@ -126,16 +135,23 @@ function Login() {
                     localStorage.setItem("isVisitor", response.data.tip===2);
                     localStorage.setItem("isAdmin", response.data.tip===0);
                     localStorage.setItem("notlogedIn", 'false');
-                    window.location = "/";
+                    showToast("Uspešna registracija! Dobrodošli!", "success");
+                    setTimeout(() => {
+                        window.location = "/";
+                    }, 1500);
                 }
             } catch(error) {
                 console.error('Greška:', error);
-                window.alert("Error!!!");
+                if (error.response?.data?.error) {
+                    showToast(`Greška: ${error.response.data.error}`, "error");
+                } else {
+                    showToast("Greška pri registraciji. Pokušajte ponovo.", "error");
+                }
             } finally {
                 setIsLoading(false);
             }
         } else {
-            alert("Morate popuniti sva polja!!");
+            showToast("Morate popuniti sva obavezna polja!", "error");
             setIsLoading(false);
         }
     }
@@ -146,9 +162,9 @@ function Login() {
      
         if(!(typeof state.Username === 'undefined') && !(typeof state.Password === 'undefined')){
             try{
-                const response = await axios.post(`${API}/login`, state);
+                const response = await api.post(`${API}/login`, state);
                 if (response.data.token === null || !response.data.token) {
-                    window.alert("Pogrešni kredencijali!!!");
+                    showToast("Pogrešno korisničko ime ili lozinka!", "error");
                 } else {
                     localStorage.setItem("token", response.data.token);
                     localStorage.setItem("userID", response.data.id);
@@ -157,15 +173,19 @@ function Login() {
                     localStorage.setItem("isVisitor", response.data.tip===2);
                     localStorage.setItem("isAdmin", response.data.tip===0);
                     localStorage.setItem("notlogedIn", 'false');
-                    window.location = "/";
+                    showToast("Uspešno ste se prijavili!", "success");
+                    setTimeout(() => {
+                        window.location = "/";
+                    }, 1500);
                 }
             } catch(err) {
-                alert(err);
+                console.error('Greška:', err);
+                showToast("Greška pri prijavi. Pokušajte ponovo.", "error");
             } finally {
                 setIsLoading(false);
             }
         } else {
-            alert("Morate popuniti sva polja");
+            showToast("Morate popuniti sva polja!", "error");
             setIsLoading(false);
         }
     }
@@ -222,14 +242,14 @@ function Login() {
                                 <div className="input-group half">
                                     <input
                                         type="text" 
-                                        placeholder="Ime" 
+                                        placeholder="Ime *" 
                                         onChange={onChangeIme}
                                     />
                                 </div>
                                 <div className="input-group half">
                                     <input 
                                         type="text" 
-                                        placeholder="Prezime" 
+                                        placeholder="Prezime *" 
                                         onChange={onChangePrezime}
                                     />
                                 </div>
@@ -247,7 +267,7 @@ function Login() {
                                 <div className="input-group half">
                                     <input 
                                         type="email" 
-                                        placeholder="Email" 
+                                        placeholder="Email *" 
                                         onChange={onChangeEmail}
                                     />
                                 </div>
@@ -264,14 +284,14 @@ function Login() {
                                 <div className="input-group half">
                                     <input 
                                         type="text" 
-                                        placeholder="Korisničko ime" 
+                                        placeholder="Korisničko ime *" 
                                         onChange={onChangeUsername}
                                     />
                                 </div>
                                 <div className="input-group half">
                                     <input 
                                         type="password" 
-                                        placeholder="Lozinka" 
+                                        placeholder="Lozinka *" 
                                         onChange={onChangePassword}
                                     />
                                 </div>
@@ -318,6 +338,15 @@ function Login() {
                     )}
                 </div>
             </div>
+            
+            {/* Toast notifikacija */}
+            {toast.show && (
+                <Toast 
+                    message={toast.message} 
+                    type={toast.type} 
+                    onClose={closeToast} 
+                />
+            )}
         </div>
     );
 }

@@ -489,3 +489,10 @@
         font-size: 1.2rem;
     }
 }
+
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10000;
+}

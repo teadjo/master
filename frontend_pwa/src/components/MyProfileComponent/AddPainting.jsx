@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import './AddPainting.css'
 import Toast from '../../Toast'; // Dodaj import
 import { normalizeArray } from '../../utils/normalize'
 import {api} from '../../utils/api'
+import { useToast } from '../../ToastContext';
 
 function AddPainting(props) {
     const navigate = useNavigate();
@@ -27,12 +27,7 @@ function AddPainting(props) {
     });
 
     // Funkcija za prikaz toasta
-    const showToast = (message, type = 'success') => {
-        setToast({ message, type });
-        setTimeout(() => {
-            setToast(null);
-        }, 3000);
-    };
+    const { showToast } = useToast();
 
     useEffect(() => {
         const fetchCategory = async () => {
@@ -122,7 +117,7 @@ function AddPainting(props) {
             
             if (response.data && response.data[0].id) {
                 console.log("uslo je ovdje")
-                await axios.post(`${API}/rk/`, {
+                await api.post(`${API}/rk/`, {
                     id_umjetnika_rk: state.id_umjetnika,
                     id_rada_rk: response.data[0].id
                 });

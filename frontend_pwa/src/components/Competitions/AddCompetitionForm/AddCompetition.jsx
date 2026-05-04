@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react'
-import axios from 'axios';
 import './AddCompetition.css'
 import { normalizeArray } from '../../../utils/normalize'
 import {api} from '../../../utils/api'
+import Toast from '../../../Toast'
+import { useToast } from '../../../ToastContext';
 
 function AddCompetition() {
     const [category, setCategory] = useState([]);
@@ -19,7 +20,14 @@ function AddCompetition() {
     const [previewImage, setPreviewImage] = useState(null); // Za preview slike
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
+    const [toast, setToast] = useState({ show: false, message: '', type: 'error' });
     const API = import.meta.env.VITE_API_URL
+
+    const { showToast } = useToast();
+
+    const closeToast = () => {
+        setToast({ show: false, message: '', type: 'error' });
+    };
 
     useEffect(() => {
         const fetchCategory = async () => {
@@ -28,6 +36,7 @@ function AddCompetition() {
                 setCategory(normalizeArray(response.data));
             } catch (error) {
                 console.error('Greška:', error);
+                showToast('Greška pri učitavanju kategorija!', 'error');
             }
         };
         fetchCategory();
@@ -51,12 +60,14 @@ function AddCompetition() {
         const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
         if (!allowedTypes.includes(file.type)) {
             setErrors(prev => ({ ...prev, slika: 'Dozvoljeni formati: JPG, PNG, GIF, WEBP' }));
+            showToast('Dozvoljeni formati slike: JPG, PNG, GIF, WEBP', 'error');
             return;
         }
 
         // Validate file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
             setErrors(prev => ({ ...prev, slika: 'Slika mora biti manja od 5MB' }));
+            showToast('Slika mora biti manja od 5MB', 'error');
             return;
         }
 
@@ -100,7 +111,7 @@ function AddCompetition() {
         e.preventDefault();
         
         if (!validateForm()) {
-            window.alert('Molimo popravite greške u formi');
+            showToast('Molimo popravite greške u formi', 'error');
             return;
         }
 
@@ -124,7 +135,7 @@ function AddCompetition() {
             });
             
             if (response.data) {
-                window.alert("Uspešno dodano takmičenje!");
+                showToast("Takmičenje je uspešno dodato!", "success");
                 // Reset form
                 setState({
                     naziv_kategorije_t: 'Slikarstvo',
@@ -140,13 +151,16 @@ function AddCompetition() {
                 // Reset file input
                 const fileInput = document.querySelector('input[type="file"]');
                 if (fileInput) fileInput.value = '';
+                
+                // Reset errors
+                setErrors({});
             }
         } catch (error) {
             console.error('Greška:', error);
             if (error.response?.data?.error) {
-                window.alert(`Greška: ${error.response.data.error}`);
+                showToast(`Greška: ${error.response.data.error}`, 'error');
             } else {
-                window.alert("Došlo je do greške pri dodavanju takmičenja");
+                showToast("Došlo je do greške pri dodavanju takmičenja", "error");
             }
         } finally {
             setLoading(false);
@@ -324,6 +338,15 @@ function AddCompetition() {
                 </form>
             </div>
         </div>
+        
+        {/* Toast notifikacija */}
+        {toast.show && (
+            <Toast 
+                message={toast.message} 
+                type={toast.type} 
+                onClose={closeToast} 
+            />
+        )}
         </>
     )
 }

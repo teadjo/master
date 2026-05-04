@@ -8,7 +8,8 @@ export default defineConfig(() => ({
     VitePWA({
       registerType: 'autoUpdate',
       navigateFallback: '/index.html',
-      includeAssets: ['offline.html'],
+      navigateFallbackDenylist: [/^\/api/],
+      includeAssets: ['**/*'],
       manifest: {
         name: 'Art Competition App',
         short_name: 'ArtApp',
@@ -16,12 +17,22 @@ export default defineConfig(() => ({
         theme_color: '#000000',
         background_color: '#ffffff',
         display: 'standalone',
+        display_override: ["standalone", "minimal-ui"],
         orientation: 'portrait',
         categories: ['art', 'social'],
-        lang: 'en',
+        lang: 'sr',
         prefer_related_applications: false,
         start_url: '/',
         scope: '/',
+        shortcuts: [
+          {
+            name: "Takmičenja",
+            short_name: "Takmičenja",
+            description: "Pogledaj takmičenja",
+            url: "/competitions",
+            icons: [{ src: "/icons/192.png", sizes: "192x192" }]
+          }
+        ],
         icons: [
           {
             src: '/icons/192.png',
@@ -43,23 +54,18 @@ export default defineConfig(() => ({
         skipWaiting: true,
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api/],
-        globPatterns: ['**/*.{js,css,html,png,svg,ico,json,woff2}'],
+        globPatterns: ['**/*.{js,css,html,png,svg,ico,json,woff2,jpg}'],
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.startsWith('/api'),
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-cache',
-              networkTimeoutSeconds: 2,
-               backgroundSync: {
-                  name: 'apiQueue',
-                  options: {
-                    maxRetentionTime: 24 * 60 // 24h
-                  }
-                },
+              networkTimeoutSeconds: 5,
+              
               expiration: {
                 maxEntries: 50,
-                maxAgeSeconds: 60 * 10 // 5 min
+                maxAgeSeconds: 60 * 10 
               },
               cacheableResponse: {
                 statuses: [0, 200]
@@ -101,7 +107,22 @@ export default defineConfig(() => ({
             handler: 'NetworkFirst',
             options: {
               cacheName: 'pages',
-              networkTimeoutSeconds: 2
+              networkTimeoutSeconds: 5
+            }
+          },
+          {
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'pages',
+              networkTimeoutSeconds: 5,
+              plugins: [
+                {
+                  handlerDidError: async () => {
+                    return caches.match('/offline.html')
+                  }
+                }
+              ]
             }
           }
         ]

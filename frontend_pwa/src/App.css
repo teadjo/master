@@ -25,6 +25,7 @@
   border-radius: 8px;
   border: none;
   cursor: pointer;
+  z-index: 1000;
 }
 
   .offline-banner {

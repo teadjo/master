@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-import axios from 'axios'
 import { Link, useParams } from 'react-router-dom'
 import './ViewArtwork.css'
 import Comment from './Comment'
@@ -35,7 +34,7 @@ function ViewArtwork() {
 
                 console.log("tuuu samm")
             } catch (err) {
-                window.alert("Greška u dobavljanju podataka!")
+                console.log("Greška u dobavljanju podataka!",err)
             } finally {
                 setLoading(false);
             }

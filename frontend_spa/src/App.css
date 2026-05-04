@@ -15,6 +15,26 @@
     justify-content: center;
     font-size: 3rem;
   }
+  .install-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: black;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+  .offline-banner {
+  background: #ff4d4f;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+}
   
   .services {
     background-position: center;

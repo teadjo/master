@@ -122,35 +122,6 @@
             transition: 0.05s;
         }
 
-        .status-chip {
-            display: inline-flex;
-            align-items: center;
-            flex-direction: row;
-            background: rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(4px);
-            border-radius: 40px;
-            padding: 0.3rem 1rem;
-            margin-bottom: 1.4rem;
-            margin-right: 35px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-            color: #facc15;
-            border: 0.5px solid rgba(250, 204, 21, 0.3);
-        }
-
-        .status-chip span {
-            display: inline-flex;
-            flex-direction: column;
-            gap: 5px;
-            width: 8px;
-            height: 8px;
-            background: #facc15;
-            border-radius: 50%;
-            margin-right: 8px;
-            box-shadow: 0 0 4px #facc15;
-            animation: pulse 1.5s infinite ease;
-        }
 
         @keyframes pulse {
             0% { opacity: 0.4; transform: scale(0.8);}
@@ -222,8 +193,6 @@
             "use strict";
 
             const reloadBtn = document.getElementById('reloadButton');
-            const statusChipText = document.getElementById('connectionStatusText');
-            const statusDotSpan = document.querySelector('#statusChip span'); // prvi span unutar chip-a
             
             window.addEventListener('online', () => {
                 setTimeout(() => {
@@ -234,27 +203,7 @@
                 window.location.reload();
             }
             
-            function updateNetworkStatusUI() {
-                const isOnline = navigator.onLine;
-                if (isOnline) {
-                    if (statusChipText) statusChipText.textContent = 'POVEZANO';
-                    if (statusDotSpan) {
-                        statusDotSpan.style.backgroundColor = '#4ade80';
-                        statusDotSpan.style.boxShadow = '0 0 5px #4ade80';
-                    }
-                    if (statusChipText && !window.location.pathname.includes('force')) {
-                        if (statusChipText.innerText !== 'POVEZANO') {
-                            statusChipText.textContent = 'POVEZANO';
-                        }
-                    }
-                } else {
-                    if (statusChipText) statusChipText.textContent = 'NEMA INTERNETA';
-                    if (statusDotSpan) {
-                        statusDotSpan.style.backgroundColor = '#facc15';
-                        statusDotSpan.style.boxShadow = '0 0 4px #facc15';
-                    }
-                }
-            }
+            
 
             let onlineNotificationElement = null;
             
@@ -296,7 +245,6 @@
             }
             
             function handleNetworkChange() {
-                updateNetworkStatusUI();
                 if (navigator.onLine) {
                     showOnlineHint();
                 } else {

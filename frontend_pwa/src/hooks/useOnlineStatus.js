@@ -17,7 +17,7 @@ export function useOnlineStatus() {
       } catch {
         setOnline(false)
       }
-    }, 5000)
+    }, 10000)
 
     return () => {
       window.removeEventListener('online', updateOnline)

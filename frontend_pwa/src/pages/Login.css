@@ -83,6 +83,14 @@
     max-height: 95vh;
 }
 
+.register-form option {
+    color:white !important;
+}
+select.user-type option:hover {
+    box-shadow: 0 0 10px 100px #232424 inset;
+}
+
+
 .login-box:hover {
     box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.9);
     transform: translateY(-2px);
