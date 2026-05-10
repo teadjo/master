@@ -7,7 +7,7 @@ import {api} from '../../utils/api'
 import Toast from '../../Toast'
 import { useToast } from '../../ToastContext';
 
-function ApplyForm() {
+function ApplyForm({ closeForm }) {
     const {id} = useParams();
     const [state, setState] = useState({});
     const [art, setArt] = useState([]);
@@ -123,10 +123,14 @@ function ApplyForm() {
                         <span className='btn-icon'>📨</span>
                         Potvrdi prijavu
                     </button>
-                    <a href={`${API1}/competition/${id}`} className='cancel-link'>
-                        <span className='btn-icon'>↩️</span>
-                        Odustani
-                    </a>
+                    <button
+                            type="button"
+                            onClick={closeForm}
+                            className='cancel-link'
+                            >
+                            <span className='btn-icon'>↩️</span>
+                            Odustani
+                            </button>
                 </div>
             </div>
         </div>

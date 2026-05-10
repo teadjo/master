@@ -137,7 +137,8 @@ function Apply() {
                 </div>
 
                 {/* Apply Form Modal */}
-                {form && <ApplyForm />}
+                {form && <ApplyForm closeForm={() => setForm(false)} />}
+
 
                 {/* Competitors Section */}
                 <section className='competitors-section'>
