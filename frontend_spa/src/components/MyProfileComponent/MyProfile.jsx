@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import { useParams} from 'react-router-dom'
-import axios from 'axios';
 import './MyProfile.css'
 import Footer from '../Footer';
 import Picture from '../Picture';
@@ -9,6 +8,8 @@ import CompetitonCard from '../CompetitionCard'
 import Pagination from '../Pagination';
 import { normalizeArray } from '../../utils/normalize'
 import {api} from '../../utils/api'
+import Toast from '../../Toast'
+import { useToast } from '../../ToastContext';
 
 function MyProfile() {
   const [user, setUser] = useState({});
@@ -20,6 +21,7 @@ function MyProfile() {
   const [currentPage, setCurrentPage] = useState(1);
   const [imagesPerPage] = useState(16);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState({ show: false, message: '', type: 'error' });
   const [userState, setUserState] = useState({
     id: id,
     ime:'',
@@ -35,6 +37,12 @@ function MyProfile() {
   const isArtist = localStorage.getItem('isArtist') === 'true';
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
   const API = import.meta.env.VITE_API_URL
+
+  const { showToast } = useToast();
+
+  const closeToast = () => {
+    setToast({ show: false, message: '', type: 'error' });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,6 +71,7 @@ function MyProfile() {
         
       } catch(error){
         console.error('Greška pri dobavljanju podataka:', error);
+        showToast('Greška pri učitavanju profila!', 'error');
       } finally {
         setLoading(false);
       }
@@ -82,15 +91,18 @@ function MyProfile() {
   const onClickSave = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`${API}/user/${id}`, userState);
+      const response = await api.put(`${API}/user/${id}`, userState);
       if (response.status === 200) {
-        window.alert("Uspješna izmjena");
-        window.location.reload();
+        showToast("Profil je uspešno izmenjen!", "success");
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       } else {
-        window.alert("Neuspješna izmjena");
+        showToast("Neuspješna izmjena profila", "error");
       }
     } catch (error) {
-      window.alert("Greška pri izmjeni!");
+      console.error('Greška pri izmjeni:', error);
+      showToast("Greška pri izmjeni profila!", "error");
     }
   }
 
@@ -107,10 +119,13 @@ function MyProfile() {
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>Učitavanje profila...</p>
-      </div>
+      <>
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Učitavanje profila...</p>
+        </div>
+        {toast.show && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
+      </>
     );
   }
 
@@ -347,6 +362,15 @@ function MyProfile() {
         {visible && <AddPainting artist={id} onClose={() => setVisible(false)} />}
       </div>
       <Footer />
+      
+      {/* Toast notifikacija */}
+      {toast.show && (
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={closeToast} 
+        />
+      )}
     </>
   );
 }

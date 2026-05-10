@@ -18,7 +18,7 @@ import NotFound from './components/NotFound';
 import AllUsers from './components/AllUsers';
 import { useOnlineStatus } from './hooks/useOnlineStatus';
 import { useEffect, useState } from 'react';
-
+import ScrollToTop from './ScrollToTop';
 
 // Komponenta koja odlučuje da li prikazati Navbar
 function AppContent() {
@@ -58,41 +58,12 @@ function AppContent() {
 }
 
 function App() {
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
 
-  useEffect(() => {
-    const handler = (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      console.log('Install prompt spreman');
-    };
 
-    window.addEventListener('beforeinstallprompt', handler);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handler);
-    };
-  }, []);
-
-  const installApp = async () => {
-    if (!deferredPrompt) return;
-
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-
-    console.log('User choice:', outcome);
-
-    setDeferredPrompt(null);
-  };
 
   return (
     <Router>
-      {deferredPrompt && (
-        <button onClick={installApp} className="install-btn">
-          Instaliraj aplikaciju
-        </button>
-      )}
-
+      <ScrollToTop />
       <AppContent />
     </Router>
   );

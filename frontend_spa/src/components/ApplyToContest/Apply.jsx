@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import './Apply.css'
-import axios from 'axios';
 import Picture from '../Picture';
 import ApplyForm from './ApplyForm';
 import Footer from '../Footer';
@@ -60,7 +59,7 @@ function Apply() {
                         
                         // Ako nagrada ne postoji, dodaj je
                         if (!existingAward.data) {
-                            await axios.post(`${API}/aua/`, {
+                            await api.post(`${API}/aua/`, {
                                 id_umjetnika_okn: winnerInfo.id_umjetnika,
                                 id_rada_okn: winnerInfo.id_rada_tr,
                                 ime_nagrade: response.data[0].ime,

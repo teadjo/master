@@ -1,19 +1,27 @@
 import React, {useState, useEffect} from 'react'
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import './ApplyForm.css'
 import Picture from '../Picture';
 import { normalizeArray } from '../../utils/normalize'
 import {api} from '../../utils/api'
-
+import Toast from '../../Toast'
+import { useToast } from '../../ToastContext';
 
 function ApplyForm() {
     const {id} = useParams();
     const [state, setState] = useState({});
     const [art, setArt] = useState([]);
     const [selectedArt, setSelectedArt] = useState(null);
+    const [toast, setToast] = useState({ show: false, message: '', type: 'error' });
     const userID = localStorage.getItem('userID')
     const API = import.meta.env.VITE_API_URL
+    const API1 = import.meta.env.VITE_URL
+
+    const { showToast } = useToast();
+
+    const closeToast = () => {
+        setToast({ show: false, message: '', type: 'error' });
+    };
 
     useEffect(() => {
         const fetchComp = async () => {
@@ -23,9 +31,10 @@ function ApplyForm() {
                 setArt(normalizeArray(response.data)); 
               } catch (error) {
                 console.error('Greška u dobavljanju ispita:', error);
+                showToast('Greška pri učitavanju vaših radova!', 'error');
               }
             }else{
-                alert('Morate biti ulogovani da biste se prijavili')
+                showToast('Morate biti ulogovani da biste se prijavili', 'error');
               }
         };
         fetchComp();
@@ -35,22 +44,29 @@ function ApplyForm() {
         e.preventDefault();
         try{
             if(!(typeof state.naziv === 'undefined')){
-            const ID_by_name = await api.get(`${API}/artworks/name/${state.naziv}`);
-            const art_id = ID_by_name.data[0].id;
-            const response = await axios.post(`${API}/spec/`, {
-                id_takmicenja_tr : id,
-                id_rada_tr : art_id
-            })
-            window.location = `http://localhost:5173/competition/${id}`
-            if (typeof response.data == undefined || !response.data[0])
-                window.alert("Nije uspjelo, slika je već prijavljena na ovom takmičenju");
-              else {
-                setArt(response.data)
-              }
-            }else {
-              alert('Morate izabrati sliku!!')
+                const ID_by_name = await api.get(`${API}/artworks/name/${state.naziv}`);
+                const art_id = ID_by_name.data[0].id;
+                const response = await api.post(`${API}/spec/`, {
+                    id_takmicenja_tr : id,
+                    id_rada_tr : art_id
+                })
+                
+                if (typeof response.data == undefined || !response.data[0]) {
+                    showToast("Nije uspjelo, slika je već prijavljena na ovom takmičenju", "error");
+                } else {
+                    showToast("Uspješno ste prijavili rad na takmičenje!", "success");
+                    setArt(response.data);
+                    setTimeout(() => {
+                        window.location = `${API1}/competition/${id}`;
+                    }, 1500);
+                }
+            } else {
+                showToast('Morate izabrati sliku za prijavu!', 'error');
             }
-          }catch(error){window.alert("Greška!!!")}
+        } catch(error){
+            console.error('Greška:', error);
+            showToast("Greška pri prijavi rada na takmičenje!", "error");
+        }
     }
 
     const handleArtSelect = (art) => {
@@ -107,13 +123,22 @@ function ApplyForm() {
                         <span className='btn-icon'>📨</span>
                         Potvrdi prijavu
                     </button>
-                    <a href={`http://localhost:5173/competition/${id}`} className='cancel-link'>
+                    <a href={`${API1}/competition/${id}`} className='cancel-link'>
                         <span className='btn-icon'>↩️</span>
                         Odustani
                     </a>
                 </div>
             </div>
         </div>
+        
+        {/* Toast notifikacija */}
+        {toast.show && (
+            <Toast 
+                message={toast.message} 
+                type={toast.type} 
+                onClose={closeToast} 
+            />
+        )}
     </div>
   )
 }

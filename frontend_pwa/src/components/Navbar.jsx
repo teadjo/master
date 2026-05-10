@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './Navbar.css'
 import Button from './Button'
-import axios from 'axios';
 import { normalizeArray } from '../utils/normalize'
+import {api} from '../utils/api'
 
 function Navbar() {
   const [click, setClick] = useState(false);

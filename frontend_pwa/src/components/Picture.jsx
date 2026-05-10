@@ -5,7 +5,6 @@ import {api} from '../utils/api'
 
 function Picture(props) {
   const API = import.meta.env.VITE_API_URL
-  console.log(`${API}${props.src}`)
 
 
   return (
@@ -22,7 +21,7 @@ function Picture(props) {
           <div className='image-overlay'>
             <div className='overlay-content'>
               <span className='overlay-icon'>🪄</span>
-              <span className='overlay-text'>Pogledaj detalje</span>
+              
             </div>
           </div>
         </div> 

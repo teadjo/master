@@ -97,7 +97,7 @@ function Apply() {
     const onClickApply = (e) => {
         e.preventDefault();
         setForm(!form);
-        window.location.hash = "";
+        // window.location.hash = "";
     }
 
     const daysLeft = comp.datum_kraja ? Math.ceil((new Date(comp.datum_kraja) - currentDate) / 86400000) : 0;
@@ -137,7 +137,7 @@ function Apply() {
                 </div>
 
                 {/* Apply Form Modal */}
-                {form && <ApplyForm />}
+                {form && <ApplyForm closeForm={() => setForm(false)} />}
 
                 {/* Competitors Section */}
                 <section className='competitors-section'>

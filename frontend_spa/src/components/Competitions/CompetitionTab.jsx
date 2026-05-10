@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react'
-import axios from 'axios';
 import Picture from '../Picture';
 import Footer from '../Footer';
 import './CompetitionTab.css'
 import CompetitionCard from '../CompetitionCard';
 import { normalizeArray } from '../../utils/normalize'
 import {api} from '../../utils/api'
-
+import Toast from '../../Toast'
+import { useToast } from '../../ToastContext';
 
 function CompetitionTab() {
     const [competition, setComp] = useState([]);
@@ -15,6 +15,7 @@ function CompetitionTab() {
     const [choice, setChoice] = useState("")
     const [loading, setLoading] = useState(true);
     const [activeDropdown, setActiveDropdown] = useState(false);
+    const [toast, setToast] = useState({ show: false, message: '', type: 'error' });
     const API = import.meta.env.VITE_API_URL
 
     const currentDate = new Date().getTime();
@@ -22,6 +23,12 @@ function CompetitionTab() {
 
     const activeCompetitions = competition.filter(comp => new Date(comp.datum_kraja).getTime() > currentDate);
     const inactiveCompetitions = competition.filter(comp => new Date(comp.datum_kraja).getTime() <= currentDate);
+
+    const { showToast } = useToast();
+
+    const closeToast = () => {
+        setToast({ show: false, message: '', type: 'error' });
+    };
 
     function onChangeSearch(e){
       setSearch(e.target.value);
@@ -34,12 +41,13 @@ function CompetitionTab() {
       try{
           const response = await api.get(`${API}/competitions/search/${search}`)
           if (!response.data || response.data.length === 0) {
-              window.alert("Nema rezultata za vašu pretragu");
+              showToast("Nema rezultata za vašu pretragu", "info");
           } else {
               setComp(normalizeArray(response.data))
           }
       } catch(error) {
-          window.alert("Greška pri pretrazi!");
+          console.error("Greška pri pretrazi:", error);
+          showToast("Greška pri pretrazi takmičenja!", "error");
       }
     }
 
@@ -49,12 +57,13 @@ function CompetitionTab() {
       try{
           const response = await api.get(`${API}/competitions/category/${categoryName}`)
           if (!response.data || response.data.length === 0) {
-              window.alert("Nema takmičenja u ovoj kategoriji");
+              showToast(`Nema takmičenja u kategoriji "${categoryName}"`, "info");
           } else {
               setComp(normalizeArray(response.data))
           }   
       } catch(error) {
           console.error("Greška pri učitavanju kategorije:", error);
+          showToast("Greška pri učitavanju kategorije!", "error");
       }
     }    
 
@@ -66,6 +75,7 @@ function CompetitionTab() {
           setChoice("");
       } catch (error) {
           console.error('Greška pri resetovanju filtera:', error);
+          showToast("Greška pri resetovanju filtera!", "error");
       }
     }
 
@@ -91,10 +101,13 @@ function CompetitionTab() {
 
     if (loading) {
         return (
-            <div className="loading-container">
-                <div className="loading-spinner"></div>
-                <p>Učitavanje takmičenja...</p>
-            </div>
+            <>
+                <div className="loading-container">
+                    <div className="loading-spinner"></div>
+                    <p>Učitavanje takmičenja...</p>
+                </div>
+                {toast.show && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
+            </>
         );
     }
 
@@ -179,7 +192,7 @@ function CompetitionTab() {
                 <p className='section-description'>Pridružite se trenutno aktivnim takmičenjima</p>
               </div>
 
-              {!Array.isArray(activeCompetitions)  ? (
+              {activeCompetitions.length === 0 ? (
                 <div className='empty-state'>
                   <span className='empty-icon'>📭</span>
                   <h3>Nema aktivnih takmičenja</h3>
@@ -213,7 +226,7 @@ function CompetitionTab() {
                 <p className='section-description'>Pregledajte ranije održana takmičenja</p>
               </div>
 
-              {!Array.isArray(inactiveCompetitions) ?  (
+              {inactiveCompetitions.length === 0 ? (
                 <div className='empty-state'>
                   <span className='empty-icon'>📊</span>
                   <h3>Nema završenih takmičenja</h3>
@@ -232,6 +245,15 @@ function CompetitionTab() {
           </div>
         </div>
         <Footer />
+        
+        {/* Toast notifikacija */}
+        {toast.show && (
+            <Toast 
+                message={toast.message} 
+                type={toast.type} 
+                onClose={closeToast} 
+            />
+        )}
     </>
   )
 }

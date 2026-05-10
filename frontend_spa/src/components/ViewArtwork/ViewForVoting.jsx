@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-import axios from 'axios'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import './ViewForVoting.css'
 import StarRatingComp from '../StarRatingComp'
@@ -8,7 +7,8 @@ import Comment from './Comment'
 import Footer from '../Footer'
 import { normalizeArray } from '../../utils/normalize'
 import {api} from '../../utils/api' 
-
+import Toast from '../../Toast'
+import { useToast } from '../../ToastContext'
 
 function ViewForVoting() {
     const { id, artID } = useParams(); // competition ID i artwork ID
@@ -22,6 +22,7 @@ function ViewForVoting() {
     const [comp, setComp] = useState({});
     const [validV, setValidV] = useState(true)
     const [loading, setLoading] = useState(true)
+    const [toast, setToast] = useState({ show: false, message: '', type: 'error' })
     const [state, setState] = useState({
         id_rada: artID,
         id_ocenjivaca: localStorage.getItem('userID'),
@@ -35,6 +36,12 @@ function ViewForVoting() {
     const isCompetitionActive = competitionEndDate >= currentDate;
     const canVote = isCompetitionActive && validV;
     const API = import.meta.env.VITE_API_URL
+
+    const { showToast } = useToast();
+
+    const closeToast = () => {
+        setToast({ show: false, message: '', type: 'error' });
+    };
 
     useEffect(() => {
         const fetchInfo = async () => {
@@ -60,7 +67,7 @@ function ViewForVoting() {
                 console.log("Competition data:", competitionRes.data);
 
                 if (!artworkRes.data[0]) {
-                    alert("Rad nije pronađen!");
+                    showToast("Rad nije pronađen!", "error");
                     navigate('/competitions');
                     return;
                 }
@@ -91,7 +98,7 @@ function ViewForVoting() {
 
             } catch (err) {
                 console.error("Greška u dobavljanju podataka:", err);
-                window.alert("Greška u dobavljanju podataka!")
+                showToast("Greška pri učitavanju podataka!", "error");
             } finally {
                 setLoading(false);
             }
@@ -114,31 +121,34 @@ function ViewForVoting() {
         console.log("User ID:", state.id_ocenjivaca, "Artist ID:", idGraded);
         
         if (state.id_ocenjivaca == idGraded) {
-            alert("Ne možete ocijeniti svoj rad!!");
+            showToast("Ne možete ocijeniti svoj rad!", "error");
             return;
         }
 
         if (grade === 0) {
-            alert("Molimo odaberite ocjenu prije slanja!");
+            showToast("Molimo odaberite ocjenu prije slanja!", "error");
             return;
         }
 
         const writeGrade = async () => {
             try {
                 console.log("Sending data:", state);
-                const write = await axios.post(`${API}/grades/`, state);
+                const write = await api.post(`${API}/grades/`, state);
                 if (write.data) {
-                    window.alert("Uspješno ocijenjeno!");
+                    showToast("Uspješno ste ocijenili rad!", "success");
                     setValidV(false);
                     // Refresh comments to show the new one
                     const gradesRes = await api.get(`${API}/grades/compID/${id}/artID/${artID}`);
                     setComments(gradesRes.data);
+                    // Reset grade and comment
+                    setGrade(0);
+                    setState(prev => ({ ...prev, komentar: '', ocjena: 0 }));
                 } else {
-                    window.alert("Objava nije uspjela");
+                    showToast("Objava nije uspjela. Pokušajte ponovo.", "error");
                 }
             } catch(error) {
                 console.error("Error submitting grade:", error);
-                window.alert("Greška pri slanju ocjene: " + error.message);
+                showToast("Greška pri slanju ocjene: " + (error.response?.data?.message || error.message || "Nepoznata greška"), "error");
             }
         }
         writeGrade();
@@ -153,7 +163,12 @@ function ViewForVoting() {
     };
 
     if (loading) {
-        return <div className="loading">Učitavanje...</div>;
+        return (
+            <>
+                <div className="loading">Učitavanje...</div>
+                {toast.show && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
+            </>
+        );
     }
 
     return (
@@ -263,7 +278,7 @@ function ViewForVoting() {
 
                     <Section title="Ocjene i komentari korisnika">
                         <div className='comments-section'>
-                            {comments && Array.isArray(comments) ?  (
+                            {comments && Array.isArray(comments) && comments.length > 0 ?  (
                                 comments.map((comment, index) => (
                                     <Comment key={index} info={comment} />
                                 ))
@@ -275,6 +290,15 @@ function ViewForVoting() {
                 </div>
             </div>
             <Footer />  
+
+            {/* Toast notifikacija */}
+            {toast.show && (
+                <Toast 
+                    message={toast.message} 
+                    type={toast.type} 
+                    onClose={closeToast} 
+                />
+            )}
         </>
     )
 }
@@ -288,4 +312,4 @@ const Section = ({ title, children }) => (
     </section>
 );
 
-export default ViewForVoting
+export default ViewForVoting;

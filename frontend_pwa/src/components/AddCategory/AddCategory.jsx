@@ -3,6 +3,7 @@ import '../../App.css';
 import './AddCategory.css';
 import axios from 'axios';
 import { normalizeArray } from '../../utils/normalize'
+import {api} from '../../utils/api'
 
 function AddCategory(){
     const [state, setState] = useState({ naziv: '' });
@@ -37,7 +38,7 @@ function AddCategory(){
         setError('');
 
         try {
-            const response = await axios.post(`${API}/category/1`, state);
+            const response = await api.post(`${API}/category/1`, state);
             
             if (response.data) {
                 setSuccess(true);

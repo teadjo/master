@@ -7,6 +7,13 @@ export default defineConfig(() => ({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      // KLJUČNO: Koristi injectManifest za custom SW
+      strategies: 'injectManifest',
+      srcDir: 'public',
+      filename: 'sw.js',
+      injectManifest: {
+        injectionPoint: 'self.__WB_MANIFEST'
+      },
       navigateFallback: '/index.html',
       navigateFallbackDenylist: [/^\/api/],
       includeAssets: ['**/*'],
@@ -55,77 +62,7 @@ export default defineConfig(() => ({
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api/],
         globPatterns: ['**/*.{js,css,html,png,svg,ico,json,woff2,jpg}'],
-        runtimeCaching: [
-          {
-            urlPattern: ({ url }) => url.pathname.startsWith('/api'),
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-cache',
-              networkTimeoutSeconds: 5,
-              
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 60 * 10 
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              },
-              plugins: [
-                {
-                  handlerDidError: async () => {
-                    return new Response(
-                      JSON.stringify({ error: 'Offline' }),
-                      { headers: { 'Content-Type': 'application/json' } }
-                    )
-                  }
-                }
-              ]
-            }
-          },
-          {
-            urlPattern: ({ request }) => request.destination === 'image',
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'image-cache',
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 7 // 7 dana
-              }
-            }
-          },
-          {
-            urlPattern: ({ request }) =>
-              request.destination === 'script' ||
-              request.destination === 'style',
-            handler: 'StaleWhileRevalidate',
-            options: {
-              cacheName: 'static-resources'
-            }
-          },
-          {
-            urlPattern: ({ request }) => request.mode === 'navigate',
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'pages',
-              networkTimeoutSeconds: 5
-            }
-          },
-          {
-            urlPattern: ({ request }) => request.mode === 'navigate',
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'pages',
-              networkTimeoutSeconds: 5,
-              plugins: [
-                {
-                  handlerDidError: async () => {
-                    return caches.match('/offline.html')
-                  }
-                }
-              ]
-            }
-          }
-        ]
+        // NE MIJENJAJ runtimeCaching - ovo će biti u sw.js
       }
     })
   ]

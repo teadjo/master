@@ -1,9 +1,9 @@
 import React from 'react'
 import './Login.css'
 import { useState } from "react";
-import axios from "axios";
 import Toast from '../Toast';
 import { useToast } from './../ToastContext';
+import {api} from '../utils/api' 
 
 function Login() {
     let [state, setState] = useState({Type: 1, slika:null});
@@ -120,7 +120,7 @@ function Login() {
                 }
                 console.log(state)
                 
-                const response = await axios.post(`${API}/add/`, formData, {
+                const response = await api.post(`${API}/add/`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         }
@@ -136,7 +136,6 @@ function Login() {
                     localStorage.setItem("isVisitor", response.data.tip===2);
                     localStorage.setItem("isAdmin", response.data.tip===0);
                     localStorage.setItem("notlogedIn", 'false');
-                    showToast("Uspešna registracija! Dobrodošli!", "success");
                     setTimeout(() => {
                         window.location = "/";
                     }, 1500);
@@ -163,7 +162,7 @@ function Login() {
      
         if(!(typeof state.Username === 'undefined') && !(typeof state.Password === 'undefined')){
             try{
-                const response = await axios.post(`${API}/login`, state);
+                const response = await api.post(`${API}/login`, state);
                 if (response.data.token === null || !response.data.token) {
                     showToast("Pogrešno korisničko ime ili lozinka!", "error");
                 } else {
@@ -174,7 +173,6 @@ function Login() {
                     localStorage.setItem("isVisitor", response.data.tip===2);
                     localStorage.setItem("isAdmin", response.data.tip===0);
                     localStorage.setItem("notlogedIn", 'false');
-                    showToast("Uspešno ste se prijavili!", "success");
                     setTimeout(() => {
                         window.location = "/";
                     }, 1500);

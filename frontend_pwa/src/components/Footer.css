@@ -446,3 +446,82 @@
     font-size: 1rem;
   }
 }
+
+/* DODAJ na kraj Footer.css fajla */
+
+/* Share Button - uklopljen sa social linkovima */
+.share-link {
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: left;
+}
+
+.share-link:hover {
+  color: #ffffff;
+  transform: translateY(-2px);
+  border-color: rgba(0, 255, 136, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2);
+}
+
+.share-icon {
+  background: linear-gradient(135deg, #00c853, #00e676) !important;
+  transition: all 0.3s ease;
+}
+
+.share-link:hover .share-icon {
+  background: linear-gradient(135deg, #00e676, #69f0ae) !important;
+  transform: scale(1.1) rotate(15deg);
+  box-shadow: 0 4px 15px rgba(0, 255, 136, 0.4);
+}
+
+/* Aktivno stanje */
+.share-link:active {
+  transform: scale(0.98);
+}
+
+/* Floating Share Button za mobilne - DODAJ OPACIONO */
+.floating-share-btn {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00c853, #00e676);
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 255, 136, 0.4);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  animation: pulse 2s infinite;
+}
+
+.floating-share-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 255, 136, 0.6);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 25px rgba(0, 255, 136, 0.7);
+  }
+}
+
+/* Sakrij na desktopu, prikaži na mobilnom */
+@media (min-width: 769px) {
+  .floating-share-btn {
+    display: none;
+  }
+}

@@ -2,6 +2,7 @@ import React from 'react'
 import './Footer.css';
 import Button from './Button'
 import { Link } from 'react-router-dom';
+import { shareContent } from '../utils/share';
 
 function Footer() {
   return (
@@ -138,6 +139,21 @@ function Footer() {
                 </div>
                 <span className='social-text'>YouTube</span>
               </Link>
+
+              <button 
+                className='social-link share-link'
+                onClick={() => shareContent({
+                  title: 'ArtConnection',
+                  text: 'Pridružite se našoj kreativnoj zajednici! 🎨 Otkrijte nevjerovatne umjetnike i učestvujte u takmičenjima.',
+                  url: window.location.href
+                })}
+                aria-label='Podijeli aplikaciju'
+              >
+                <div className='social-icon share-icon'>
+                  <i className='fas fa-share-alt' />
+                </div>
+                <span className='social-text'>Podijeli</span>
+              </button>
             </div>
           </div>
 

@@ -161,9 +161,12 @@
     transition: all 0.2s ease;
     background: #fafbfc;
     font-family: inherit;
-    color: #2d3748;
+    color: #2d3748 !important;
 }
 
+option{
+    color: #2d3748 !important;
+}
 .form-group input:hover,
 .form-group select:hover,
 .form-group textarea:hover {

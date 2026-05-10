@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './Cards.css'
 import Picture from './Picture'
-import axios from 'axios';
 import Pagination from './Pagination';
 import { useNavigate } from 'react-router-dom';
 import { normalizeArray } from '../utils/normalize'

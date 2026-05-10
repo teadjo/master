@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './Navbar.css'
 import Button from './Button'
-import axios from 'axios';
 import { normalizeArray } from '../utils/normalize'
+import {api} from '../utils/api'
 
 function Navbar() {
   const [click, setClick] = useState(false);
@@ -40,11 +40,11 @@ function Navbar() {
     
     const fetchCategory = async () => {
       try{
-        const getCategory = await axios(`${API}/category/`);
+        const getCategory = await api.get(`${API}/category/`);
         console.log("DATA TYPE:", typeof getCategory, getCategory)
         setCategory(normalizeArray(getCategory.data));
       } catch (error) {
-        window.alert("Error!!!");
+        console.log("error", error)
       }
     }
     fetchCategory();

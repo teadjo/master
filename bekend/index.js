@@ -25,7 +25,11 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(cors());
 app.use(compression());
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+  setHeaders: (res) => {
+    res.set('Cache-Control', 'public, max-age=31536000, immutable')
+  }
+}));
 
 app.use("/competitions/", comprouter);
 app.use("/aua/", artwork_user_award);

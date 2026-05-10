@@ -3,6 +3,7 @@ import './Login.css'
 import { useState } from "react";
 import Toast from '../Toast';
 import { useToast } from './../ToastContext';
+import {api} from '../utils/api' 
 
 function Login() {
     let [state, setState] = useState({Type: 1, slika:null});
@@ -135,7 +136,6 @@ function Login() {
                     localStorage.setItem("isVisitor", response.data.tip===2);
                     localStorage.setItem("isAdmin", response.data.tip===0);
                     localStorage.setItem("notlogedIn", 'false');
-                    showToast("Uspešna registracija! Dobrodošli!", "success");
                     setTimeout(() => {
                         window.location = "/";
                     }, 1500);
@@ -173,7 +173,6 @@ function Login() {
                     localStorage.setItem("isVisitor", response.data.tip===2);
                     localStorage.setItem("isAdmin", response.data.tip===0);
                     localStorage.setItem("notlogedIn", 'false');
-                    showToast("Uspešno ste se prijavili!", "success");
                     setTimeout(() => {
                         window.location = "/";
                     }, 1500);
