@@ -199,6 +199,7 @@
     padding: 1rem;
     border-radius: 12px;
     border: 1px solid rgba(138, 43, 226, 0.1);
+    color: #2c303d;
 }
 
 .stat-item {
@@ -211,13 +212,14 @@
 .stat-number {
     font-size: 1.2rem;
     font-weight: 800;
-    color: #8A2BE2;
+    color: #8A2BE2 !important;
 }
 
 .stat-label {
     font-size: 0.75rem;
     color: #666668;
     font-weight: 600;
+    color: #2c303d !important;
 }
 
 /* Main Content */
