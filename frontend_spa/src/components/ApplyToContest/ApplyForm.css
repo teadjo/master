@@ -10,8 +10,39 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    padding: 1rem;
+    padding: 15px;
     animation: fadeIn 0.3s ease-out;
+}
+
+
+.apply-form-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 15px;
+    animation: fadeIn 0.3s ease-out;
+    overflow-y: auto; 
+    -webkit-overflow-scrolling: touch; 
+}
+
+.apply-form-container {
+    width: 90%;
+    max-width: 1200px;
+    max-height: 90vh; 
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: slideUp 0.4s ease-out;
+    margin: auto; 
 }
 
 .apply-form-container {
@@ -34,14 +65,14 @@
 
 .form-header {
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 5px !important;
 }
 
 .form-header h1 {
     font-size: 2.3rem;
     font-weight: 800;
     color: #2c303d;
-    margin: 0 0 0.7rem 0;
+    margin: 0 0 0.3rem 0;
     background: linear-gradient(135deg, #8A2BE2, #4B0082);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -256,57 +287,193 @@
 /* Responsive Design */
 @media screen and (max-width: 768px) {
     .apply-form-overlay {
-        padding: 1rem;
+        padding: 0.5rem;
+        align-items: flex-start; /* VAŽNO: Počni od vrha */
+        margin-top: 70px;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
     }
     
     .apply-form-container {
-        width: 95%;
-        max-height: 95vh;
+        width: 100%;
+        max-height: 100vh;
+        border-radius: 16px;
+        margin-top: env(safe-area-inset-top, 10px); /* Za iPhone notch */
     }
     
     .apply-form-content {
-        padding: 2rem;
+        padding: 1.2rem 1rem;
+        max-height: 100vh;
+        overflow-y: auto; /* Omogući skrolovanje */
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .form-header {
+        margin-bottom: 0.5rem !important;
     }
     
     .form-header h1 {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
+    }
+    
+    .form-header p {
+        font-size: 0.9rem;
+    }
+    
+    .artworks-selection {
+        flex: 1;
+        margin-bottom: 1rem;
+        min-height: 0; /* VAŽNO za flex */
+    }
+    
+    .selection-header {
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    
+    .selection-header h3 {
+        font-size: 1.1rem;
     }
     
     .artworks-grid1 {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1rem;
-        max-height: 300px;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.8rem;
+        max-height: 280px; /* Manji grid */
+        padding: 0.5rem;
     }
     
     .form-actions {
-        flex-direction: column;
-        gap: 1rem;
+        display: flex;
+        flex-direction: row; /* UVIJEK u redu */
+        gap: 12px;
+        padding: 12px 0 0 0;
+        border-top: 2px solid #f0f0f0;
+        position: sticky;
+        bottom: 0;
+        background: white;
+        margin-top: auto; /* Guraj na dno */
     }
     
-    .submit-btn,
+    .submit-btn {
+        flex: 1;
+        padding: 14px 16px;
+        font-size: 0.95rem;
+        border-radius: 12px;
+        white-space: nowrap;
+    }
+    
     .cancel-link {
-        width: 100%;
+        flex-shrink: 0; /* Ne skupljaj se */
+        min-width: 100px; /* Minimalna širina */
+        padding: 14px 16px;
+        font-size: 0.95rem;
+        border-radius: 12px;
+        background: #f5f5f5; /* Siva pozadina da se vidi */
+        color: #666;
+        border: 2px solid #e0e0e0;
+        display: flex;
+        align-items: center;
         justify-content: center;
+        gap: 6px;
+        white-space: nowrap;
+    }
+    
+    .cancel-link:hover {
+        background: #e8e8e8;
+        color: #333;
     }
 }
 
 @media screen and (max-width: 480px) {
+    .apply-form-overlay {
+        padding: 0;
+    }
+    
+    .apply-form-container {
+        border-radius: 0;
+        max-height: 100vh;
+    }
+    
     .apply-form-content {
-        padding: 1.5rem;
+        padding: 1rem 0.8rem;
     }
     
     .form-header h1 {
-        font-size: 1.7rem;
+        font-size: 1.3rem;
+    }
+    
+    .form-header p {
+        font-size: 0.85rem;
+    }
+    
+    .selection-header h3 {
+        font-size: 1rem;
+    }
+    
+    .selected-count {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
     }
     
     .artworks-grid1 {
-        grid-template-columns: 1fr;
-        max-height: 250px;
+        grid-template-columns: repeat(2, 1fr); /* 2 kolone */
+        gap: 0.5rem;
+        max-height: 220px;
     }
     
-    .selection-header {
-        flex-direction: column;
-        gap: 0.5rem;
-        align-items: flex-start;
+    .form-actions {
+        gap: 8px;
+        padding: 10px 0 0 0;
+    }
+    
+    .submit-btn {
+        padding: 12px 12px;
+        font-size: 0.85rem;
+        border-radius: 10px;
+    }
+    
+    .submit-btn .btn-icon {
+        font-size: 1rem;
+    }
+    
+    .cancel-link {
+        min-width: 80px;
+        padding: 12px 12px;
+        font-size: 0.85rem;
+        border-radius: 10px;
+    }
+    
+    .cancel-link .btn-icon {
+        font-size: 1rem;
     }
 }
+
+/* Za veoma male ekrane (320px) */
+@media screen and (max-width: 350px) {
+    .artworks-grid1 {
+        grid-template-columns: 1fr;
+        max-height: 200px;
+    }
+    
+    .form-actions {
+        gap: 6px;
+    }
+    
+    .submit-btn {
+        font-size: 0.8rem;
+        padding: 10px 8px;
+    }
+    
+    .cancel-link {
+        min-width: 60px;
+        font-size: 0.8rem;
+        padding: 10px 8px;
+    }
+    
+    .btn-icon {
+        font-size: 0.9rem;
+    }
+}
+

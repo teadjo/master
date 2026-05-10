@@ -29,21 +29,20 @@
     z-index: 1000;
     padding: 15px;
     animation: fadeIn 0.3s ease-out;
-    overflow-y: auto; /* DODAJ OVO */
-    -webkit-overflow-scrolling: touch; /* DODAJ OVO - za iOS */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; 
 }
 
-/* Osiguraj da container ne izlazi iz ekrana */
 .apply-form-container {
     width: 90%;
     max-width: 1200px;
-    max-height: 90vh; /* Smanji sa 100vh */
+    max-height: 90vh; 
     background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     overflow: hidden;
     animation: slideUp 0.4s ease-out;
-    margin: auto; /* DODAJ OVO */
+    margin: auto; 
 }
 
 .apply-form-container {

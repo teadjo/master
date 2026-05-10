@@ -25,7 +25,12 @@ function ApplyForm({ closeForm }) {
 
     useEffect(() => {
         const fetchComp = async () => {
-          if(!(userID === 'null')){
+            if (!userID || userID === 'null' || userID === 'undefined') {
+                showToast('Morate biti ulogovani da biste se prijavili', 'error');
+                return;
+            }
+            if(!(userID === 'null') && !(userID === 'undefined')){
+            
             try {
                 const response = await api.get(`${API}/artworks/artist/${userID}`);
                 setArt(normalizeArray(response.data)); 
