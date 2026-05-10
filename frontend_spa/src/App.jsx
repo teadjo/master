@@ -16,7 +16,6 @@ import ViewForVoting from './components/ViewArtwork/ViewForVoting';
 import AddCategory from './components/AddCategory/AddCategory';
 import NotFound from './components/NotFound';
 import AllUsers from './components/AllUsers';
-import { useOnlineStatus } from './hooks/useOnlineStatus';
 import { useEffect, useState } from 'react';
 import ScrollToTop from './ScrollToTop';
 
@@ -25,15 +24,9 @@ function AppContent() {
   const location = useLocation();
   const hideNavbar = location.pathname === '/login';
 
-  const online = useOnlineStatus(); 
 
   return (
     <>
-      {!online && (
-        <div className="offline-banner">
-          Nema internet konekcije
-        </div>
-      )}
 
       {!hideNavbar && <Navbar />}
       <Suspense fallback={<div>Loading...</div>}>
