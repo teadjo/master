@@ -4,6 +4,7 @@ const cors = require("cors");
 const compression = require('compression');
 const path = require('path'); 
 const fs = require('fs'); 
+require('dotenv').config();
 
 const userrouter = require("./routes/korisnici_routes");
 const categoryrouter = require("./routes/kategorija_routes");
