@@ -42,7 +42,7 @@
     rgba(74, 20, 140, 0.05) 50%,
     rgba(138, 43, 226, 0.1) 100%
   );
-  z-index: 2;  /* Povećaj na 2 (iznad slike) */
+  z-index: 28;  /* Povećaj na 2 (iznad slike) */
 }
 
 /* Isti z-index za ostale elemente */
