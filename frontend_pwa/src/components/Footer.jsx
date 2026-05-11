@@ -167,7 +167,7 @@ function Footer() {
                 placeholder='Unesite vaš email' 
                 className='newsletter-input'
               />
-              <button type='submit' className='newsletter-btn'>
+              <button type='submit' className='newsletter-btn' aria-label="Prijavi se na newsletter">
                 <i className='fas fa-paper-plane' />
               </button>
             </div>
