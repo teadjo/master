@@ -19,8 +19,38 @@ import { BackgroundSyncPlugin } from 'workbox-background-sync';
 self.skipWaiting();
 clientsClaim();
 
-cleanupOutdatedCaches();
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
 
+          const validCaches = [
+            'api-cache',
+            'image-cache',
+            'backend-images',
+            'static-resources',
+            'pages'
+          ];
+
+          const isWorkbox = cacheName.startsWith('workbox-precache');
+
+          const isValid = validCaches.some(name =>
+            cacheName.includes(name)
+          );
+
+          if (!isValid && !isWorkbox) {
+            console.log('🗑️ Brišem stari cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
+
+cleanupOutdatedCaches();
+self.__WB_DISABLE_DEV_LOGS = true;
 precacheAndRoute(self.__WB_MANIFEST);
 
 console.log('✅ Custom SW učitan');
@@ -378,25 +408,6 @@ self.addEventListener('push', (event) => {
 });
 
 
-
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cache) => {
-          if (
-            !cache.includes('workbox-precache') &&
-            !cache.includes('static-resources') &&
-            !cache.includes('api-cache') &&
-            !cache.includes('image-cache')
-          ) {
-            return caches.delete(cache);
-          }
-        })
-      );
-    })
-  );
-});
 
 
 /* =========================================================
