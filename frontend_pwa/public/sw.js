@@ -379,6 +379,24 @@ self.addEventListener('push', (event) => {
 
 
 
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cache) => {
+          if (
+            !cache.includes('workbox-precache') &&
+            !cache.includes('static-resources') &&
+            !cache.includes('api-cache') &&
+            !cache.includes('image-cache')
+          ) {
+            return caches.delete(cache);
+          }
+        })
+      );
+    })
+  );
+});
 
 
 /* =========================================================
