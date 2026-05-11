@@ -35,7 +35,7 @@ console.log('✅ Custom SW učitan');
 
 registerRoute(
   ({ url }) =>
-    url.origin.includes('vercel.app') &&
+    url.origin === 'https://master-4-xbzp.onrender.com' &&
     url.pathname.startsWith('/uploads'),
 
   new CacheFirst({
@@ -123,7 +123,7 @@ registerRoute(
 
 registerRoute(
   ({ url, request }) =>
-    url.origin.includes('vercel.app') &&
+    url.origin === 'https://master-4-xbzp.onrender.com' &&
     request.method === 'GET',
 
     new StaleWhileRevalidate({
@@ -280,7 +280,7 @@ const postBgSync = new BackgroundSyncPlugin('postQueue', {
 
 registerRoute(
   ({ url, request }) =>
-    url.origin.includes('vercel.app') &&
+    url.origin === 'https://master-4-xbzp.onrender.com' &&
     request.method === 'POST',
 
   new NetworkOnly({
@@ -304,7 +304,7 @@ const mutateBgSync = new BackgroundSyncPlugin('mutateQueue', {
 
 registerRoute(
   ({ url, request }) =>
-    url.origin.includes('vercel.app') &&
+    url.origin === 'https://master-4-xbzp.onrender.com' &&
     ['PUT', 'PATCH', 'DELETE'].includes(request.method),
 
   new NetworkOnly({
