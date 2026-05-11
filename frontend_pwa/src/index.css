@@ -12,6 +12,12 @@ code {
     monospace;
 }
 
+@font-face {
+  font-display: swap; 
+  font-family: 'FontAwesome';
+  src: url('/assets/fa-regular.woff2') format('woff2');
+}
+
 /* Dodaj u globalni CSS fajl */
 .toast-container {
     position: fixed;

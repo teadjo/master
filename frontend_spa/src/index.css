@@ -7,6 +7,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@font-face {
+  font-display: swap; 
+  font-family: 'FontAwesome';
+  src: url('/assets/fa-regular.woff2') format('woff2');
+}
+
 code {
   font-family: 'Montserrat',source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

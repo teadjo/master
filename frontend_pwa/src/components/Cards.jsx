@@ -99,7 +99,7 @@ function Cards() {
                 <ul className='cards_items artists-grid'>
                 {Array.isArray(currentImages) ? (currentImages.map((art) => {
                   return (
-                    <div key={art.id} className='individualPicture-start artist-card'>
+                    <li key={art.id} className='individualPicture-start artist-card'>
                       <Picture 
                         src={art.slika ? `${art.slika}` : './back.jpg'}
                         label={art.naziv_kategorije}
@@ -107,7 +107,7 @@ function Cards() {
                         title={art.naziv}  
                         link={`/artwork/${art.id}/profile/`}
                       /> 
-                    </div>
+                    </li>
                   )
                 })):(<p>Nema podataka</p>)}
                 </ul>
@@ -151,7 +151,7 @@ function Cards() {
             <div className='cards_wrapper'>
               <ul className='cards_items artists-grid'>
               {Array.isArray(users) ? (users.map((art) => (
-                <div key={art.id} className='individualPicture-start artist-card'>
+                <li key={art.id} className='individualPicture-start artist-card'>
                   <Picture 
                     src={art.profilna_slika ? `${art.profilna_slika}` : './../back.jpg'}
                     label1={art.korisnicko_ime}
@@ -159,7 +159,7 @@ function Cards() {
                     title={[art.ime_kor, " ", art.prezime]}  
                     link={`/${art.id_kor}/myProfile/`}
                   /> 
-                </div>
+                </li>
               ))):(<p>Nema podataka</p>)}
               </ul>
             </div>
