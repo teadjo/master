@@ -1,0 +1,27 @@
+# PWA VERZIJA - fokus na Service Worker i instalaciju
+User-agent: *
+Allow: /
+
+# Iste blokade kao SPA (zbog konzistentnosti)
+Disallow: /metrics
+Disallow: /admin
+
+# PWA specifični dozvoli (KLJUČNO!)
+Allow: /sw.js
+Allow: /manifest.webmanifest
+Allow: /offline.html
+Allow: /icons/
+
+# Optimizovano za PWA crawlanje
+Crawl-delay: 0.5  # Brži crawl zbog keširanja
+
+# Signaliziraj pretraživačima da je PWA instalabilna
+User-agent: Googlebot
+Allow: /
+Allow: /sw.js
+Allow: /manifest.webmanifest
+
+# Sitemap (isti kao SPA)
+Sitemap: https://tvoj-pwa-frontend.vercel.app/sitemap.xml
+
+Host: tvoj-pwa-frontend.vercel.app

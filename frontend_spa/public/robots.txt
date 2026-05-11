@@ -1,0 +1,22 @@
+# SPA VERZIJA - maksimalna indeksacija za poređenje
+User-agent: *
+Allow: /
+
+# Blokiraj samo admin/metričke rute
+Disallow: /metrics
+Disallow: /admin
+Disallow: /api/internal
+
+# Dozvoli sve ostalo (SPA treba SEO)
+Allow: /competitions
+Allow: /artworks
+Allow: /users
+
+# Crawl delay zbog sporijeg Render hostinga
+Crawl-delay: 1
+
+# Mapa sajta
+Sitemap: https://tvoj-spa-frontend.vercel.app/sitemap.xml
+
+# Bilježi statistiku za master rad
+Host: tvoj-spa-frontend.vercel.app
