@@ -1,23 +1,32 @@
 import React from 'react'
 import './HomeComp.css'
 import { useNavigate } from 'react-router-dom';
+import heroImage from '../../public/hero.jpg';  // ← DODAJ OVO (import slike)
 
 function HomeComp() {
 
   const navigate = useNavigate();
 
-
   const handleClick = () => {
-    navigate('/login'); // Navigates to the /new-page route within your app
+    navigate('/login');
   };
 
   const handleClick1 = () => {
-    navigate('#hero-actions'); // Navigates to the /new-page route within your app
+    navigate('#hero-actions');
   };
+
   return (
     <div className='hero-container'>
-      {/* Background Overlay */}
+      {/* Background Image - SADA JE <img> umjesto CSS */}
       <div className='hero-background'>
+        {/* DODAJ OVO - slika kao <img> tag */}
+        <img 
+          src={heroImage} 
+          alt="Art hero background" 
+          className='hero-image'
+          fetchpriority="high"
+          loading="eager"
+        />
         <div className='background-overlay'></div>
         <div className='floating-shapes'>
           <div className='shape shape-1'></div>
@@ -27,7 +36,7 @@ function HomeComp() {
         </div>
       </div>
       
-      {/* Main Content */}
+      {/* Ostali sadržaj ostaje POTPUNO ISTI */}
       <div className='hero-content1'>
         <div className='hero-badge'>
           <span className='badge-icon'>🎨</span>
@@ -64,11 +73,7 @@ function HomeComp() {
             Istraži Galeriju
           </button>
         </div>
-        
-      
       </div>
-      
-     
     </div>
   );
 }

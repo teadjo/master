@@ -16,10 +16,43 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
-    linear-gradient(135deg, rgba(12, 12, 12, 0.9) 0%, rgba(26, 26, 26, 0.8) 50%, rgba(45, 27, 105, 0.7) 100%),
-    url('../../public/hero.jpg') center center/cover no-repeat;
   z-index: 1;
+}
+
+.hero-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;    /* Održava proporcije i pokriva cijeli prostor */
+  object-position: center;
+  z-index: 1;
+}
+
+/* Ostali CSS ostaje POTPUNO ISTI */
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    rgba(138, 43, 226, 0.1) 0%,
+    rgba(74, 20, 140, 0.05) 50%,
+    rgba(138, 43, 226, 0.1) 100%
+  );
+  z-index: 2;  /* Povećaj na 2 (iznad slike) */
+}
+
+/* Isti z-index za ostale elemente */
+.floating-shapes {
+  z-index: 3;  /* Bilo je 3, ostaje 3 */
+}
+
+.hero-content1 {
+  z-index: 4;  /* Bilo je 4, ostaje 4 */
 }
 
 .background-overlay {
