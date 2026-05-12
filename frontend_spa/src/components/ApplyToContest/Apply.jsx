@@ -183,6 +183,7 @@ function Apply() {
                     <div className='winner-content-simple'>
                         <div className='winner-image-container'>
                             <img 
+                                loading="lazy"
                                 src={winnerData.slika ? `${API}${winnerData.slika}` : './../../../back.jpg'}
                                 alt={winnerData.naziv}
                                 className='winner-image'

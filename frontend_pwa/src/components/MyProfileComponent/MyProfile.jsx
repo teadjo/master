@@ -139,8 +139,8 @@ function MyProfile() {
             <div className='profile-avatar'>
               <div className='avatar-image'>
                 {user.profilna_slika ? 
-                  (<img src={`${API}${user.profilna_slika}`} alt="Profilna" />) :
-                  (<img src='./../../back.jpg' alt="Default" />)
+                  (<img loading="lazy" src={`${API}${user.profilna_slika}`} alt="Profilna" />) :
+                  (<img loading="lazy" src='./../../back.jpg' alt="Default" />)
                 }
               </div>
               {isCurrentUser && (

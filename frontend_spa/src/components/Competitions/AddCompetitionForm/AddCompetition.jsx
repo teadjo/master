@@ -303,6 +303,7 @@ function AddCompetition() {
                             {previewImage && (
                                 <div className="image-preview" style={{ marginTop: '15px' }}>
                                     <img 
+                                        loading="lazy"
                                         src={previewImage} 
                                         alt="Preview" 
                                         style={{ 

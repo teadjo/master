@@ -13,6 +13,7 @@ function Picture(props) {
         <div className='card-image-section'>
           <div className='image-wrapper'>
             <img
+              loading="lazy"
               className='card-image'
               alt={props.title}
               src={props.src == null ? "./../../back.jpg" : `${API}${props.src}`}

@@ -264,6 +264,7 @@ function AddPainting(props) {
                                             </div>
                                             <div className="preview-image-wrapper">
                                                 <img 
+                                                    loading="lazy"
                                                     src={previewImage} 
                                                     alt="Preview" 
                                                     className="preview-image"
