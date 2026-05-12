@@ -1,8 +1,7 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont,'Montserrat', 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif !important;
+  font-family: system-ui, -apple-system, sans-serif; 
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -13,10 +12,7 @@ body {
   src: url('/assets/fa-regular.woff2') format('woff2');
 }
 
-code {
-  font-family: 'Montserrat',source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+
 
 /* Dodaj u globalni CSS fajl */
 .toast-container {
