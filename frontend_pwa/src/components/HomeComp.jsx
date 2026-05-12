@@ -30,12 +30,7 @@ function HomeComp() {
         <div className='hero-gradient-overlay'></div>
         {/* Ovo je ljubičasti accent overlay (isti kao prije) */}
         <div className='background-overlay'></div>
-        <div className='floating-shapes'>
-          <div className='shape shape-1'></div>
-          <div className='shape shape-2'></div>
-          <div className='shape shape-3'></div>
-          <div className='shape shape-4'></div>
-        </div>
+       
       </div>
       
       {/* Ostali sadržaj ostaje isti */}

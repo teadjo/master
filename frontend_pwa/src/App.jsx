@@ -6,7 +6,7 @@ import Login from './pages/Login';
 import { lazy, Suspense } from 'react';
 const Home = lazy(() => import('./pages/Home'));
 import Footer from './components/Footer';
-import CompetitionTab from './components/Competitions/CompetitionTab';
+const CompetitionTab = lazy(() => import ('./components/Competitions/CompetitionTab'));
 import MyProfile from './components/MyProfileComponent/MyProfile';
 import ArtworksByCategory from './components/ArtworksByCategory/ArtworksByCategory';
 import AddCompetition from './components/Competitions/AddCompetitionForm/AddCompetition';

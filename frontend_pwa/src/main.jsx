@@ -69,26 +69,7 @@ if ('serviceWorker' in navigator) {
   })
 }
 
-// NOVO: Prati sync poruke od Service Workera
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.addEventListener('message', (event) => {
-    console.log('📨 Poruka od SW:', event.data);
-    
-    if (event.data && event.data.type === 'SYNC_STATUS') {
-      console.log('📊 Sync status:', event.data.tags);
-      
-      if (event.data.tags.length > 0) {
-        console.log('🔄 Sinhronizacija u toku...');
-      } else {
-        console.log('✅ Svi podaci sinhronizovani');
-      }
-    }
-    
-    if (event.data && event.data.type === 'SYNC_COMPLETE') {
-      console.log('🎉 SYNC_COMPLETE primljeno!');
-    }
-  });
-}
+
 
 performance.mark('app-start');
 

@@ -61,16 +61,6 @@
   z-index: 3;
 }
 
-.floating-shapes {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 4;  /* Povećano sa 3 na 4 */
-  pointer-events: none;
-}
-
 
 .hero-content1 {
   position: relative;
@@ -80,44 +70,7 @@
   padding: 0 2rem;
   animation: fadeInUp 1s ease-out;
 }
-.shape {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(138, 43, 226, 0.15) 0%, transparent 70%);
-  animation: float 6s ease-in-out infinite;
-}
 
-.shape-1 {
-  width: 120px;
-  height: 120px;
-  top: 20%;
-  left: 10%;
-  animation-delay: 0s;
-}
-
-.shape-2 {
-  width: 80px;
-  height: 80px;
-  top: 60%;
-  right: 15%;
-  animation-delay: 2s;
-}
-
-.shape-3 {
-  width: 60px;
-  height: 60px;
-  bottom: 30%;
-  left: 20%;
-  animation-delay: 4s;
-}
-
-.shape-4 {
-  width: 100px;
-  height: 100px;
-  top: 40%;
-  right: 25%;
-  animation-delay: 1s;
-}
 
 @keyframes float {
   0%, 100% {

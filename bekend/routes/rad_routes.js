@@ -3,6 +3,7 @@ const router = express.Router();
 const multer = require('multer'); 
 const path = require('path');
 const fs = require('fs');
+const sharp = require('sharp');
 
 const radKontroler = require("../controlers/rad_controler");
 
@@ -39,7 +40,43 @@ const upload = multer({
 });
 
 // POST za dodavanje rada sa slikom
-router.post("/", upload.single('slika'), radKontroler.insertArtwork);
+router.post("/", upload.single('slika'), async (req, res) => {
+  try {
+    const originalPath = req.file.path;
+
+    const webpFilename =
+      req.file.filename.split('.')[0] + '.webp';
+
+    const outputPath = path.join(
+      __dirname,
+      '../uploads',
+      webpFilename
+    );
+
+    await sharp(originalPath)
+      .resize({
+        width: 1200,
+        withoutEnlargement: true
+      })
+      .webp({
+        quality: 80
+      })
+      .toFile(outputPath);
+
+    fs.unlinkSync(originalPath);
+
+    req.file.filename = webpFilename;
+    req.file.path = outputPath;
+
+    await radKontroler.insertArtwork(req, res);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: 'Image optimization failed'
+    });
+  }
+});
 
 
 router

@@ -59,8 +59,44 @@ router
     .get(korisnicikontroler.getUserByType);
 router
     .route("/add/")
-    .post(upload.single('slika'), korisnicikontroler.insertUser);
-
+    .post(upload.single('slika'), async (req, res) => {
+      try {
+        const originalPath = req.file.path;
+    
+        const webpFilename =
+          req.file.filename.split('.')[0] + '.webp';
+    
+        const outputPath = path.join(
+          __dirname,
+          '../uploads',
+          webpFilename
+        );
+    
+        await sharp(originalPath)
+          .resize({
+            width: 1200,
+            withoutEnlargement: true
+          })
+          .webp({
+            quality: 80
+          })
+          .toFile(outputPath);
+    
+        fs.unlinkSync(originalPath);
+    
+        req.file.filename = webpFilename;
+        req.file.path = outputPath;
+    
+        await korisnicikontroler.insertUser(req, res);
+    
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({
+          error: 'Image optimization failed'
+        });
+      }
+    });
+    
 
 
 module.exports = router;

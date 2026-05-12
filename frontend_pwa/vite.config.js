@@ -16,7 +16,9 @@ export default defineConfig(() => ({
       },
       navigateFallback: '/index.html',
       navigateFallbackDenylist: [/^\/api/],
-      includeAssets: ['**/*'],
+      includeAssets: ['favicon.svg',
+                      'icons/192.png',
+                      'icons/512.png'],
       manifest: {
         name: 'Art Competition App',
         short_name: 'ArtApp',
