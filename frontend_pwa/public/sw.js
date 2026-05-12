@@ -122,24 +122,6 @@ registerRoute(
 
   new StaleWhileRevalidate({
     cacheName: 'static-resources',
-    plugins: [
-  {
-    cachedResponseWillBeUsed: async ({ cachedResponse }) => {
-
-      const clients = await self.clients.matchAll();
-
-      clients.forEach(client => {
-        client.postMessage({
-          type: cachedResponse
-            ? 'CACHE_HIT'
-            : 'CACHE_MISS'
-        });
-      });
-
-      return cachedResponse;
-    }
-  }
-]
   })
 );
 
@@ -159,35 +141,7 @@ registerRoute(
     new StaleWhileRevalidate({
   cacheName: 'api-cache',
 
-  plugins: [
-    {
-      cachedResponseWillBeUsed: async ({ cachedResponse }) => {
-        if (cachedResponse) {
-          sendMetricToClient({
-            type: 'CACHE_HIT'
-          });
-        }
-
-        return cachedResponse;
-      }
-    },
-    {
-    cachedResponseWillBeUsed: async ({ cachedResponse }) => {
-
-      const clients = await self.clients.matchAll();
-
-      clients.forEach(client => {
-        client.postMessage({
-          type: cachedResponse
-            ? 'CACHE_HIT'
-            : 'CACHE_MISS'
-        });
-      });
-
-      return cachedResponse;
-    }
-  }
-]
+ 
   })
 );
 
