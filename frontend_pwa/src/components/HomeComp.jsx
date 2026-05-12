@@ -1,7 +1,7 @@
 import React from 'react'
 import './HomeComp.css'
 import { useNavigate } from 'react-router-dom';
-import heroImage from '../../public/hero.jpg';
+import heroImage from '../../public/hero.webp';
 
 function HomeComp() {
 

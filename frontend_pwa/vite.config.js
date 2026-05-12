@@ -18,7 +18,8 @@ export default defineConfig(() => ({
       navigateFallbackDenylist: [/^\/api/],
       includeAssets: ['favicon.svg',
                       'icons/192.png',
-                      'icons/512.png'],
+                      'icons/512.png',
+                      'hero.webp'],
       manifest: {
         name: 'Art Competition App',
         short_name: 'ArtApp',
