@@ -20,7 +20,6 @@ const NotFound = lazy(() => import('./components/NotFound'));
 const AllUsers = lazy(() => import('./components/AllUsers'));
 const SyncStatus = lazy(() => import('./components/SyncStatus'));
 const InstallPrompt = lazy(() => import('./components/InstallPrompt'));
-const MetricsDashboard = lazy(() => import('./MetricsDashboard'));
 
 // HOOKOVI (ne mogu biti lazy, moraju biti normalno uvezeni)
 import { useOnlineStatus } from './hooks/useOnlineStatus';
@@ -81,7 +80,6 @@ function AppContent() {
           <Route path='/artwork/:artID/profile' element={<ViewArtwork />} />
           <Route path='/addCategory/' element={<AddCategory />} />
           <Route path='/users/' element={<AllUsers />} />
-          <Route path='/metrics' element={<MetricsDashboard />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </Suspense>
