@@ -1,30 +1,36 @@
 import React from 'react';
 import './App.css';
-import Navbar from './components/Navbar';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
-import Login from './pages/Login';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
+
+// LAZY UČITAVANJE - sve osim osnovnih komponenti
+const Navbar = lazy(() => import('./components/Navbar'));
+const Login = lazy(() => import('./pages/Login'));
 const Home = lazy(() => import('./pages/Home'));
-import Footer from './components/Footer';
-const CompetitionTab = lazy(() => import ('./components/Competitions/CompetitionTab'));
-import MyProfile from './components/MyProfileComponent/MyProfile';
-import ArtworksByCategory from './components/ArtworksByCategory/ArtworksByCategory';
-import AddCompetition from './components/Competitions/AddCompetitionForm/AddCompetition';
-import Apply from './components/ApplyToContest/Apply';
-import ViewArtwork from './components/ViewArtwork/ViewArtwork';
-import ViewForVoting from './components/ViewArtwork/ViewForVoting';
-import AddCategory from './components/AddCategory/AddCategory';
-import NotFound from './components/NotFound';
-import AllUsers from './components/AllUsers';
+const Footer = lazy(() => import('./components/Footer'));
+const CompetitionTab = lazy(() => import('./components/Competitions/CompetitionTab'));
+const MyProfile = lazy(() => import('./components/MyProfileComponent/MyProfile'));
+const ArtworksByCategory = lazy(() => import('./components/ArtworksByCategory/ArtworksByCategory'));
+const AddCompetition = lazy(() => import('./components/Competitions/AddCompetitionForm/AddCompetition'));
+const Apply = lazy(() => import('./components/ApplyToContest/Apply'));
+const ViewArtwork = lazy(() => import('./components/ViewArtwork/ViewArtwork'));
+const ViewForVoting = lazy(() => import('./components/ViewArtwork/ViewForVoting'));
+const AddCategory = lazy(() => import('./components/AddCategory/AddCategory'));
+const NotFound = lazy(() => import('./components/NotFound'));
+const AllUsers = lazy(() => import('./components/AllUsers'));
+const SyncStatus = lazy(() => import('./components/SyncStatus'));
+const InstallPrompt = lazy(() => import('./components/InstallPrompt'));
+const MetricsDashboard = lazy(() => import('./MetricsDashboard'));
+
+// HOOKOVI (ne mogu biti lazy, moraju biti normalno uvezeni)
 import { useOnlineStatus } from './hooks/useOnlineStatus';
-import { useEffect, useState } from 'react';
-import ScrollToTop from './ScrollToTop';
 import { SyncNotificationProvider } from './contexts/SyncNotificationContext';
-import SyncStatus from './components/SyncStatus';
-import InstallPrompt from './components/InstallPrompt';
 import { checkStorageQuota, requestPersistentStorage } from './utils/storage';
 import { useNetworkStatus } from './hooks/useNetworkStatus';
-import MetricsDashboard from './MetricsDashboard';
+import ScrollToTop from './ScrollToTop';
+
+// OSTALO
+import { checkStorageQuota, requestPersistentStorage } from './utils/storage';
 
 
 function NetworkInfo() {
