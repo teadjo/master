@@ -40,7 +40,6 @@ self.addEventListener('activate', (event) => {
           );
 
           if (!isValid && !isWorkbox) {
-            console.log('🗑️ Brišem stari cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -52,12 +51,6 @@ self.addEventListener('activate', (event) => {
 cleanupOutdatedCaches();
 self.__WB_DISABLE_DEV_LOGS = true;
 precacheAndRoute(self.__WB_MANIFEST);
-
-console.log('✅ Custom SW učitan');
-
-
-
-
 
 /* =========================================================
    BACKEND SLIKE
@@ -115,15 +108,15 @@ registerRoute(
    JS + CSS
 ========================================================= */
 
-registerRoute(
-  ({ request }) =>
-    request.destination === 'script' ||
-    request.destination === 'style',
+// registerRoute(
+//   ({ request }) =>
+//     request.destination === 'script' ||
+//     request.destination === 'style',
 
-  new StaleWhileRevalidate({
-    cacheName: 'static-resources',
-  })
-);
+//   new StaleWhileRevalidate({
+//     cacheName: 'static-resources',
+//   })
+// );
 
 
 
@@ -140,7 +133,12 @@ registerRoute(
 
     new StaleWhileRevalidate({
   cacheName: 'api-cache',
-
+      plugins: [
+  new ExpirationPlugin({
+    maxEntries: 50,
+    maxAgeSeconds: 60 * 5
+  })
+]
  
   })
 );
@@ -177,7 +175,10 @@ registerRoute(
             })
           );
         }
-      }
+      },   new ExpirationPlugin({
+    maxEntries: 20,
+    maxAgeSeconds: 60 * 60 * 24
+  }),
     ]
   })
 );
@@ -194,7 +195,6 @@ const postBgSync = new BackgroundSyncPlugin('postQueue', {
   maxRetentionTime: 24 * 60,
 
   onSync: async ({ queue }) => {
-    console.log('🔄 Replay queued requests...');
 
     let entry;
 
@@ -208,7 +208,6 @@ const postBgSync = new BackgroundSyncPlugin('postQueue', {
           throw new Error('Request failed');
         }
 
-        console.log('✅ Request replayovan');
 
         sendMetricToClient({
           type: 'SYNC_SUCCESS'
@@ -234,8 +233,6 @@ const postBgSync = new BackgroundSyncPlugin('postQueue', {
         });
 
       } catch (error) {
-
-        console.error('❌ Replay failed:', error);
 
         const clients = await self.clients.matchAll();
 
@@ -305,7 +302,6 @@ registerRoute(
 ========================================================= */
 
 self.addEventListener('push', (event) => {
-  console.log('📨 Push received');
 
   let data = {
     title: 'Art Competition',
@@ -392,8 +388,6 @@ self.addEventListener('notificationclick', (event) => {
     })
   );
 });
-
-console.log('✅ SW READY');
 
 /* =========================================================
    METRICS COMMUNICATION
