@@ -5,6 +5,17 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig(() => ({
   plugins: [
     react(),
+     criticalCSS({
+      // Ovo će izdvojiti CSS potreban za prvi prikaz
+      inline: true,  // inline-uje kritični CSS u HTML
+      minify: true,
+      dimensions: [
+        {
+          width: 1920,
+          height: 1080,
+        },
+      ],
+    }),
     VitePWA({
       registerType: 'autoUpdate',
       // KLJUČNO: Koristi injectManifest za custom SW
