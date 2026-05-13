@@ -131,18 +131,18 @@ registerRoute(
     url.origin === 'https://master-4-xbzp.onrender.com' &&
     request.method === 'GET',
 
-    new StaleWhileRevalidate({
-  cacheName: 'api-cache',
-      plugins: [
-  new ExpirationPlugin({
-    maxEntries: 50,
-    maxAgeSeconds: 60 * 5
-  })
-]
- 
+    new NetworkFirst({
+    cacheName: 'api-cache',
+    networkTimeoutSeconds: 5,
+
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 50,
+        maxAgeSeconds: 60 * 5
+      })
+    ]
   })
 );
-
 
 
 
