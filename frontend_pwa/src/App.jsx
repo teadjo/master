@@ -29,9 +29,6 @@ import { checkStorageQuota, requestPersistentStorage } from './utils/storage';
 import { useNetworkStatus } from './hooks/useNetworkStatus';
 import ScrollToTop from './ScrollToTop';
 
-// OSTALO
-import { checkStorageQuota, requestPersistentStorage } from './utils/storage';
-
 
 function NetworkInfo() {
   const network = useNetworkStatus();
