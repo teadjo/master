@@ -13,7 +13,6 @@
     "@fortawesome/fontawesome-free": "^7.2.0",
     "axios": "^1.15.2",
     "fortawesome": "^0.0.1-security",
-    "puppeteer-core": "^24.43.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-icons": "^5.6.0",
@@ -36,7 +35,6 @@
     "eslint": "^10.2.1",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
-    "globals": "^17.5.0",
-    "vite-plugin-critical-css": "^1.0.0"
+    "globals": "^17.5.0"
   }
 }
