@@ -351,10 +351,11 @@ self.addEventListener('push', (event) => {
   //     type: 'PUSH_RECEIVED'
   //   });
   // });
-
-  event.waitUntil(
-    self.registration.showNotification(data.title, options)
-  );
+  if (Notification.permission === 'granted') {
+    event.waitUntil(
+      self.registration.showNotification(data.title, options)
+    );
+}
 });
 
 
