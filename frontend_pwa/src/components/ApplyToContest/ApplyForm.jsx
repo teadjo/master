@@ -33,8 +33,11 @@ function ApplyForm({ closeForm }) {
     useEffect(() => {
 
         if ('Notification' in window) {
-            Notification.requestPermission();
-            }
+            Notification.requestPermission()
+                .then(permission => {
+                    console.log('Notification permission:', permission);
+                });
+}
         const fetchComp = async () => {
             if (!userID || userID === 'null' || userID === 'undefined') {
             showToast('Morate biti ulogovani da biste se prijavili', 'error');

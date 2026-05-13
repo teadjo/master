@@ -156,7 +156,7 @@ registerRoute(
 
   new NetworkFirst({
     cacheName: 'pages',
-    networkTimeoutSeconds: 3,
+    networkTimeoutSeconds: 5,
 
     plugins: [
       {
