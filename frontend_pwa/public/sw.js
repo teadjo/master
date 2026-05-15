@@ -27,34 +27,56 @@ clientsClaim();
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-
-          const validCaches = [
-            'api-cache',
-            'image-cache',
-            'backend-images',
-            'static-resources',
-            'pages'
-          ];
-
-          const isWorkboxPrecache = cacheName.startsWith('workbox-precache-v2-');
-          
-          // Tačno poređenje za tvoje keševe
-          const isCustomCache = validCaches.includes(cacheName);
-          
-          // Ako nije ni tvoj custom keš ni trenutni workbox precache - obriši
-          if (!isCustomCache && !isWorkboxPrecache) {
-            console.log('Brišem stari keš:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
+    caches.keys().then(async (cacheNames) => {
+      // Definiši DOZVOLJENE keševe
+      const allowedCaches = [
+        'api-cache',
+        'image-cache',
+        'backend-images',
+        'static-resources',
+        'pages'
+      ];
+      
+      // Pronađi TRENUTNI workbox precache keš (samo jedan!)
+      const currentPrecache = cacheNames.find(name => 
+        name.startsWith('workbox-precache-v2-')
       );
+      
+      console.log('Trenutni precache:', currentPrecache);
+      console.log('Svi keševi:', cacheNames);
+      
+      // Obriši SVE osim dozvoljenih i trenutnog precache-a
+      const deletePromises = cacheNames.map(async (cacheName) => {
+        const isAllowed = allowedCaches.includes(cacheName);
+        const isCurrentPrecache = cacheName === currentPrecache;
+        
+        if (!isAllowed && !isCurrentPrecache) {
+          console.log('Brišem keš:', cacheName);
+          await caches.delete(cacheName);
+          console.log('Obrisan keš:', cacheName);
+        }
+      });
+      
+      await Promise.all(deletePromises);
+      
+      // Dodatna provera: ako ima više workbox precache keševa
+      const precacheCaches = cacheNames.filter(name => 
+        name.startsWith('workbox-precache-v2-')
+      );
+      
+      if (precacheCaches.length > 1) {
+        console.warn('Pronađeno više precache keševa:', precacheCaches);
+        // Obriši sve osim najnovijeg
+        const oldestPrecache = precacheCaches.sort()[0];
+        for (const cache of precacheCaches) {
+          if (cache !== oldestPrecache) {
+            await caches.delete(cache);
+          }
+        }
+      }
     })
   );
 });
-
 
 
 /* =========================================================
