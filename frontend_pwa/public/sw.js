@@ -16,6 +16,28 @@ import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 
 import { BackgroundSyncPlugin } from 'workbox-background-sync';
 
+
+// sw.js - na vrhu, ODMAH nakon import-ova
+self.addEventListener('install', (event) => {
+  console.log('🔄 SW instalacija...');
+  
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      const deletePromises = cacheNames.map(cacheName => {
+        console.log('🗑️ Install cleanup:', cacheName);
+        return caches.delete(cacheName);
+      });
+      return Promise.all(deletePromises);
+    }).then(() => {
+      // ✅ Force aktivacija
+      return self.skipWaiting();
+    })
+  );
+});
+
+// Tvoj postojeći activate kod ostaje isti...
+
+
 self.skipWaiting();
 clientsClaim();
 
