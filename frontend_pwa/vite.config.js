@@ -5,7 +5,7 @@ export default defineConfig(() => ({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       // KLJUČNO: Koristi injectManifest za custom SW
       strategies: 'injectManifest',
       srcDir: 'public',
@@ -64,7 +64,6 @@ export default defineConfig(() => ({
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api/],
         globPatterns: ['**/*.{js,css,html,png,svg,ico,json,woff2,jpg}'],
-        // NE MIJENJAJ runtimeCaching - ovo će biti u sw.js
       }
     })
   ]
