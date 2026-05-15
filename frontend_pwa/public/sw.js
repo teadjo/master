@@ -16,80 +16,39 @@ import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 
 import { BackgroundSyncPlugin } from 'workbox-background-sync';
 
-
-// // sw.js - na vrhu, ODMAH nakon import-ova
-// self.addEventListener('install', (event) => {
-//   console.log('🔄 SW instalacija...');
-  
-//   event.waitUntil(
-//     caches.keys().then(cacheNames => {
-//       const deletePromises = cacheNames.map(cacheName => {
-//         console.log('🗑️ Install cleanup:', cacheName);
-//         return caches.delete(cacheName);
-//       });
-//       return Promise.all(deletePromises);
-//     }).then(() => {
-//       // ✅ Force aktivacija
-//       return self.skipWaiting();
-//     })
-//   );
-// });
-
-// Tvoj postojeći activate kod ostaje isti...
-
-
 self.skipWaiting();
 clientsClaim();
 
-self.__WB_DISABLE_DEV_LOGS = false;
-// ✅ ISPRAVAN REDOSLIJED: precache se registruje PRIJE cleanupOutdatedCaches
+self.__WB_DISABLE_DEV_LOGS = true;
 precacheAndRoute(self.__WB_MANIFEST);
-// ✅ cleanupOutdatedCaches() se poziva ODMAH NAKON precacheAndRoute// jer sada Workbox interno zna koji su manifest hashevi validni
 cleanupOutdatedCaches();
-
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    (async () => {
-      const cacheNames = await caches.keys();
-      console.log('📦 Svi keševi nakon aktivacije:', cacheNames);
-      
-      // Workbox će se sam pobrinuti za precache keševe
-      // Ne diraj ništa osim ako nije tvoj custom keš sa pogrešnim imenom
-      const validCustomCaches = [
-        'api-cache',
-        'image-cache',
-        'backend-images',
-        'static-resources',
-        'pages'
-      ];
-      
-      const cachesToDelete = [];
-      
-      for (const cacheName of cacheNames) {
-        // Ako je workbox precache - pusti Workbox da upravlja
-        if (cacheName.startsWith('workbox-precache')) {
-          continue;
-        }
-        
-        // Ako je validan custom keš - zadrži
-        if (validCustomCaches.includes(cacheName)) {
-          continue;
-        }
-        
-        // Sve ostalo - obriši
-        cachesToDelete.push(cacheName);
-      }
-      
-      if (cachesToDelete.length > 0) {
-        console.log('🗑️ Brišem nepoznate keševe:', cachesToDelete);
-        await Promise.all(
-          cachesToDelete.map(name => caches.delete(name))
-        );
-      }
-      
-      console.log('✅ Aktivacija završena. Keševi:', await caches.keys());
-    })()
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+
+          const validCaches = [
+            'api-cache',
+            'image-cache',
+            'backend-images',
+            'static-resources',
+            'pages'
+          ];
+
+          const isWorkbox = cacheName.startsWith('workbox-precache');
+
+          const isValid = validCaches.some(name =>
+            cacheName.includes(name)
+          );
+
+          if (!isValid && !isWorkbox) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
   );
 });
 
@@ -109,8 +68,7 @@ registerRoute(
     plugins: [
       new ExpirationPlugin({
         maxEntries: 200,
-        maxAgeSeconds: 60 * 60 * 24 * 30,
-        purgeOnQuotaError: true
+        maxAgeSeconds: 60 * 60 * 24 * 30
       }),
 
       new CacheableResponsePlugin({
@@ -129,8 +87,7 @@ registerRoute(
 ========================================================= */
 
 registerRoute(
-  ({ url, request }) => request.destination === 'image' && 
-  url.origin !== 'https://master-4-xbzp.onrender.com',
+  ({ request }) => request.destination === 'image',
 
   new CacheFirst({
     cacheName: 'image-cache',
@@ -138,11 +95,7 @@ registerRoute(
     plugins: [
       new ExpirationPlugin({
         maxEntries: 100,
-        maxAgeSeconds: 60 * 60 * 24 * 7,
-        purgeOnQuotaError: true
-      }),
-      new CacheableResponsePlugin({        
-        statuses: [0, 200]      
+        maxAgeSeconds: 60 * 60 * 24 * 7
       })
     ]
   })
@@ -177,7 +130,6 @@ registerRoute(
 registerRoute(
   ({ url, request }) =>
     url.origin === 'https://master-4-xbzp.onrender.com' &&
-    !url.pathname.startsWith('/uploads') &&
     request.method === 'GET',
 
     new NetworkFirst({
@@ -188,9 +140,6 @@ registerRoute(
       new ExpirationPlugin({
         maxEntries: 50,
         maxAgeSeconds: 60 * 5
-      }),
-      new CacheableResponsePlugin({        
-        statuses: [0, 200]      
       })
     ]
   })
@@ -211,10 +160,6 @@ registerRoute(
     networkTimeoutSeconds: 5,
 
     plugins: [
-      new ExpirationPlugin({        
-        maxEntries: 20,        
-        maxAgeSeconds: 60 * 60 * 24      
-      }),
       {
         handlerDidError: async () => {
           const cache = await caches.open('pages');
@@ -231,7 +176,10 @@ registerRoute(
             })
           );
         }
-      }
+      },   new ExpirationPlugin({
+    maxEntries: 20,
+    maxAgeSeconds: 60 * 60 * 24
+  }),
     ]
   })
 );
@@ -250,9 +198,11 @@ const postBgSync = new BackgroundSyncPlugin('postQueue', {
   onSync: async ({ queue }) => {
 
     let entry;
+
     while ((entry = await queue.shiftRequest())) {
       try {
         const request = entry.request.clone();
+
         const response = await fetch(request);
 
         if (!response.ok) {
@@ -315,9 +265,15 @@ registerRoute(
     url.origin === 'https://master-4-xbzp.onrender.com' &&
     request.method === 'POST',
 
-  new NetworkOnly({plugins: [postBgSync]}),
+  new NetworkOnly({
+    plugins: [postBgSync]
+  }),
+
   'POST'
 );
+
+
+
 
 
 /* =========================================================
@@ -396,9 +352,11 @@ self.addEventListener('push', (event) => {
   //     type: 'PUSH_RECEIVED'
   //   });
   // });
-  event.waitUntil(    
-    self.registration.showNotification(data.title, options)  
-  );
+  if (Notification.permission === 'granted') {
+    event.waitUntil(
+      self.registration.showNotification(data.title, options)
+    );
+}
 });
 
 
@@ -414,10 +372,11 @@ self.addEventListener('notificationclick', (event) => {
   const urlToOpen = event.notification?.data?.url || '/';
 
   event.waitUntil(
-    self.clients.matchAll({
+    clients.matchAll({
       type: 'window',
       includeUncontrolled: true
     }).then((clientList) => {
+
       for (const client of clientList) {
         if ('focus' in client) {
           client.navigate(urlToOpen);
@@ -437,7 +396,7 @@ self.addEventListener('notificationclick', (event) => {
 ========================================================= */
 
 function sendMetricToClient(data) {
-  self.clients.matchAll({
+  clients.matchAll({
     includeUncontrolled: true,
     type: 'window'
   }).then((clientList) => {
