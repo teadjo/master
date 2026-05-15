@@ -48,38 +48,50 @@ precacheAndRoute(self.__WB_MANIFEST);
 cleanupOutdatedCaches();
 
 
-const VALID_CACHE_NAMES = [  'api-cache',  'image-cache',  'backend-images',  'static-resources',  'pages'];
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     (async () => {
       const cacheNames = await caches.keys();
-
-      const workboxCaches = cacheNames.filter(name =>        
-        name.startsWith('workbox-precache')      
-      );
-      const workboxToDelete = workboxCaches.slice(0, -1);
-      const deletePromises = cacheNames  
-        .filter((cacheName) => {
-            const isValidCustomCache = VALID_CACHE_NAMES.some(name =>
-                cacheName === name // EGZAKTNO poklapanje, ne includes()!         
-             );
-             const isCurrentWorkbox = workboxCaches[workboxCaches.length - 1] === cacheName;
-             const isOldWorkbox = workboxToDelete.includes(cacheName);
-             if (isOldWorkbox) return true;
-             if (isCurrentWorkbox) return false;
-             if (isValidCustomCache) return false;
-            return true;
-          })
-          .map(cacheName => {
-            console.log('[SW] Brisem stari kes:', cacheName);
-            return caches.delete(cacheName)
-          });
-
-          await Promise.all(deletePromises);
-
-        })()
-      );
-    });
+      console.log('📦 Svi keševi nakon aktivacije:', cacheNames);
+      
+      // Workbox će se sam pobrinuti za precache keševe
+      // Ne diraj ništa osim ako nije tvoj custom keš sa pogrešnim imenom
+      const validCustomCaches = [
+        'api-cache',
+        'image-cache',
+        'backend-images',
+        'static-resources',
+        'pages'
+      ];
+      
+      const cachesToDelete = [];
+      
+      for (const cacheName of cacheNames) {
+        // Ako je workbox precache - pusti Workbox da upravlja
+        if (cacheName.startsWith('workbox-precache')) {
+          continue;
+        }
+        
+        // Ako je validan custom keš - zadrži
+        if (validCustomCaches.includes(cacheName)) {
+          continue;
+        }
+        
+        // Sve ostalo - obriši
+        cachesToDelete.push(cacheName);
+      }
+      
+      if (cachesToDelete.length > 0) {
+        console.log('🗑️ Brišem nepoznate keševe:', cachesToDelete);
+        await Promise.all(
+          cachesToDelete.map(name => caches.delete(name))
+        );
+      }
+      
+      console.log('✅ Aktivacija završena. Keševi:', await caches.keys());
+    })()
+  );
+});
 
 
 /* =========================================================
