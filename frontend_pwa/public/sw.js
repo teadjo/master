@@ -19,32 +19,46 @@ import { BackgroundSyncPlugin } from 'workbox-background-sync';
 self.skipWaiting();
 clientsClaim();
 
+self.__WB_DISABLE_DEV_LOGS = true;
+// ✅ ISPRAVAN REDOSLIJED: precache se registruje PRIJE cleanupOutdatedCaches
+precacheAndRoute(self.__WB_MANIFEST);
+// ✅ cleanupOutdatedCaches() se poziva ODMAH NAKON precacheAndRoute// jer sada Workbox interno zna koji su manifest hashevi validni
+cleanupOutdatedCaches();
+
+
+const VALID_CACHE_NAMES = [  'api-cache',  'image-cache',  'backend-images',  'static-resources',  'pages'];
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
+    (async () => {
+      const cacheNames = await caches.keys();
 
-          const validCaches = [
-            'api-cache',
-            'image-cache',
-            'backend-images',
-            'static-resources',
-            'pages'
-          ];
-
-          if(!validCaches.includes(cacheName)){
-            return caches.delete(cacheName);
-         }
-        })
+      const workboxCaches = cacheNames.filter(name =>        
+        name.startsWith('workbox-precache')      
       );
-    })
-  );
-});
+      const workboxToDelete = workboxCaches.slice(0, -1);
+      const deletePromises = cacheNames  
+        .filter((cacheName) => {
+            const isValidCustomCache = VALID_CACHE_NAMES.some(name =>
+                cacheName === name // EGZAKTNO poklapanje, ne includes()!         
+             );
+             const isCurrentWorkbox = workboxCaches[workboxCaches.length - 1] === cacheName;
+             const isOldWorkbox = workboxToDelete.includes(cacheName);
+             if (isOldWorkbox) return true;
+             if (isCurrentWorkbox) return false;
+             if (isValidCustomCache) return false;
+            return true;
+          })
+          .map(cacheName => {
+            console.log('[SW] Brisem stari kes:', cacheName);
+            return caches.delete(cacheName)
+          });
 
-cleanupOutdatedCaches();
-self.__WB_DISABLE_DEV_LOGS = true;
-precacheAndRoute(self.__WB_MANIFEST);
+          await Promise.all(deletePromises);
+
+        })()
+      );
+    });
+
 
 /* =========================================================
    BACKEND SLIKE
@@ -61,7 +75,8 @@ registerRoute(
     plugins: [
       new ExpirationPlugin({
         maxEntries: 200,
-        maxAgeSeconds: 60 * 60 * 24 * 30
+        maxAgeSeconds: 60 * 60 * 24 * 30,
+        purgeOnQuotaError: true
       }),
 
       new CacheableResponsePlugin({
@@ -80,7 +95,8 @@ registerRoute(
 ========================================================= */
 
 registerRoute(
-  ({ request }) => request.destination === 'image',
+  ({ request }) => request.destination === 'image' && 
+  url.origin !== 'https://master-4-xbzp.onrender.com',
 
   new CacheFirst({
     cacheName: 'image-cache',
@@ -88,7 +104,11 @@ registerRoute(
     plugins: [
       new ExpirationPlugin({
         maxEntries: 100,
-        maxAgeSeconds: 60 * 60 * 24 * 7
+        maxAgeSeconds: 60 * 60 * 24 * 7,
+        purgeOnQuotaError: true
+      }),
+      new CacheableResponsePlugin({        
+        statuses: [0, 200]      
       })
     ]
   })
@@ -123,6 +143,7 @@ registerRoute(
 registerRoute(
   ({ url, request }) =>
     url.origin === 'https://master-4-xbzp.onrender.com' &&
+    !url.pathname.startsWith('/uploads') &&
     request.method === 'GET',
 
     new NetworkFirst({
@@ -133,6 +154,9 @@ registerRoute(
       new ExpirationPlugin({
         maxEntries: 50,
         maxAgeSeconds: 60 * 5
+      }),
+      new CacheableResponsePlugin({        
+        statuses: [0, 200]      
       })
     ]
   })
@@ -153,6 +177,10 @@ registerRoute(
     networkTimeoutSeconds: 5,
 
     plugins: [
+      new ExpirationPlugin({        
+        maxEntries: 20,        
+        maxAgeSeconds: 60 * 60 * 24      
+      }),
       {
         handlerDidError: async () => {
           const cache = await caches.open('pages');
@@ -169,10 +197,7 @@ registerRoute(
             })
           );
         }
-      },   new ExpirationPlugin({
-    maxEntries: 20,
-    maxAgeSeconds: 60 * 60 * 24
-  }),
+      }
     ]
   })
 );
@@ -191,11 +216,9 @@ const postBgSync = new BackgroundSyncPlugin('postQueue', {
   onSync: async ({ queue }) => {
 
     let entry;
-
     while ((entry = await queue.shiftRequest())) {
       try {
         const request = entry.request.clone();
-
         const response = await fetch(request);
 
         if (!response.ok) {
@@ -258,15 +281,9 @@ registerRoute(
     url.origin === 'https://master-4-xbzp.onrender.com' &&
     request.method === 'POST',
 
-  new NetworkOnly({
-    plugins: [postBgSync]
-  }),
-
+  new NetworkOnly({plugins: [postBgSync]}),
   'POST'
 );
-
-
-
 
 
 /* =========================================================
@@ -345,11 +362,9 @@ self.addEventListener('push', (event) => {
   //     type: 'PUSH_RECEIVED'
   //   });
   // });
-  if (Notification.permission === 'granted') {
-    event.waitUntil(
-      self.registration.showNotification(data.title, options)
-    );
-}
+  event.waitUntil(    
+    self.registration.showNotification(data.title, options)  
+  );
 });
 
 
@@ -365,11 +380,10 @@ self.addEventListener('notificationclick', (event) => {
   const urlToOpen = event.notification?.data?.url || '/';
 
   event.waitUntil(
-    clients.matchAll({
+    self.clients.matchAll({
       type: 'window',
       includeUncontrolled: true
     }).then((clientList) => {
-
       for (const client of clientList) {
         if ('focus' in client) {
           client.navigate(urlToOpen);
@@ -389,7 +403,7 @@ self.addEventListener('notificationclick', (event) => {
 ========================================================= */
 
 function sendMetricToClient(data) {
-  clients.matchAll({
+  self.clients.matchAll({
     includeUncontrolled: true,
     type: 'window'
   }).then((clientList) => {
