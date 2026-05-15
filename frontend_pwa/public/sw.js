@@ -16,6 +16,12 @@ import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 
 import { BackgroundSyncPlugin } from 'workbox-background-sync';
 
+cleanupOutdatedCaches();
+self.__WB_DISABLE_DEV_LOGS = true;
+
+// Precache sa manifestom
+precacheAndRoute(self.__WB_MANIFEST);
+
 self.skipWaiting();
 clientsClaim();
 
@@ -49,9 +55,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-cleanupOutdatedCaches();
-self.__WB_DISABLE_DEV_LOGS = true;
-precacheAndRoute(self.__WB_MANIFEST);
+
 
 /* =========================================================
    BACKEND SLIKE
@@ -345,13 +349,6 @@ self.addEventListener('push', (event) => {
     ]
   };
 
-  // const clients = await self.clients.matchAll();
-
-  // clients.forEach(client => {
-  //   client.postMessage({
-  //     type: 'PUSH_RECEIVED'
-  //   });
-  // });
   if (Notification.permission === 'granted') {
     event.waitUntil(
       self.registration.showNotification(data.title, options)
