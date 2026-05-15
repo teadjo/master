@@ -129,7 +129,7 @@ registerRoute(
 ========================================================= */
 
 registerRoute(
-  ({ request }) => request.destination === 'image' && 
+  ({ url, request }) => request.destination === 'image' && 
   url.origin !== 'https://master-4-xbzp.onrender.com',
 
   new CacheFirst({
