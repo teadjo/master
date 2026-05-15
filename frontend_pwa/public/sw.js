@@ -16,73 +16,36 @@ import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 
 import { BackgroundSyncPlugin } from 'workbox-background-sync';
 
-cleanupOutdatedCaches();
-self.__WB_DISABLE_DEV_LOGS = true;
-
-// Precache sa manifestom
-precacheAndRoute(self.__WB_MANIFEST);
-
 self.skipWaiting();
 clientsClaim();
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    (async () => {
-      const allCaches = await caches.keys();
-      
-      // Definiši validne custom keševe
-      const validCaches = [
-        'api-cache',
-        'image-cache',
-        'backend-images',
-        'static-resources',
-        'pages'
-      ];
-      
-      // Pronađi SVE workbox precache keševe
-      const precacheCaches = allCaches.filter(name => 
-        name.startsWith('workbox-precache')
-      );
-      
-      console.log('Svi keševi:', allCaches);
-      console.log('Precache keševi:', precacheCaches);
-      
-      // Ako ima više od jednog precache keša, zadrži samo najnoviji
-      if (precacheCaches.length > 1) {
-        // Najnoviji keš je poslednji kreiran (pretpostavljamo)
-        const newestPrecache = precacheCaches[precacheCaches.length - 1];
-        
-        console.log('Zadržavam najnoviji:', newestPrecache);
-        
-        // Obriši sve starije precache keševe
-        for (const cache of precacheCaches) {
-          if (cache !== newestPrecache) {
-            console.log('Brišem stari precache:', cache);
-            await caches.delete(cache);
-          }
-        }
-      }
-      
-      // Obriši ostale nevalidne keševe
-      const remainingCaches = await caches.keys();
-      await Promise.all(
-        remainingCaches.map(async (cacheName) => {
-          const isCustom = validCaches.includes(cacheName);
-          const isPrecache = cacheName.startsWith('workbox-precache');
-          const isWebpack = cacheName.includes('webpack'); // Ako koristiš Webpack
-          
-          // Zadrži: custom keševe, precache keševe, webpack keševe
-          if (!isCustom && !isPrecache && !isWebpack) {
-            console.log('Brišem nepoznati keš:', cacheName);
-            await caches.delete(cacheName);
-          }
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+
+          const validCaches = [
+            'api-cache',
+            'image-cache',
+            'backend-images',
+            'static-resources',
+            'pages'
+          ];
+
+          if(!validCaches.includes(cacheName)){
+            return caches.delete(cacheName);
+         }
         })
       );
-      
-      console.log('Finalni keševi:', await caches.keys());
-    })()
+    })
   );
 });
+
+cleanupOutdatedCaches();
+self.__WB_DISABLE_DEV_LOGS = true;
+precacheAndRoute(self.__WB_MANIFEST);
+
 /* =========================================================
    BACKEND SLIKE
 ========================================================= */
@@ -375,6 +338,13 @@ self.addEventListener('push', (event) => {
     ]
   };
 
+  // const clients = await self.clients.matchAll();
+
+  // clients.forEach(client => {
+  //   client.postMessage({
+  //     type: 'PUSH_RECEIVED'
+  //   });
+  // });
   if (Notification.permission === 'granted') {
     event.waitUntil(
       self.registration.showNotification(data.title, options)
