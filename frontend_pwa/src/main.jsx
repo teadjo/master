@@ -42,18 +42,18 @@ if ('serviceWorker' in navigator) {
       onRegistered(registration) {
         // NOVO: Prati background sync status
         console.log('✅ SW registrovan, provjeravam sync...');
-         if ('caches' in window) {          
-          caches.keys().then(cacheNames => {            
-            const oldCaches = cacheNames.filter(name =>               
-              name.includes('workbox-precache') &&               
-              !name.includes(registration.scope) // zadržava samo current scope            
-             );                        
-             oldCaches.forEach(cacheName => {              
-              console.log('🗑️ Brišem stari cache:', cacheName);              
-              caches.delete(cacheName);            
-            });          
-          });        
-        }
+        //  if ('caches' in window) {          
+        //   caches.keys().then(cacheNames => {            
+        //     const oldCaches = cacheNames.filter(name =>               
+        //       name.includes('workbox-precache') &&               
+        //       !name.includes(registration.scope) // zadržava samo current scope            
+        //      );                        
+        //      oldCaches.forEach(cacheName => {              
+        //       console.log('🗑️ Brišem stari cache:', cacheName);              
+        //       caches.delete(cacheName);            
+        //     });          
+        //   });        
+        // }
         if (registration && 'sync' in registration) {
           // Provjeri ima li pending syncova
           registration.sync.getTags().then(tags => {
