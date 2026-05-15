@@ -41,7 +41,7 @@ import { BackgroundSyncPlugin } from 'workbox-background-sync';
 self.skipWaiting();
 clientsClaim();
 
-self.__WB_DISABLE_DEV_LOGS = true;
+self.__WB_DISABLE_DEV_LOGS = false;
 // ✅ ISPRAVAN REDOSLIJED: precache se registruje PRIJE cleanupOutdatedCaches
 precacheAndRoute(self.__WB_MANIFEST);
 // ✅ cleanupOutdatedCaches() se poziva ODMAH NAKON precacheAndRoute// jer sada Workbox interno zna koji su manifest hashevi validni
