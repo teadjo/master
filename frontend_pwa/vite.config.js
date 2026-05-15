@@ -5,7 +5,7 @@ export default defineConfig(() => ({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'prompt',
+      registerType: 'autoUpdate',
       // KLJUČNO: Koristi injectManifest za custom SW
       strategies: 'injectManifest',
       srcDir: 'public',
@@ -57,10 +57,14 @@ export default defineConfig(() => ({
       },
 
       workbox: {
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+        skipWaiting: true,
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api/],
         globPatterns: ['**/*.{js,css,html,png,svg,ico,json,woff2,jpg}'],
+        // NE MIJENJAJ runtimeCaching - ovo će biti u sw.js
       }
     })
   ]

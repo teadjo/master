@@ -31,10 +31,9 @@ if ('requestIdleCallback' in window) {
 if ('serviceWorker' in navigator) {
   import('virtual:pwa-register').then(({ registerSW }) => {
     registerSW({
-      immediate: false,
+      immediate: true,
       onNeedRefresh() {
         console.log('Nova verzija dostupna');
-         window.location.reload();
       },
       onOfflineReady() {
         console.log('App spremna za offline');
@@ -42,18 +41,7 @@ if ('serviceWorker' in navigator) {
       onRegistered(registration) {
         // NOVO: Prati background sync status
         console.log('✅ SW registrovan, provjeravam sync...');
-        //  if ('caches' in window) {          
-        //   caches.keys().then(cacheNames => {            
-        //     const oldCaches = cacheNames.filter(name =>               
-        //       name.includes('workbox-precache') &&               
-        //       !name.includes(registration.scope) // zadržava samo current scope            
-        //      );                        
-        //      oldCaches.forEach(cacheName => {              
-        //       console.log('🗑️ Brišem stari cache:', cacheName);              
-        //       caches.delete(cacheName);            
-        //     });          
-        //   });        
-        // }
+        
         if (registration && 'sync' in registration) {
           // Provjeri ima li pending syncova
           registration.sync.getTags().then(tags => {
@@ -117,17 +105,17 @@ window.addEventListener('offline', () => {
 
 performance.mark('sw-installed')
 
-// navigator.serviceWorker.ready.then((registration) => {
-//   performance.mark('sw-ready')
-//   performance.measure('sw-activation', 'app-start', 'sw-ready')
+navigator.serviceWorker.ready.then((registration) => {
+  performance.mark('sw-ready')
+  performance.measure('sw-activation', 'app-start', 'sw-ready')
   
-//   // NOVO: Provjeri sync pri startu
-//   if ('sync' in registration) {
-//     registration.sync.getTags().then(tags => {
-//       console.log('📋 Sync stanje pri startu:', tags);
-//     });
-//   }
-// })
+  // NOVO: Provjeri sync pri startu
+  if ('sync' in registration) {
+    registration.sync.getTags().then(tags => {
+      console.log('📋 Sync stanje pri startu:', tags);
+    });
+  }
+})
 
 navigator.serviceWorker.addEventListener('message', (event) => {
 

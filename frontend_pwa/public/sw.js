@@ -19,10 +19,6 @@ import { BackgroundSyncPlugin } from 'workbox-background-sync';
 self.skipWaiting();
 clientsClaim();
 
-self.__WB_DISABLE_DEV_LOGS = true;
-precacheAndRoute(self.__WB_MANIFEST);
-cleanupOutdatedCaches();
-
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -52,6 +48,9 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+cleanupOutdatedCaches();
+self.__WB_DISABLE_DEV_LOGS = true;
+precacheAndRoute(self.__WB_MANIFEST);
 
 /* =========================================================
    BACKEND SLIKE
