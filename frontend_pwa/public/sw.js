@@ -33,13 +33,14 @@ self.addEventListener('activate', (event) => {
             'pages'
           ];
 
-          const isWorkbox = cacheName.startsWith('workbox-precache');
-
-          const isValid = validCaches.some(name =>
-            cacheName.includes(name)
-          );
-
-          if (!isValid && !isWorkbox) {
+          const isWorkboxPrecache = cacheName.startsWith('workbox-precache-v2-');
+          
+          // Tačno poređenje za tvoje keševe
+          const isCustomCache = validCaches.includes(cacheName);
+          
+          // Ako nije ni tvoj custom keš ni trenutni workbox precache - obriši
+          if (!isCustomCache && !isWorkboxPrecache) {
+            console.log('Brišem stari keš:', cacheName);
             return caches.delete(cacheName);
           }
         })
