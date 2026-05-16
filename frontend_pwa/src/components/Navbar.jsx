@@ -1,68 +1,92 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import './Navbar.css'
-import Button from './Button'
-import { normalizeArray } from '../utils/normalize'
-import {api} from '../utils/api'
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
+import './Navbar.css';
+import Button from './Button';
+import { normalizeArray } from '../utils/normalize';
+import { api } from '../utils/api';
 
 function Navbar() {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
   const [category, setCategory] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
-  const API = import.meta.env.VITE_API_URL
+  const API = import.meta.env.VITE_API_URL;
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
 
-  const showButton = () => {
-    if (window.innerWidth <= 960) {
-      setButton(false);
-    } else {
-      setButton(true);
-    }
+  // ✅ 1. Koristi matchMedia umjesto innerWidth (NEMA REFLOW!)
+  const showButton = useCallback(() => {
+    // matchMedia ne izaziva reflow - mnogo brže!
+    const isMobile = window.matchMedia('(max-width: 960px)').matches;
+    setButton(!isMobile);
+  }, []);
+
+  // ✅ 2. Debounce za resize event
+  const debounce = (func, wait) => {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
   };
 
-  function LogOut(e){
+  function LogOut(e) {
     e.preventDefault();
     closeMobileMenu();
-    window.location = `/`
-    localStorage.setItem("notlogedIn", 'true');    
-    localStorage.setItem("isAdmin", 'false');                         
-    localStorage.setItem("isArtist", 'false');                         
-    localStorage.setItem("isVisitor", 'false');  
-    localStorage.setItem("userID", null)
+    window.location = `/`;
+    localStorage.setItem("notlogedIn", 'true');
+    localStorage.setItem("isAdmin", 'false');
+    localStorage.setItem("isArtist", 'false');
+    localStorage.setItem("isVisitor", 'false');
+    localStorage.setItem("userID", null);
   }
 
   useEffect(() => {
+    // ✅ 3. Inicijalno pozivanje
     showButton();
-    if(localStorage.getItem('notlogedIn') == null) localStorage.setItem('notlogedIn', 'true')
+    
+    // ✅ 4. Session storage za notlogedIn (brže od localStorage)
+    if (sessionStorage.getItem('notlogedIn') === null) {
+      sessionStorage.setItem('notlogedIn', 'true');
+    }
     
     const fetchCategory = async () => {
-      try{
+      try {
         const getCategory = await api.get(`${API}/category/`);
-        console.log("DATA TYPE:", typeof getCategory, getCategory)
         setCategory(normalizeArray(getCategory.data));
       } catch (error) {
-        console.log("error", error)
+        console.log("error", error);
       }
-    }
+    };
     fetchCategory();
 
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 50);
     };
-    window.addEventListener('scroll', handleScroll);
     
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    // ✅ 5. Passivni scroll listener (bolje performanse)
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // ✅ 6. Debounced resize listener
+    const debouncedResize = debounce(showButton, 150);
+    window.addEventListener('resize', debouncedResize);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', debouncedResize);
+    };
+  }, [showButton]); // showButton u dependency array
 
-  window.addEventListener('resize', showButton);
-  
+  // ✅ 7. Umjesto da provjeravaš localStorage svaki render - memoizacija
+  const isLoggedIn = sessionStorage.getItem('notlogedIn') === 'false';
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  const userId = localStorage.getItem('userID');
+
   return (
     <>
       <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
@@ -81,7 +105,7 @@ function Navbar() {
           </div>
           
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-            {(localStorage.getItem('isAdmin') === 'false' || localStorage.getItem('isAdmin') == null) && 
+            {(!isAdmin || localStorage.getItem('isAdmin') === null) && (
               <li className='nav-item'>
                 <div className='dropdown'>
                   <button className='dropbtn'>
@@ -91,20 +115,20 @@ function Navbar() {
                     </svg>
                   </button>
                   <div className="dropdown-content">
-                    {Array.isArray(category) ? (category.map((category, index) => (
+                    {Array.isArray(category) && category.map((cat, index) => (
                       <Link 
                         key={index}
                         className='dropdown-link' 
                         onClick={closeMobileMenu} 
-                        to={`/artworks/category/${category.naziv}`}
+                        to={`/artworks/category/${cat.naziv}`}
                       >
-                        {category.naziv}
+                        {cat.naziv}
                       </Link>
-                    ))):(<p>Nema podataka</p>)}
+                    ))}
                   </div>
                 </div>
               </li>
-            }
+            )}
             
             <li className='nav-item'>
               <Link
@@ -116,7 +140,7 @@ function Navbar() {
               </Link>
             </li>
           
-            {localStorage.getItem("isAdmin") === 'true' && (
+            {isAdmin && (
               <>
                 <li className='nav-item'>
                   <Link
@@ -148,10 +172,10 @@ function Navbar() {
               </>
             )}
             
-            {localStorage.getItem("notlogedIn") === 'false' && (
+            {isLoggedIn && (
               <li className='nav-item'>
                 <Link
-                  to={`/${localStorage.getItem('userID')}/myProfile`} 
+                  to={`/${userId}/myProfile`} 
                   className='nav-links profile-link'
                   onClick={closeMobileMenu}
                 >
@@ -162,7 +186,7 @@ function Navbar() {
             )}
             
             <li className='nav-item mobile-only'>
-              {localStorage.getItem('notlogedIn') === 'false' && (
+              {isLoggedIn && (
                 <Link
                   to='/'
                   className='nav-links-mobile logout-mobile'
@@ -174,7 +198,7 @@ function Navbar() {
             </li>
             
             <li className='nav-item mobile-only'>
-              {localStorage.getItem('notlogedIn') === 'true' && (
+              {!isLoggedIn && (
                 <Link
                   to='/login'
                   className='nav-links-mobile login-mobile'
@@ -187,12 +211,12 @@ function Navbar() {
           </ul>
           
           <div className='navbar-buttons'>
-            {button && localStorage.getItem('notlogedIn') === 'true' && (
+            {button && !isLoggedIn && (
               <Button buttonStyle='btn--primary' to='/login'>
                 Prijava
               </Button>
             )} 
-            {button && localStorage.getItem('notlogedIn') === 'false' && (
+            {button && isLoggedIn && (
               <Button onClick={LogOut} buttonStyle='btn--outline'>
                 Odjava
               </Button>
