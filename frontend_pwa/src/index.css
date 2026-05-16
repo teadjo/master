@@ -5,9 +5,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@font-face {
+  font-family: 'FontAwesome';
+  font-display: swap;
+  src: url('/assets/fa-regular.woff2') format('woff2');
+}
 
-
-/* Dodaj u globalni CSS fajl */
 .toast-container {
     position: fixed;
     top: 20px;

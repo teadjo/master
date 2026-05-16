@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import './Apply.css'
 import Picture from '../Picture';
-import ApplyForm from './ApplyForm';
+const ApplyForm = React.lazy(() => import('./ApplyForm'));
 import Footer from '../Footer';
 import { normalizeArray } from '../../utils/normalize';
 import {api} from '../../utils/api' 
@@ -25,20 +25,23 @@ function Apply() {
     useEffect(() => {
     const fetchComp = async () => {
         try {
-            const response = await api.get(`${API}/competitions/compID/${id}`);
-            setComp(response.data[0]); 
+            const [compRes, artRes, scoresRes] = await Promise.all([
+                api.get(`${API}/competitions/compID/${id}`),
+                api.get(`${API}/spec/tr/${id}`),
+                api.get(`${API}/grades/kmp/${id}`)
+            ]);
             
-            const ArtInComp = await api.get(`${API}/spec/tr/${id}`);
-            setCompetitors(normalizeArray(ArtInComp.data));
+            setComp(compRes.data[0]);
+            setCompetitors(normalizeArray(artRes.data));
+            setGrades(scoresRes.data);
             
-            const allScoresInfo = await api.get(`${API}/grades/kmp/${id}`);
-            const allScores = allScoresInfo.data;
-            setGrades(allScores);
-            
-            const scoreMap = allScores.reduce((acc, grade) => {
+            const scoreMap = useMemo(() => {
+            return grades.reduce((acc, grade) => {
                 acc[grade.id_rada] = (acc[grade.id_rada] || 0) + grade.ocjena;
                 return acc;
-            }, {}); 
+            }, {});
+        }, [grades]);
+
             
             setResults(scoreMap);
             const maxWinner = findMax(scoreMap);
@@ -94,11 +97,10 @@ function Apply() {
         return maxKey;
     }
 
-    const onClickApply = (e) => {
+    const onClickApply = useCallback((e) => {
         e.preventDefault();
-        setForm(!form);
-        // window.location.hash = "";
-    }
+        requestAnimationFrame(() => setForm(prev => !prev));
+    }, []);
 
     const daysLeft = comp.datum_kraja ? Math.ceil((new Date(comp.datum_kraja) - currentDate) / 86400000) : 0;
 
