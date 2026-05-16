@@ -253,31 +253,69 @@ function Apply() {
                 {/* ========== ZAVRŠENO TAKMIČENJE ========== */}
                 {ended && (
                     <>
-                        {/* Results Summary Section */}
-                        <section className='results-summary-section'>
-                            <div className='results-header'>
-                                <h2>📊 Konačni rezultati</h2>
-                                <p>Takmičenje je završeno {daysSinceEnded} dana</p>
+                    <section className='results-summary-section'>
+                        <div className='results-header'>
+                            <span className='results-badge'>✨ Konačni rezultati ✨</span>
+                            <h2>Takmičenje je završeno</h2>
+                            <p className='results-date'>Završeno prije {daysSinceEnded} dana</p>
+                        </div>
+                        
+                        <div className='results-stats-grid'>
+                            {/* Kartica 1 - Prijavljeni radovi */}
+                            <div className='premium-stat-card'>
+                                <div className='card-glow'></div>
+                                <div className='card-icon-wrapper'>
+                                    <span className='card-icon'>🖼️</span>
+                                </div>
+                                <div className='card-number'>{competitors.length}</div>
+                                <div className='card-label'>Prijavljenih radova</div>
+                                <div className='card-decoration'>
+                                    <svg width="40" height="4" viewBox="0 0 40 4" fill="none">
+                                        <circle cx="2" cy="2" r="2" fill="#8A2BE2" opacity="0.3"/>
+                                        <circle cx="10" cy="2" r="2" fill="#8A2BE2" opacity="0.5"/>
+                                        <circle cx="18" cy="2" r="2" fill="#8A2BE2" opacity="0.7"/>
+                                        <circle cx="26" cy="2" r="2" fill="#8A2BE2" opacity="0.5"/>
+                                        <circle cx="34" cy="2" r="2" fill="#8A2BE2" opacity="0.3"/>
+                                    </svg>
+                                </div>
+                                <div className='card-subtle-text'>ukupno prijava</div>
                             </div>
-                            
-                            <div className='results-stats-grid'>
-                                <div className='result-stat-card'>
-                                    <div className='result-icon'>🏆</div>
-                                    <div className='result-number'>{competitors.length}</div>
-                                    <div className='result-label'>Ukupno prijavljenih</div>
+
+                            {/* Kartica 2 - Ukupno glasova */}
+                            <div className='premium-stat-card highlight'>
+                                <div className='card-glow'></div>
+                                <div className='card-icon-wrapper'>
+                                    <span className='card-icon'>⭐</span>
                                 </div>
-                                <div className='result-stat-card'>
-                                    <div className='result-icon'>⭐</div>
-                                    <div className='result-number'>{totalVotes}</div>
-                                    <div className='result-label'>Ukupno glasova</div>
+                                <div className='card-number'>{totalVotes}</div>
+                                <div className='card-label'>Ukupno glasova</div>
+                                <div className='card-decoration'>
+                                    <svg width="40" height="4" viewBox="0 0 40 4" fill="none">
+                                        <circle cx="2" cy="2" r="2" fill="#FFD700" opacity="0.3"/>
+                                        <circle cx="10" cy="2" r="2" fill="#FFD700" opacity="0.5"/>
+                                        <circle cx="18" cy="2" r="2" fill="#FFD700" opacity="0.7"/>
+                                        <circle cx="26" cy="2" r="2" fill="#FFD700" opacity="0.5"/>
+                                        <circle cx="34" cy="2" r="2" fill="#FFD700" opacity="0.3"/>
+                                    </svg>
                                 </div>
-                                <div className='result-stat-card'>
-                                    <div className='result-icon'>🎯</div>
-                                    <div className='result-number'>{winnerPercentage}%</div>
-                                    <div className='result-label'>Pobjednički rezultat</div>
-                                </div>
+                                <div className='card-subtle-text'>od svih žirija</div>
                             </div>
-                        </section>
+
+                            {/* Kartica 3 - Pobjednički rezultat */}
+                            <div className='premium-stat-card winner'>
+                                <div className='card-glow'></div>
+                                <div className='card-icon-wrapper'>
+                                    <span className='card-icon'>🏆</span>
+                                </div>
+                                <div className='card-number'>{winnerPercentage}%</div>
+                                <div className='card-label'>Pobjednički rezultat</div>
+                                <div className='card-progress-bar'>
+                                    <div className='progress-fill' style={{ width: `${winnerPercentage}%` }}></div>
+                                </div>
+                                <div className='card-subtle-text'>od maksimalnog broja bodova</div>
+                            </div>
+                        </div>
+                    </section>
 
                         {/* Winner Section - proširena */}
                         {winnerData && (
