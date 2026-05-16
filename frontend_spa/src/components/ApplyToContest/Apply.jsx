@@ -282,9 +282,8 @@ function Apply() {
                         {/* Winner Section - proširena */}
                         {winnerData && (
                             <section className='winner-section-detailed winner-section'>
-                                <div className='winner-crown'>👑</div>
                                  <div className='section-header'>
-                                    <div className='winner-trophy-icon'>🏆</div>
+                                    <div className='winner-trophy-icon'>👑</div>
                                     <h2>Pobjednik Takmičenja</h2>
                                     <p>Čestitamo pobjedniku na osvojenoj nagradi!</p>
                                 </div>
