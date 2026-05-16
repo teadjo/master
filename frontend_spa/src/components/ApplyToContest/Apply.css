@@ -1,4 +1,6 @@
-/* Apply.css */
+.competitors-section {
+    min-height: 500px;  /* Rezerviši minimalnu visinu */
+}
 .competition-container {
     min-height: 100vh;
     background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%);
@@ -144,6 +146,15 @@ section {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2rem;
     min-height: 500px; 
+}
+
+
+/* ✅ Placeholder za slike dok se učitavaju */
+.card-image {
+    background-color: #f0f0f0;
+    aspect-ratio: 16 / 9;  /* Fiksni aspect ratio */
+    width: 100%;
+    object-fit: cover;
 }
 
 .competitor-card {

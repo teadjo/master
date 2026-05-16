@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom';
 import './Apply.css';
 import Picture from '../Picture';
 const ApplyForm = React.lazy(() => import('./ApplyForm'));
-import Footer from '../Footer';
+const Footer = React.lazy(() => import('../Footer'))
+// import Footer from '../Footer';
 import { normalizeArray } from '../../utils/normalize';
 import { api } from '../../utils/api';
 

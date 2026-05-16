@@ -67,5 +67,9 @@ export default defineConfig(() => ({
         // NE MIJENJAJ runtimeCaching - ovo će biti u sw.js
       }
     })
-  ]
+  ],
+  build: {
+    cssMinify: true,
+    cssCodeSplit: true,
+  }
 }))

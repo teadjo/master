@@ -1,4 +1,8 @@
 /* Apply.css */
+
+.competitors-section {
+    min-height: 500px; 
+}
 .competition-container {
     min-height: 100vh;
     background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%);
@@ -11,6 +15,14 @@
     padding: 4rem 2rem;
     position: relative;
     overflow: hidden;
+}
+
+
+.card-image {
+    background-color: #f0f0f0;
+    aspect-ratio: 16 / 9;  /* Fiksni aspect ratio */
+    width: 100%;
+    object-fit: cover;
 }
 
 .competition-hero::before {
