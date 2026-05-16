@@ -22,7 +22,14 @@ function Apply() {
     const localAwardGivenKey = `awardGiven-${id}`;
     const [results, setResults] = useState([]);
     const API = import.meta.env.VITE_API_URL
+    const scoreMap = useMemo(() => {
+            return grades.reduce((acc, grade) => {
+                acc[grade.id_rada] = (acc[grade.id_rada] || 0) + grade.ocjena;
+                return acc;
+            }, {});
+        }, [grades]);
 
+        
     useEffect(() => {
     const fetchComp = async () => {
         try {
@@ -36,12 +43,7 @@ function Apply() {
             setCompetitors(normalizeArray(artRes.data));
             setGrades(scoresRes.data);
             
-            const scoreMap = useMemo(() => {
-            return grades.reduce((acc, grade) => {
-                acc[grade.id_rada] = (acc[grade.id_rada] || 0) + grade.ocjena;
-                return acc;
-            }, {});
-        }, [grades]);
+            
             
             setResults(scoreMap);
             const maxWinner = findMax(scoreMap);
