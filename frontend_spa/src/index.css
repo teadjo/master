@@ -26,8 +26,6 @@ body {
 }
 
 
-
-/* Dodaj u globalni CSS fajl */
 .toast-container {
     position: fixed;
     top: 20px;
