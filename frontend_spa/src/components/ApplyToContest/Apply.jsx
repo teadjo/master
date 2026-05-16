@@ -345,11 +345,7 @@ function Apply() {
                                                 title={art.naziv} 
                                                 link={`/artwork/${art.id_rada_tr}/profile`}
                                             />
-                                            {results[art.id_rada_tr] && (
-                                                <div className='submission-score'>
-                                                    <span>⭐ {results[art.id_rada_tr]} bodova</span>
-                                                </div>
-                                            )}
+                                           
                                         </div>
                                     ))}
                                 </div>
