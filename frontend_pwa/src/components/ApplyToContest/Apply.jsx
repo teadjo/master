@@ -296,9 +296,7 @@ function Apply() {
                                             alt={winnerData.naziv}
                                             className='winner-image'
                                         />
-                                        <div className='winner-score-chip'>
-                                            ⭐ {winnerScore} bodova
-                                        </div>
+                                       
                                     </div>
                                     <div className='winner-info-simple'>
                                         <h3>{winnerData.ime_kor} {winnerData.prezime}</h3>
