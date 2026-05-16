@@ -255,9 +255,7 @@ function Apply() {
                     <>
                     <section className='results-summary-section'>
                         <div className='results-header'>
-                            <span className='results-badge'>✨ Konačni rezultati ✨</span>
                             <h2>Takmičenje je završeno</h2>
-                            <p className='results-date'>Završeno prije {daysSinceEnded} dana</p>
                         </div>
                         
                         <div className='results-stats-grid'>
