@@ -281,34 +281,37 @@ function Apply() {
 
                         {/* Winner Section - proširena */}
                         {winnerData && (
-                            <section className='winner-section-detailed'>
+                            <section className='winner-section-detailed winner-section'>
                                 <div className='winner-crown'>👑</div>
-                                <div className='winner-header'>
-                                    <h2>Pobjednik takmičenja</h2>
+                                 <div className='section-header'>
+                                    <div className='winner-trophy-icon'>🏆</div>
+                                    <h2>Pobjednik Takmičenja</h2>
                                     <p>Čestitamo pobjedniku na osvojenoj nagradi!</p>
                                 </div>
-                                <div className='winner-showcase'>
-                                    <div className='winner-image-large'>
+                                
+                                <div className='winner-content-simple'>
+                                    <div className='winner-image-container'>
                                         <img 
+                                            fetchPriority="high"
                                             src={winnerData.slika ? `${API}${winnerData.slika}` : './../../../back.jpg'}
                                             alt={winnerData.naziv}
-                                            className='winner-artwork'
+                                            className='winner-image'
                                         />
-                                        <div className='winner-score-badge'>
-                                            <span>{winnerScore} bodova</span>
+                                        <div className='winner-score-chip'>
+                                            ⭐ {winnerScore} bodova
                                         </div>
                                     </div>
-                                    <div className='winner-details'>
+                                    <div className='winner-info-simple'>
                                         <h3>{winnerData.ime_kor} {winnerData.prezime}</h3>
-                                        <p className='winner-artwork-title'>"{winnerData.naziv}"</p>
-                                        <div className='winner-meta'>
-                                            <span className='winner-category-badge'>{winnerData.naziv_kategorije}</span>
-                                            <span className='winner-score'>🏆 {winnerScore} bodova</span>
+                                        <p className='winner-work'>Pobjednički rad: <strong>{winnerData.naziv}</strong></p>
+                                        <div className='winner-meta-info'>
+                                            <span className='winner-category-tag'>{winnerData.naziv_kategorije}</span>
+                                            <span className='winner-points-tag'>🏆 {winnerScore} bodova</span>
                                         </div>
-                                        <p className='winner-bio'>{winnerData.opis_djela}</p>
-                                        <div className='winner-prize'>
-                                            <span>🎁 Osvojeno:</span>
-                                            <strong>{comp?.svota}€ + Izlaganje u galeriji</strong>
+                                        <p className='winner-description'>{winnerData.opis_djela}</p>
+                                        <div className='winner-award-info'>
+                                            <span className='award-icon-small'>🎁</span>
+                                            <span>Osvojeno: <strong>{comp?.svota}€ + Izlaganje u galeriji</strong></span>
                                         </div>
                                     </div>
                                 </div>
