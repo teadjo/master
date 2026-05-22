@@ -19,34 +19,34 @@ import { BackgroundSyncPlugin } from 'workbox-background-sync';
 self.skipWaiting();
 clientsClaim();
 
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
+// self.addEventListener('activate', (event) => {
+//   event.waitUntil(
+//     caches.keys().then((cacheNames) => {
+//       return Promise.all(
+//         cacheNames.map((cacheName) => {
 
-          const validCaches = [
-            'api-cache',
-            'image-cache',
-            'backend-images',
-            'static-resources',
-            'pages'
-          ];
+//           const validCaches = [
+//             'api-cache',
+//             'image-cache',
+//             'backend-images',
+//             'static-resources',
+//             'pages'
+//           ];
 
-          const isWorkbox = cacheName.startsWith('workbox-precache');
+//           const isWorkbox = cacheName.startsWith('workbox-precache');
 
-          const isValid = validCaches.some(name =>
-            cacheName.includes(name)
-          );
+//           const isValid = validCaches.some(name =>
+//             cacheName.includes(name)
+//           );
 
-          if (!isValid && !isWorkbox) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
-  );
-});
+//           if (!isValid && !isWorkbox) {
+//             return caches.delete(cacheName);
+//           }
+//         })
+//       );
+//     })
+//   );
+// });
 
 cleanupOutdatedCaches();
 self.__WB_DISABLE_DEV_LOGS = true;
@@ -78,9 +78,6 @@ registerRoute(
 );
 
 
-
-
-
 /* =========================================================
    OSTALE SLIKE
 ========================================================= */
@@ -99,28 +96,6 @@ registerRoute(
     ]
   })
 );
-
-
-
-
-
-/* =========================================================
-   JS + CSS
-========================================================= */
-
-// registerRoute(
-//   ({ request }) =>
-//     request.destination === 'script' ||
-//     request.destination === 'style',
-
-//   new StaleWhileRevalidate({
-//     cacheName: 'static-resources',
-//   })
-// );
-
-
-
-
 
 /* =========================================================
    API GET
@@ -143,8 +118,6 @@ registerRoute(
     ]
   })
 );
-
-
 
 
 /* =========================================================
@@ -182,9 +155,6 @@ registerRoute(
     ]
   })
 );
-
-
-
 
 
 /* =========================================================
@@ -252,9 +222,6 @@ const postBgSync = new BackgroundSyncPlugin('postQueue', {
 });
 
 
-
-
-
 /* =========================================================
    POST REQUESTS
 ========================================================= */
@@ -270,9 +237,6 @@ registerRoute(
 
   'POST'
 );
-
-
-
 
 
 /* =========================================================
@@ -292,9 +256,6 @@ registerRoute(
     plugins: [mutateBgSync]
   })
 );
-
-
-
 
 
 /* =========================================================
@@ -344,21 +305,12 @@ self.addEventListener('push', (event) => {
     ]
   };
 
-  // const clients = await self.clients.matchAll();
-
-  // clients.forEach(client => {
-  //   client.postMessage({
-  //     type: 'PUSH_RECEIVED'
-  //   });
-  // });
   if (Notification.permission === 'granted') {
     event.waitUntil(
       self.registration.showNotification(data.title, options)
     );
 }
 });
-
-
 
 
 /* =========================================================
