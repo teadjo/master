@@ -74,7 +74,7 @@ registerRoute(
     plugins:[
       new ExpirationPlugin({
           maxEntries:50,
-          maxAgeSeconds:60*5
+          maxAgeSeconds:60*30
       })
     ]
     })
@@ -85,9 +85,8 @@ registerRoute(
 registerRoute(
   ({ request }) => request.mode === 'navigate',
 
-  new CacheFirst({
+  new StaleWhileRevalidate({
     cacheName: 'pages',
-    networkTimeoutSeconds: 5,
 
     plugins: [
       {
