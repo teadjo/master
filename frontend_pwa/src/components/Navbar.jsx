@@ -82,8 +82,7 @@ function Navbar() {
     };
   }, [showButton]); // showButton u dependency array
 
-  // ✅ 7. Umjesto da provjeravaš localStorage svaki render - memoizacija
-  const isLoggedIn = sessionStorage.getItem('notlogedIn') === 'false';
+  const isLoggedIn = localStorage.getItem('notlogedIn') === 'false';
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
   const userId = localStorage.getItem('userID');
 
