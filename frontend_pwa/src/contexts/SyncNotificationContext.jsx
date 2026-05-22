@@ -96,7 +96,9 @@ useEffect(() => {
     syncStatus,
     startOfflineSync,
     showNotification,
-    setSyncStatus
+    setSyncStatus,
+    pendingCount,  
+    lastSyncTime,
   };
 
   return (
