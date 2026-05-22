@@ -85,8 +85,9 @@ registerRoute(
 registerRoute(
   ({ request }) => request.mode === 'navigate',
 
-  new StaleWhileRevalidate({
-    cacheName: 'pages',
+  new NetworkFirst({
+    cacheName:"pages",
+    networkTimeoutSeconds:3,
 
     plugins: [
       {
