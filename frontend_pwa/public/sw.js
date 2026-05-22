@@ -45,7 +45,9 @@ registerRoute(
 // OSTALE SLIKE
 
 registerRoute(
-  ({ request }) => request.destination === 'image',
+   ({url,request}) =>
+      url.origin !== 'https://master-4-xbzp.onrender.com' &&
+      request.destination==="image",
 
   new CacheFirst({
     cacheName: 'image-cache',
@@ -66,17 +68,16 @@ registerRoute(
     url.origin === 'https://master-4-xbzp.onrender.com' &&
     request.method === 'GET',
 
-    new NetworkFirst({
-    cacheName: 'api-cache',
-    networkTimeoutSeconds: 5,
+    new StaleWhileRevalidate({
+    cacheName:'api-cache',
 
-    plugins: [
+    plugins:[
       new ExpirationPlugin({
-        maxEntries: 50,
-        maxAgeSeconds: 60 * 5
+          maxEntries:50,
+          maxAgeSeconds:60*5
       })
     ]
-  })
+    })
 );
 
 // PAGE NAVIGATION
@@ -84,7 +85,7 @@ registerRoute(
 registerRoute(
   ({ request }) => request.mode === 'navigate',
 
-  new NetworkFirst({
+  new CacheFirst({
     cacheName: 'pages',
     networkTimeoutSeconds: 5,
 
