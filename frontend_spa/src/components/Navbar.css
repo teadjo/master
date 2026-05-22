@@ -107,7 +107,6 @@
   transform: translateY(-1px);
 }
 
-/* Dropdown Styles */
 .dropdown {
   position: relative;
   display: inline-block;
@@ -193,7 +192,6 @@
   padding-left: 25px;
 }
 
-/* Mobile Styles */
 .menu-icon {
   display: none;
   flex-direction: column;
@@ -263,7 +261,6 @@
   display: none;
 }
 
-/* Responsive Design */
 @media screen and (max-width: 960px) {
   .navbar-container {
     padding: 0 1.5rem;

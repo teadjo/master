@@ -1,4 +1,3 @@
-// src/hooks/useNetworkStatus.js - NOVI FAJL (dodatak tvom postojećem)
 import { useState, useEffect } from 'react';
 
 export function useNetworkStatus() {

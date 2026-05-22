@@ -1,4 +1,3 @@
-/* AddCompetition.css */
 .form-container {
     min-height: 100vh;
     display: flex;
@@ -126,7 +125,6 @@
     font-weight: 500;
 }
 
-/* File Upload Styles */
 .file-upload {
     position: relative;
     cursor: pointer;
@@ -178,7 +176,6 @@
     margin-top: 0.5rem;
 }
 
-/* Submit Button */
 .submit-btn {
     width: 93% !important;
     display: flex;
@@ -231,7 +228,6 @@
     font-size: 1.2rem;
 }
 
-/* Responsive Design */
 @media screen and (max-width: 768px) {
     .form-container {
         padding: 1rem;
@@ -276,7 +272,6 @@
     }
 }
 
-/* Animation */
 @keyframes fadeInUp {
     from {
         opacity: 0;

@@ -15,7 +15,6 @@ function AddCategory(){
     function OnChangeCategory(e){
         const new_cred = { naziv: e.target.value };
         setState((prevState) => ({ ...prevState, ...new_cred }));
-        // Clear errors when user starts typing
         if (error) setError('');
         if (success) setSuccess(false);
     }
@@ -23,7 +22,6 @@ function AddCategory(){
     async function OnClickButton(e){
         e.preventDefault();
         
-        // Validation
         if (!state.naziv || !state.naziv.trim()) {
             setError('Molimo unesite naziv kategorije');
             return;
@@ -42,8 +40,8 @@ function AddCategory(){
             
             if (response.data) {
                 setSuccess(true);
-                setState({ naziv: '' }); // Reset form
-                setTimeout(() => setSuccess(false), 3000); // Hide success message after 3 seconds
+                setState({ naziv: '' }); 
+                setTimeout(() => setSuccess(false), 3000); 
             } else {
                 setError('Greška u dodavanju kategorije. Pokušajte ponovo.');
             }

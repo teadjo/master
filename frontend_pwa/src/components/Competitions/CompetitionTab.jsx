@@ -19,7 +19,6 @@ function CompetitionTab() {
     const API = import.meta.env.VITE_API_URL
 
     const currentDate = new Date().getTime();
-    console.log("DATA TYPE:", typeof competition, competition )
 
     const activeCompetitions = competition.filter(comp => new Date(comp.datum_kraja).getTime() > currentDate);
     const inactiveCompetitions = competition.filter(comp => new Date(comp.datum_kraja).getTime() <= currentDate);
@@ -87,7 +86,6 @@ function CompetitionTab() {
                     api.get(`${API}/competitions/`),
                     api.get(`${API}/category/`)
                 ]);
-                console.log("DATA TYPE:", typeof compResponse, compResponse.data)
                 setComp(compResponse.data);
                 setCategory(normalizeArray(categoryResponse.data));
             } catch (error) {
@@ -114,7 +112,6 @@ function CompetitionTab() {
   return (
     <>
         <div className='comp-container'>
-          {/* Sidebar Filter */}
           <div className='filter-sidebar'>
             <div className='filter-header'>
               <h3>Filteri</h3>
@@ -163,7 +160,6 @@ function CompetitionTab() {
               </div>
             </div>
 
-            {/* Stats */}
             <div className='filter-stats'>
               <div className='stat-item'>
                 <span className='stat-number'>{activeCompetitions.length}</span>
@@ -180,9 +176,7 @@ function CompetitionTab() {
             </div>
           </div>
 
-          {/* Main Content */}
           <div className='comp-content'>
-            {/* Active Competitions */}
             <section className='competitions-section'>
               <div className='section-header'>
                 <div className='title-wrapper'>
@@ -216,7 +210,6 @@ function CompetitionTab() {
               )}
             </section>
 
-            {/* Inactive Competitions */}
             <section className='competitions-section'>
               <div className='section-header'>
                 <div className='title-wrapper'>
@@ -246,7 +239,6 @@ function CompetitionTab() {
         </div>
         <Footer />
         
-        {/* Toast notifikacija */}
         {toast.show && (
             <Toast 
                 message={toast.message} 

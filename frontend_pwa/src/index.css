@@ -1,23 +1,4 @@
 
-@font-face {
-    font-family: 'Font Awesome 6 Brands';
-    font-display: swap; 
-    src: url('/assets/fa-brands.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'Font Awesome 6 Free';
-    font-display: swap;  
-    src: url('/assets/fa-regular.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'Font Awesome 6 Free';
-    font-display: swap;  
-    font-weight: 900;
-    src: url('/assets/fa-regular.woff2') format('woff2');
-}
-
 body {
   margin: 0;
   font-family: system-ui, -apple-system, sans-serif; 

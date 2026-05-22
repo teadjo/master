@@ -47,7 +47,6 @@ function CompetitionCard(props) {
       data-status={competitionStatus.status}
       onClick={handleCardClick}
     >
-      {/* Image */}
       <div className="card-image-container">
         <img 
           loading="lazy"
@@ -58,15 +57,7 @@ function CompetitionCard(props) {
           } 
           alt={props.value.naziv_takmicenja}
         />
-        
-        {/* Status Badge - top right
-        <div className="competition-header">
-          <div className="status-badge">
-            {competitionStatus.badgeText}
-          </div>
-        </div>
-         */}
-        {/* Time left - bottom left */}
+              
         <div className="competition-overlay">
           <div className="time-info">
             <span>⏳</span>
@@ -75,7 +66,6 @@ function CompetitionCard(props) {
         </div>
       </div>
       
-      {/* Content */}
       <div className="card-content">
         <div className="competition-meta">
           <span className="competition-category">

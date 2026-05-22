@@ -4,7 +4,6 @@ export async function addToBackgroundSync(request) {
   if ('serviceWorker' in navigator && 'SyncManager' in window) {
     const registration = await navigator.serviceWorker.ready;
     
-    // Sačuvaj request u IndexedDB
     const db = await openDB();
     const tx = db.transaction('pendingRequests', 'readwrite');
     await tx.store.add({
@@ -16,7 +15,6 @@ export async function addToBackgroundSync(request) {
     });
     await tx.done;
     
-    // Registruj sync
     await registration.sync.register(SYNC_QUEUE);
   }
 }

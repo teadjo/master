@@ -1,11 +1,9 @@
-/* Reset i globalni stilovi */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Container koji zauzima cijeli viewport bez skrola */
 .login-container {
     position: fixed;
     top: 0;
@@ -24,7 +22,6 @@
     color: white;
 }
 
-/* Animirane pozadinske svjetlosti */
 .login-container::before {
     content: '';
     position: absolute;
@@ -50,7 +47,6 @@
     animation: slideUp 0.5s ease-out;
 }
 
-/* Dinamička širina forme */
 .login-wrapper.login-mode {
     max-width: 450px;
 }
@@ -96,7 +92,6 @@ select.user-type option:hover {
     transform: translateY(-2px);
 }
 
-/* Login mode stilovi */
 .login-wrapper.login-mode .login-box {
     padding: 40px 35px 30px 35px;
 }
@@ -109,7 +104,6 @@ select.user-type option:hover {
     margin-top: 10px;
 }
 
-/* Register mode stilovi */
 .login-wrapper.register-mode .login-box {
     padding: 35px 40px 25px 40px;
     color: white !important;
@@ -145,7 +139,6 @@ select.user-type option:hover {
     font-weight: 500;
 }
 
-/* Forme */
 .login-form, .register-form {
     flex: 1;
     overflow-y: auto;
@@ -171,7 +164,6 @@ select.user-type option:hover {
     margin-top: auto;
 }
 
-/* Scrollbar */
 .login-form::-webkit-scrollbar, .register-form::-webkit-scrollbar {
     width: 4px;
 }
@@ -200,7 +192,6 @@ select.user-type option:hover {
     flex: 1;
 }
 
-/* Input i textarea */
 input, textarea {
     width: 100%;
     border: 2px solid rgba(255, 255, 255, 0.1);
@@ -236,7 +227,6 @@ input::placeholder, textarea::placeholder {
     font-weight: 400;
 }
 
-/* MODERNI DROPDOWN - POTPUNO TAMAN I LJUBIČAST */
 select {
     width: 100%;
     appearance: none;
@@ -280,7 +270,6 @@ select:focus-visible {
     outline: none;
 }
 
-/* Strelica */
 select {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%23c084fc' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
     background-position: right 16px center;
@@ -289,7 +278,6 @@ select {
     appearance: none !important;
 }
 
-/* Option elementi - TAMNI */
 select option {
     background: linear-gradient(135deg, #0a0a15, #12121f);
     color: #e2e8f0;
@@ -320,7 +308,6 @@ select option[disabled] {
     background: #1a1a2e;
 }
 
-/* Glow animacija */
 @keyframes selectGlow {
     0% {
         box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4);
@@ -338,7 +325,6 @@ select:active {
     transform: scale(0.99);
 }
 
-/* Textarea */
 textarea {
     resize: vertical;
     min-height: 60px;
@@ -346,7 +332,6 @@ textarea {
     line-height: 1.4;
 }
 
-/* Label */
 label {
     display: block;
     margin-bottom: 6px;
@@ -357,7 +342,6 @@ label {
     letter-spacing: 0.5px;
 }
 
-/* File input */
 input[type="file"] {
     padding: 8px 12px;
     border: 2px dashed rgba(255, 255, 255, 0.2);
@@ -391,7 +375,6 @@ input[type="file"]::file-selector-button:hover {
     filter: brightness(1.1);
 }
 
-/* Dugmad */
 .login-button, .register-button {
     width: 100%;
     border: none;
@@ -400,7 +383,6 @@ input[type="file"]::file-selector-button:hover {
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    /* overflow: hidden; */
     background-size: 200% auto;
 }
 
@@ -443,7 +425,6 @@ input[type="file"]::file-selector-button:hover {
     box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
 }
 
-/* Sticky switch */
 .form-switch {
     text-align: center;
     padding-top: 16px;
@@ -481,7 +462,6 @@ input[type="file"]::file-selector-button:hover {
     transform: translateX(3px);
 }
 
-/* Responsive */
 @media screen and (max-width: 768px) {
     .login-wrapper.login-mode {
         max-width: 400px;
@@ -562,7 +542,6 @@ input[type="file"]::file-selector-button:hover {
     }
 }
 
-/* Loading animacija */
 @keyframes pulse {
     0%, 100% {
         opacity: 1;

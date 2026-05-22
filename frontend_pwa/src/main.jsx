@@ -39,11 +39,9 @@ if ('serviceWorker' in navigator) {
         console.log('App spremna za offline');
       },
       onRegistered(registration) {
-        // NOVO: Prati background sync status
         console.log('✅ SW registrovan, provjeravam sync...');
         
         if (registration && 'sync' in registration) {
-          // Provjeri ima li pending syncova
           registration.sync.getTags().then(tags => {
             if (tags.length > 0) {
               console.log('📋 Pending sync tags:', tags);
@@ -51,7 +49,6 @@ if ('serviceWorker' in navigator) {
           });
         }
         
-        // Periodična provjera sync statusa
         setInterval(async () => {
           if (navigator.onLine && registration && registration.active) {
             try {
@@ -63,7 +60,7 @@ if ('serviceWorker' in navigator) {
               // SyncManager možda nije dostupan
             }
           }
-        }, 30000); // Svakih 30 sekundi
+        }, 30000); 
       }
     })
   })
@@ -87,11 +84,9 @@ window.addEventListener('load', () => {
   localStorage.setItem('pwa-metrics-history', JSON.stringify(allMetrics));
 });
 
-// NOVO: Monitoring online/offline za background sync
 window.addEventListener('online', () => {
   console.log('🟢 Online - SW će automatski pokrenuti sync');
   
-  // Pošalji poruku SW-u da provjeri sync
   if (navigator.serviceWorker.controller) {
     navigator.serviceWorker.controller.postMessage({
       type: 'CHECK_SYNC'
@@ -109,7 +104,6 @@ navigator.serviceWorker.ready.then((registration) => {
   performance.mark('sw-ready')
   performance.measure('sw-activation', 'app-start', 'sw-ready')
   
-  // NOVO: Provjeri sync pri startu
   if ('sync' in registration) {
     registration.sync.getTags().then(tags => {
       console.log('📋 Sync stanje pri startu:', tags);

@@ -7,7 +7,6 @@ import { shareContent } from '../utils/share';
 function Footer() {
   return (
     <div className='footer-container'>
-      {/* Glavni subscription section */}
       <section className='footer-subscription'>
         <div className='subscription-content'>
           <div className='footer-logo'>
@@ -31,10 +30,8 @@ function Footer() {
         </div>
       </section>
 
-      {/* Glavni footer content */}
       <div className='footer-main'>
         <div className='footer-content'>
-          {/* Kontakt informacije */}
           <div className='footer-section'>
             <h3 className='footer-title'>Kontaktirajte nas</h3>
             <div className='contact-info'>
@@ -68,7 +65,6 @@ function Footer() {
             </div>
           </div>
 
-          {/* Brzi linkovi */}
           <div className='footer-section'>
             <h3 className='footer-title'>Brzi Linkovi</h3>
             <div className='footer-links-grid'>
@@ -91,7 +87,6 @@ function Footer() {
             </div>
           </div>
 
-          {/* Društvene mreže */}
           <div className='footer-section'>
             <h3 className='footer-title'>Pratite nas</h3>
             <div className='social-links'>
@@ -157,7 +152,6 @@ function Footer() {
             </div>
           </div>
 
-          {/* Newsletter */}
           <div className='footer-section'>
             <h3 className='footer-title'>Newsletter</h3>
             <p className='newsletter-text'>Budite u toku sa najnovijim takmičenjima i događajima</p>
@@ -175,7 +169,6 @@ function Footer() {
         </div>
       </div>
 
-      {/* Bottom footer */}
       <div className='footer-bottom'>
         <div className='footer-bottom-content'>
           <div className='footer-copyright'>
@@ -190,7 +183,6 @@ function Footer() {
         </div>
       </div>
 
-      {/* Decorative elements */}
       <div className='footer-decoration'>
         <div className='decoration-circle circle-1'></div>
         <div className='decoration-circle circle-2'></div>

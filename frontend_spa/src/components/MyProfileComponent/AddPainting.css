@@ -1,6 +1,5 @@
 * {
     margin: 0;
-    /* padding: 0; */
     box-sizing: border-box;
 }
 
@@ -64,7 +63,6 @@
     padding-left: 0px !important;
 }
 
-/* Header sekcija */
 .form-header {
     background: none;
     padding: 0px;
@@ -85,7 +83,6 @@
     margin: 0;
 }
 
-/* Scrollable content */
 .form-scrollable {
     max-height: calc(85vh - 140px);
     overflow-y: auto;
@@ -113,7 +110,6 @@
     background: #5a67d8;
 }
 
-/* Grid layout */
 .form-grid {
     display: flex;
     flex-direction: column;
@@ -188,7 +184,6 @@ option{
     min-height: 100px;
 }
 
-/* File upload area */
 .file-upload-area {
     border: 2px dashed #e2e8f0;
     border-radius: 20px;
@@ -243,7 +238,6 @@ option{
     color: #a0aec0;
 }
 
-/* Preview sekcija */
 .preview-section {
     margin-top: 1rem;
     background: #f7fafc;
@@ -322,7 +316,6 @@ option{
     transform: scale(1.02);
 }
 
-/* Error styling */
 .error-text {
     font-size: 0.75rem;
     color: #e53e3e;
@@ -344,7 +337,6 @@ option{
     background: #fff5f5;
 }
 
-/* Action buttons */
 .form-actions {
     padding: 1.5rem 2rem;
     background: #f7fafc;
@@ -417,7 +409,6 @@ option{
     to { transform: rotate(360deg); }
 }
 
-/* Responsive dizajn */
 @media (max-width: 640px) {
     .form-scrollable {
         padding: 1.2rem 1.5rem;
@@ -452,7 +443,6 @@ option{
     }
 }
 
-/* Sukces animacija za submit */
 @keyframes successPulse {
     0% { transform: scale(1); }
     50% { transform: scale(0.98); }

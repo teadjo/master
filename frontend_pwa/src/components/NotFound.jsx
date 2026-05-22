@@ -1,4 +1,3 @@
-// NotFound.js
 import React from 'react';
 import './NotFound.css';
 

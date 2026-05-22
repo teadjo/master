@@ -8,7 +8,6 @@ export const api = axios.create({
   timeout: 10000,
 });
 
-// samo UX fallback (bez IndexedDB queue)
 api.interceptors.response.use(
   response => response,
   async error => {

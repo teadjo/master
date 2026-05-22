@@ -114,7 +114,6 @@ function Apply() {
     const daysSinceEnded = comp?.datum_kraja && ended ?
         Math.ceil((currentDate - new Date(comp.datum_kraja)) / 86400000) : 0;
 
-    // Računanje statistike za pobjednika
     const totalVotes = Object.values(results).reduce((a, b) => a + b, 0);
     const winnerScore = winner ? results[winner] : 0;
     const winnerPercentage = totalVotes > 0 && winnerScore ? Math.round((winnerScore / totalVotes) * 100) : 0;
@@ -122,7 +121,6 @@ function Apply() {
     return (
         <>
             <div className='competition-container'>
-                {/* Hero Section */}
                 <div className='competition-hero'>
                     <div className='hero-content'>
                         <div className='hero-badge'>
@@ -134,10 +132,8 @@ function Apply() {
                     </div>
                 </div>
 
-                {/* ========== AKTIVNO TAKMIČENJE ========== */}
                 {active && (
                     <>
-                        {/* Stats Section */}
                         <section className='competition-stats-section'>
                             <div className='stats-grid'>
                                 <div className='stat-card'>
@@ -176,7 +172,6 @@ function Apply() {
                             </div>
                         </section>
 
-                        {/* Instructions Section */}
                         <section className='instructions-section'>
                             <div className='instructions-header'>
                                 <h2>📝 Kako učestvovati?</h2>
@@ -204,7 +199,6 @@ function Apply() {
                             </div>
                         </section>
 
-                        {/* Competitors Section - prijavljeni radovi */}
                         <section className='competitors-section'>
                             <div className='section-header'>
                                 <h2>🌟 Prijavljeni radovi</h2>
@@ -250,7 +244,6 @@ function Apply() {
                     </>
                 )}
 
-                {/* ========== ZAVRŠENO TAKMIČENJE ========== */}
                 {ended && (
                     <>
                     <section className='results-summary-section'>
@@ -259,7 +252,6 @@ function Apply() {
                         </div>
                         
                         <div className='results-stats-grid'>
-                            {/* Kartica 1 - Prijavljeni radovi */}
                             <div className='premium-stat-card'>
                                 <div className='card-glow'></div>
                                 <div className='card-icon-wrapper'>
@@ -279,7 +271,6 @@ function Apply() {
                                 <div className='card-subtle-text'>ukupno prijava</div>
                             </div>
 
-                            {/* Kartica 2 - Ukupno glasova */}
                             <div className='premium-stat-card highlight'>
                                 <div className='card-glow'></div>
                                 <div className='card-icon-wrapper'>
@@ -299,7 +290,6 @@ function Apply() {
                                 <div className='card-subtle-text'>od svih žirija</div>
                             </div>
 
-                            {/* Kartica 3 - Pobjednički rezultat */}
                             <div className='premium-stat-card winner'>
                                 <div className='card-glow'></div>
                                 <div className='card-icon-wrapper'>
@@ -315,7 +305,6 @@ function Apply() {
                         </div>
                     </section>
 
-                        {/* Winner Section - proširena */}
                         {winnerData && (
                             <section className='winner-section-detailed winner-section'>
                                  <div className='section-header'>
@@ -351,7 +340,6 @@ function Apply() {
                             </section>
                         )}
 
-                        {/* All Submissions Section - svi radovi za pregled */}
                         <section className='all-submissions-section'>
                             <div className='section-header'>
                                 <h2>🖼️ Svi prijavljeni radovi</h2>
@@ -396,7 +384,6 @@ function Apply() {
                     </>
                 )}
 
-                {/* Awards Section - uvijek vidljiva */}
                 <section className='awards-section'>
                     <div className='section-header'>
                         <h2>🎁 Nagrade</h2>
@@ -433,7 +420,6 @@ function Apply() {
                     </div>
                 </section>
 
-                {/* Call to Action - samo ako je aktivno */}
                 {active && (
                     <section className='bottom-cta-section'>
                         <div className='bottom-cta'>

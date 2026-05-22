@@ -132,7 +132,6 @@ function MyProfile() {
   return (
     <>        
       <div className='profile-container'>
-        {/* Header */}
         <div className='profile-header'>
           <div className='header-bg'></div>
           <div className='header-content'>
@@ -187,9 +186,7 @@ function MyProfile() {
           </div>
         </div>
 
-        {/* Main */}
         <div className='profile-main'>
-          {/* Bio */}
           <div className='bio-wrapper'>
             <div className='bio-title'>
               <span>📝</span>
@@ -198,7 +195,6 @@ function MyProfile() {
             <p className='bio-description'>{user.opis_kor || 'Korisnik nije dodao opis.'}</p>
           </div>
 
-          {/* Edit Modal */}
           {form && (
             <div className='modal-backdrop' onClick={showForm}>
               <div className='modal-container' onClick={(e) => e.stopPropagation()}>
@@ -285,7 +281,6 @@ function MyProfile() {
             </div>
           )}
 
-          {/* Galerija */}
           {art.length > 0 && (
             <div className='section-card'>
               <div className='section-head'>
@@ -319,7 +314,6 @@ function MyProfile() {
             </div>
           )}
 
-          {/* Takmičenja */}
           {artComp.length > 0 && (
             <div className='section-card'>
               <div className='section-head'>
@@ -343,7 +337,6 @@ function MyProfile() {
             </div>
           )}
 
-          {/* Empty */}
           {art.length === 0 && isArtist && (
             <div className='empty-wrapper'>
               <div className='empty-emoji'>🎨</div>
@@ -363,7 +356,6 @@ function MyProfile() {
       </div>
       <Footer />
       
-      {/* Toast notifikacija */}
       {toast.show && (
         <Toast 
           message={toast.message} 

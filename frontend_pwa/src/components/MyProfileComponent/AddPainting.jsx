@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
 import './AddPainting.css'
-import Toast from '../../Toast'; // Dodaj import
+import Toast from '../../Toast'; 
 import { normalizeArray } from '../../utils/normalize'
 import {api} from '../../utils/api'
 import { useToast } from '../../ToastContext';
@@ -12,7 +12,7 @@ function AddPainting(props) {
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
     const [previewImage, setPreviewImage] = useState(null);
-    const [toast, setToast] = useState(null); // Dodaj state za toast
+    const [toast, setToast] = useState(null); 
     
     const currentDate = new Date();
     const API = import.meta.env.VITE_API_URL
@@ -26,7 +26,6 @@ function AddPainting(props) {
         slika: null
     });
 
-    // Funkcija za prikaz toasta
     const { showToast } = useToast();
 
     useEffect(() => {
@@ -113,10 +112,8 @@ function AddPainting(props) {
                 }
             });
 
-            console.log(response)
             
             if (response.data && response.data[0].id) {
-                console.log("uslo je ovdje")
                 await api.post(`${API}/rk/`, {
                     id_umjetnika_rk: state.id_umjetnika,
                     id_rada_rk: response.data[0].id

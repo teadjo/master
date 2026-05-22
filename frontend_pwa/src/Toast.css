@@ -1,4 +1,3 @@
-/* Toast.css */
 .toast-container {
     position: fixed;
     top: 20px;
@@ -9,7 +8,6 @@
     gap: 10px;
 }
 
-/* Ostali stilovi ostaju isti */
 .toast {
     min-width: 280px;
     max-width: 400px;

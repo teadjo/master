@@ -1,5 +1,3 @@
-/* Apply.css */
-
 .competitors-section {
     min-height: 500px; 
 }
@@ -8,7 +6,6 @@
     background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%);
 }
 
-/* Hero Section */
 .competition-hero {
     background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 50%, #2d1b69 100%);
     color: white;
@@ -20,7 +17,7 @@
 
 .card-image {
     background-color: #f0f0f0;
-    aspect-ratio: 16 / 9;  /* Fiksni aspect ratio */
+    aspect-ratio: 16 / 9;  
     width: 100%;
     object-fit: cover;
 }
@@ -121,7 +118,6 @@
     background: linear-gradient(135deg, #9b45f0, #5a14a8);
 }
 
-/* Sections */
 section {
     max-width: 1200px;
     margin: 0 auto;
@@ -150,7 +146,6 @@ section {
     margin: 0;
 }
 
-/* Competitors Section */
 .competitors-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -191,8 +186,6 @@ section {
     margin: 0;
 }
 
-/* Winner Section */
-/* Simplified Winner Section */
 .winner-section {
     background: linear-gradient(135deg, #fffaf0, #fff5e6);
     border-radius: 20px;
@@ -269,7 +262,6 @@ section {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
-/* Responsive Design za Winner Section */
 @media screen and (max-width: 968px) {
     .winner-content-simple {
         grid-template-columns: 300px 1fr;
@@ -332,8 +324,6 @@ section {
         font-size: 1rem;
     }
 }
-
-/* Awards Section */
 
 .awards-section {
   min-height: 400px; 
@@ -410,7 +400,6 @@ section {
     line-height: 1.5;
 }
 
-/* Responsive Design */
 @media screen and (max-width: 768px) {
     .competition-hero {
         padding: 3rem 1.5rem;
@@ -471,7 +460,6 @@ section {
     }
 }
 
-/* Animation */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -489,7 +477,6 @@ section {
     animation: fadeInUp 0.6s ease-out;
 }
 
-/* ========== WINNER SECTION - POPRAVLJEN ========== */
 .winner-section {
     background: linear-gradient(135deg, #fffaf0, #fff5e6);
     border-radius: 20px;
@@ -528,7 +515,6 @@ section {
     border: 3px solid white;
 }
 
-/* ✅ Score chip preko slike (diskretno) */
 .winner-score-chip {
     position: absolute;
     bottom: 15px;
@@ -615,7 +601,6 @@ section {
     color: #8A2BE2;
 }
 
-/* ========== STATS SECTION (aktivno) ========== */
 .competition-stats-section {
     background: white;
     padding: 3rem 2rem;
@@ -669,7 +654,6 @@ section {
     margin-top: 0.5rem;
 }
 
-/* ========== CTA BANNER ========== */
 .cta-banner {
     max-width: 1200px;
     margin: 0 auto;
@@ -727,7 +711,6 @@ section {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* ========== INSTRUCTIONS SECTION ========== */
 .instructions-section {
     background: white;
     padding: 4rem 2rem;
@@ -797,13 +780,11 @@ section {
     line-height: 1.5;
 }
 
-/* ========== ALL SUBMISSIONS SECTION ========== */
 .all-submissions-section {
     background: white;
     padding: 4rem 2rem;
 }
 
-/* ========== BOTTOM CTA ========== */
 .bottom-cta-section {
     background: linear-gradient(135deg, #f8f9fa, #ffffff);
     padding: 4rem 2rem;
@@ -844,7 +825,6 @@ section {
     transform: scale(1.05);
 }
 
-/* ========== LOADING SKELETON ========== */
 .loading-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -890,7 +870,6 @@ section {
     100% { background-position: -200% 0; }
 }
 
-/* ========== RESPONSIVE ========== */
 @media screen and (max-width: 968px) {
     .winner-content-simple {
         grid-template-columns: 300px 1fr;
@@ -955,7 +934,6 @@ section {
         gap: 1.5rem;
     }
 }
-/* ========== RESULTS SUMMARY SECTION - BRZO I ČISTO ========== */
 .results-summary-section {
     background: #ffffff;
     padding: 3rem 2rem;
@@ -987,7 +965,6 @@ section {
     font-size: 0.85rem;
 }
 
-/* Grid kartica */
 .results-stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -996,7 +973,6 @@ section {
     margin: 0 auto;
 }
 
-/* Osnovna kartica - lagana */
 .premium-stat-card {
     background: #ffffff;
     border-radius: 20px;
@@ -1013,12 +989,10 @@ section {
     border-color: rgba(138, 43, 226, 0.2);
 }
 
-/* Highlight kartica - aktivno takmičenje */
 .premium-stat-card.highlight {
     border-top: 3px solid #8A2BE2;
 }
 
-/* Ikonica */
 .card-icon-wrapper {
     width: 50px;
     height: 50px;
@@ -1034,7 +1008,6 @@ section {
     font-size: 1.5rem;
 }
 
-/* Broj */
 .card-number {
     font-size: 2.5rem;
     font-weight: 700;
@@ -1043,14 +1016,12 @@ section {
     margin-bottom: 0.3rem;
 }
 
-/* Labela */
 .card-label {
     font-size: 0.9rem;
     font-weight: 500;
     color: #444;
 }
 
-/* Progress bar - samo za winner karticu */
 .card-progress-bar {
     width: 70%;
     height: 3px;
@@ -1066,20 +1037,17 @@ section {
     border-radius: 3px;
 }
 
-/* Subtle text */
 .card-subtle-text {
     font-size: 0.65rem;
     color: #aaa;
     margin-top: 0.5rem;
 }
 
-/* Dekoracija - minimalna */
 .card-decoration {
     margin: 0.5rem 0;
     opacity: 0.3;
 }
 
-/* Responsive */
 @media screen and (max-width: 768px) {
     .results-stats-grid {
         grid-template-columns: 1fr;

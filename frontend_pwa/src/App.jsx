@@ -3,7 +3,6 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { lazy, Suspense, useEffect, useState } from 'react';
 
-// LAZY UČITAVANJE - sve osim osnovnih komponenti
 const Navbar = lazy(() => import('./components/Navbar'));
 const Login = lazy(() => import('./pages/Login'));
 const Home = lazy(() => import('./pages/Home'));
@@ -21,7 +20,6 @@ const AllUsers = lazy(() => import('./components/AllUsers'));
 const SyncStatus = lazy(() => import('./components/SyncStatus'));
 const InstallPrompt = lazy(() => import('./components/InstallPrompt'));
 
-// HOOKOVI (ne mogu biti lazy, moraju biti normalno uvezeni)
 import { useOnlineStatus } from './hooks/useOnlineStatus';
 import { SyncNotificationProvider } from './contexts/SyncNotificationContext';
 import { checkStorageQuota, requestPersistentStorage } from './utils/storage';
@@ -103,7 +101,6 @@ function App() {
       const quota = await checkStorageQuota();
       console.log('💾 Storage info:', quota);
       
-      // Zatraži persistent storage (važno za PWA!)
       const persisted = await requestPersistentStorage();
       console.log('💾 Persistent storage:', persisted);
     }
@@ -128,11 +125,6 @@ function App() {
   return (
     <Router>
       <SyncNotificationProvider>
-        {/* {deferredPrompt && (
-          <button onClick={installApp} className="install-btn">
-            Instaliraj aplikaciju
-          </button>
-        )} */}
         <ScrollToTop />
         <AppContent />
         <SyncStatus />

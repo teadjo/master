@@ -1,8 +1,6 @@
 import { clientsClaim } from 'workbox-core';
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
-
 import { registerRoute } from 'workbox-routing';
-
 import {
   CacheFirst,
   NetworkFirst,
@@ -11,50 +9,17 @@ import {
 } from 'workbox-strategies';
 
 import { ExpirationPlugin } from 'workbox-expiration';
-
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
-
 import { BackgroundSyncPlugin } from 'workbox-background-sync';
 
 self.skipWaiting();
 clientsClaim();
 
-// self.addEventListener('activate', (event) => {
-//   event.waitUntil(
-//     caches.keys().then((cacheNames) => {
-//       return Promise.all(
-//         cacheNames.map((cacheName) => {
-
-//           const validCaches = [
-//             'api-cache',
-//             'image-cache',
-//             'backend-images',
-//             'static-resources',
-//             'pages'
-//           ];
-
-//           const isWorkbox = cacheName.startsWith('workbox-precache');
-
-//           const isValid = validCaches.some(name =>
-//             cacheName.includes(name)
-//           );
-
-//           if (!isValid && !isWorkbox) {
-//             return caches.delete(cacheName);
-//           }
-//         })
-//       );
-//     })
-//   );
-// });
-
 cleanupOutdatedCaches();
 self.__WB_DISABLE_DEV_LOGS = true;
 precacheAndRoute(self.__WB_MANIFEST);
 
-/* =========================================================
-   BACKEND SLIKE
-========================================================= */
+// BACKEND SLIKE
 
 registerRoute(
   ({ url }) =>
@@ -77,10 +42,7 @@ registerRoute(
   })
 );
 
-
-/* =========================================================
-   OSTALE SLIKE
-========================================================= */
+// OSTALE SLIKE
 
 registerRoute(
   ({ request }) => request.destination === 'image',
@@ -97,9 +59,7 @@ registerRoute(
   })
 );
 
-/* =========================================================
-   API GET
-========================================================= */
+// API GET
 
 registerRoute(
   ({ url, request }) =>
@@ -119,10 +79,7 @@ registerRoute(
   })
 );
 
-
-/* =========================================================
-   PAGE NAVIGATION
-========================================================= */
+// PAGE NAVIGATION
 
 registerRoute(
   ({ request }) => request.mode === 'navigate',
@@ -135,7 +92,6 @@ registerRoute(
       {
         handlerDidError: async () => {
           const cache = await caches.open('pages');
-
           const cached = await cache.match('/index.html');
 
           return (
@@ -156,16 +112,12 @@ registerRoute(
   })
 );
 
-
-/* =========================================================
-   BACKGROUND SYNC
-========================================================= */
+// BACKGROUND SYNC
 
 const postBgSync = new BackgroundSyncPlugin('postQueue', {
   maxRetentionTime: 24 * 60,
 
   onSync: async ({ queue }) => {
-
     let entry;
 
     while ((entry = await queue.shiftRequest())) {
@@ -178,12 +130,10 @@ const postBgSync = new BackgroundSyncPlugin('postQueue', {
           throw new Error('Request failed');
         }
 
-
         sendMetricToClient({
           type: 'SYNC_SUCCESS'
         });
 
-        // 🔔 NOTIFIKACIJA
         await self.registration.showNotification(
           '✅ Prijava uspješna! 🎉',
           {
@@ -192,7 +142,6 @@ const postBgSync = new BackgroundSyncPlugin('postQueue', {
           }
         );
 
-        // 📡 POŠALJI FRONTEND-U
         const clients = await self.clients.matchAll();
 
         clients.forEach(client => {
@@ -214,17 +163,13 @@ const postBgSync = new BackgroundSyncPlugin('postQueue', {
         });
 
         await queue.unshiftRequest(entry);
-
         throw error;
       }
     }
   }
 });
 
-
-/* =========================================================
-   POST REQUESTS
-========================================================= */
+// POST REQUESTS
 
 registerRoute(
   ({ url, request }) =>
@@ -234,14 +179,10 @@ registerRoute(
   new NetworkOnly({
     plugins: [postBgSync]
   }),
-
   'POST'
 );
 
-
-/* =========================================================
-   PUT / PATCH / DELETE
-========================================================= */
+// PUT / PATCH / DELETE
 
 const mutateBgSync = new BackgroundSyncPlugin('mutateQueue', {
   maxRetentionTime: 24 * 60
@@ -257,10 +198,7 @@ registerRoute(
   })
 );
 
-
-/* =========================================================
-   PUSH NOTIFICATIONS
-========================================================= */
+// PUSH NOTIFICATIONS
 
 self.addEventListener('push', (event) => {
 
@@ -286,13 +224,10 @@ self.addEventListener('push', (event) => {
     body: data.body,
     icon: data.icon,
     badge: data.badge,
-
     vibrate: [200, 100, 200],
-
     data: {
       url: data.url || '/'
     },
-
     actions: [
       {
         action: 'open',
@@ -312,10 +247,7 @@ self.addEventListener('push', (event) => {
 }
 });
 
-
-/* =========================================================
-   CLICK ON NOTIFICATION
-========================================================= */
+// CLICK ON NOTIFICATION
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
@@ -342,9 +274,7 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-/* =========================================================
-   METRICS COMMUNICATION
-========================================================= */
+// METRICS COMMUNICATION
 
 function sendMetricToClient(data) {
   clients.matchAll({

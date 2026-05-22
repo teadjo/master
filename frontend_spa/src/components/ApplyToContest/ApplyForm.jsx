@@ -140,7 +140,6 @@ function ApplyForm({ closeForm }) {
             </div>
         </div>
         
-        {/* Toast notifikacija */}
         {toast.show && (
             <Toast 
                 message={toast.message} 

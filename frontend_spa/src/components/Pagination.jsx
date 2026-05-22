@@ -12,7 +12,6 @@ const Pagination = ({ imagesPerPage, totalImages, paginate, currentPage }) => {
     const goToPreviousPage = () => currentPage > 1 && paginate(currentPage - 1);
     const goToNextPage = () => currentPage < totalPages && paginate(currentPage + 1);
 
-    // Prikazujemo max 5 stranica
     const getVisiblePages = () => {
         if (totalPages <= 5) return pageNumbers;
         
@@ -29,7 +28,6 @@ const Pagination = ({ imagesPerPage, totalImages, paginate, currentPage }) => {
 
     return (
         <div className="pagination">
-            {/* Previous Button */}
             <button 
                 onClick={goToPreviousPage}
                 disabled={currentPage === 1}
@@ -38,7 +36,6 @@ const Pagination = ({ imagesPerPage, totalImages, paginate, currentPage }) => {
                 ←
             </button>
 
-            {/* Page Numbers */}
             {visiblePages.map((number, index) => (
                 number === '...' ? (
                     <span key={index} className="pagination-dots">...</span>
@@ -53,7 +50,6 @@ const Pagination = ({ imagesPerPage, totalImages, paginate, currentPage }) => {
                 )
             ))}
 
-            {/* Next Button */}
             <button 
                 onClick={goToNextPage}
                 disabled={currentPage === totalPages}

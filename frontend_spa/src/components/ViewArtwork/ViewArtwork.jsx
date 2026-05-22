@@ -32,7 +32,6 @@ function ViewArtwork() {
                 setAllWonCompetitions(normalizeArray(compRes.data));
                 setAllCompetitions(normalizeArray(specRes.data));
 
-                console.log("tuuu samm")
             } catch (err) {
                 console.log("Greška u dobavljanju podataka!",err)
             } finally {

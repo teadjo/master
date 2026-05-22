@@ -6,7 +6,6 @@ function StarRatingComp(props) {
     const [rating, setRating] = useState(null);
     const [hover, setHover] = useState(null);
 
-    // Props za kontrolu veličine i kompaktnost
     const starSize = props.size || 60;
     const isCompact = props.compact || false;
 
@@ -39,7 +38,6 @@ function StarRatingComp(props) {
             })}
         </div>
         
-        {/* Rating Text Display - sakriva se u kompaktnom modu */}
         {!isCompact && (
           <div className='rating-text'>
             {rating ? (

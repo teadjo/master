@@ -1,4 +1,3 @@
-// src/utils/share.js
 export async function shareContent(data) {
   if (!navigator.share) {
     console.log('❌ Web Share API nije podržan');
@@ -10,9 +9,8 @@ export async function shareContent(data) {
       title: data.title,
       text: data.text,
       url: data.url,
-      files: data.files // opciono
+      files: data.files 
     });
-    console.log('✅ Sadržaj podijeljen');
     return true;
   } catch (error) {
     if (error.name !== 'AbortError') {

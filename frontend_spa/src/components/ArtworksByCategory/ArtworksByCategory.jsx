@@ -40,7 +40,6 @@ function ArtworksByCategory() {
     return (
         <div className="artworks-page">
             <div className='artworks-container'>
-                {/* Hero Header */}
                 <div className='category-hero'>
                     <div className='hero-content'>
                         <h1 className='category-title'>{category}</h1>
@@ -51,7 +50,6 @@ function ArtworksByCategory() {
                     </div>
                 </div>
 
-                {/* Artworks Grid */}
                 {loading ? (
                     <div className="loading-section">
                         <div className="loading-spinner"></div>
@@ -81,7 +79,6 @@ function ArtworksByCategory() {
                             </div>
                         )}
 
-                        {/* Pagination */}
                         {art.length > imagesPerPage && (
                             <div className='pagination-section'>
                                 <Pagination

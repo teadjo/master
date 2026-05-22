@@ -143,7 +143,6 @@ function AllUsers(){
             </div>
             <Footer/>
             
-            {/* Toast notifikacija */}
             {toast.show && (
                 <Toast 
                     message={toast.message} 
@@ -152,7 +151,6 @@ function AllUsers(){
                 />
             )}
 
-            {/* Custom Confirm Dialog */}
             {confirmDialog.show && (
                 <div className="custom-confirm-overlay" onClick={closeConfirmDialog}>
                     <div className="custom-confirm-dialog" onClick={(e) => e.stopPropagation()}>

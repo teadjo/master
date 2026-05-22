@@ -9,7 +9,6 @@
     padding: 0 20px 40px;
 }
 
-/* Hero Section */
 .category-hero {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -40,7 +39,6 @@
     font-weight: 500;
 }
 
-/* Artworks Grid */
 .artworks-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -50,19 +48,14 @@
 
 .artwork-card-wrapper {
     transition: all 0.3s ease;
-    /* border-radius: 16px; */
     overflow: hidden;
-    /* background: white; */
-    /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); */
     transition: all 0.3s ease;
 }
 
 .artwork-card-wrapper:hover {
     transform: translateY(-8px);
-    /* box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); */
 }
 
-/* Loading State */
 .loading-section {
     display: flex;
     flex-direction: column;
@@ -93,7 +86,6 @@
     margin: 0;
 }
 
-/* Empty State */
 .empty-state {
     text-align: center;
     padding: 80px 20px;
@@ -124,7 +116,6 @@
     margin: 0 auto;
 }
 
-/* Pagination Section */
 .pagination-section {
     display: flex;
     justify-content: center;
@@ -133,7 +124,6 @@
     border-top: 1px solid #e2e8f0;
 }
 
-/* Responsive Design */
 @media screen and (max-width: 1200px) {
     .artworks-grid {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

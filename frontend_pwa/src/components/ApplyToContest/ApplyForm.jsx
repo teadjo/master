@@ -23,7 +23,6 @@ function ApplyForm({ closeForm }) {
     const { showToast } = useToast();
     const navigate = useNavigate();
     
-    // KLJUČNO: Koristi globalni sync kontekst
     const { startOfflineSync } = useSyncNotification();
 
     const closeToast = () => {
@@ -73,7 +72,6 @@ function ApplyForm({ closeForm }) {
                 id_rada_tr: state.art_id
             });
 
-            // Ako je offline (queued)
             if (response.data && response.data.queued) {
                 console.log('📱 Offline - zahtjev sačuvan');
                 
@@ -81,9 +79,7 @@ function ApplyForm({ closeForm }) {
                     'Vaš rad će biti prijavljen kada budete ponovo online! 📱',
                     'info'
                 );
-                
-                // KLJUČNO: Pokreni GLOBALNI sync tracker
-                // Ovo će raditi čak i kad korisnik napusti formu!
+
                 startOfflineSync(id, `${API1}/competition/${id}`);
                 setTimeout(() => {
                     navigate(`/competition/${id}`);
@@ -91,7 +87,6 @@ function ApplyForm({ closeForm }) {
                 return;
             }
 
-            // Online - uspjeh
             if (response.status === 200 || response.status === 201) {
                 showToast(
                     "Uspješno ste prijavili rad na takmičenje! 🎉",
@@ -112,10 +107,8 @@ function ApplyForm({ closeForm }) {
                     'info'
                 );
                 
-                // KLJUČNO: Pokreni GLOBALNI sync tracker
                 startOfflineSync(id, `${API1}/competition/${id}`);
                 
-                // Ručno sačuvaj ako treba
                 try {
                     const dbRequest = indexedDB.open('BackgroundSyncDB', 1);
                     dbRequest.onsuccess = (event) => {

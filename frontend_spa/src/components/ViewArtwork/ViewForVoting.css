@@ -1,4 +1,3 @@
-/* Zajednički stilovi za obje komponente */
 .artwork-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -104,14 +103,12 @@
     font-weight: 600;
 }
 
-/* Competitions Grid */
 .competitions-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
 
-/* Awards List */
 .awards-list {
     list-style: none;
     padding: 0;
@@ -136,7 +133,6 @@
     font-size: 1.3rem;
 }
 
-/* Comments Section */
 .comments-section {
     display: flex;
     flex-direction: column;
@@ -150,7 +146,6 @@
     padding: 40px 0;
 }
 
-/* Voting Section Styles */
 .voting-section {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 12px;
@@ -204,7 +199,6 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Responsive Design */
 @media screen and (max-width: 768px) {
     .artwork-container {
         padding: 15px;
@@ -246,7 +240,6 @@
     }
 }
 
-/* Dodatni stilovi specifični za ViewForVoting */
 .voting-container {
     position: relative;
 }
@@ -358,7 +351,6 @@
     font-weight: 500;
 }
 
-/* Star Rating Container in Voting Section */
 .voting-section .star-rating-container.compact {
     margin: 0 auto;
     background: rgba(255, 255, 255, 0.1);
@@ -371,7 +363,6 @@
     border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* Responsive adjustments for voting */
 @media screen and (max-width: 768px) {
     .voting-section {
         padding: 20px;
@@ -410,7 +401,6 @@
     }
 }
 
-/* Competition Banner */
 .competition-banner {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -461,7 +451,6 @@
     background: rgba(255, 255, 255, 0.3);
 }
 
-/* Voting closed messages */
 .voting-closed {
     background: #f8f9fa;
     border: 2px dashed #cbd5e0;
@@ -478,7 +467,6 @@
     font-weight: 500;
 }
 
-/* Responsive */
 @media screen and (max-width: 768px) {
     .banner-content {
         flex-direction: column;

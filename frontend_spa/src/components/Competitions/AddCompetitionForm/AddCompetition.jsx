@@ -15,9 +15,9 @@ function AddCompetition() {
         datum_kraja: '',
         ime: '',
         svota: '',
-        slika: null  // Sada čuva File objekat, ne base64 string
+        slika: null 
     });
-    const [previewImage, setPreviewImage] = useState(null); // Za preview slike
+    const [previewImage, setPreviewImage] = useState(null); 
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
     const [toast, setToast] = useState({ show: false, message: '', type: 'error' });
@@ -46,7 +46,6 @@ function AddCompetition() {
         const { name, value } = e.target;
         setState(prev => ({ ...prev, [name]: value }));
         
-        // Clear error when user starts typing
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
         }
@@ -56,7 +55,6 @@ function AddCompetition() {
         const file = e.target.files[0];
         if (!file) return;
 
-        // Validate file type
         const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
         if (!allowedTypes.includes(file.type)) {
             setErrors(prev => ({ ...prev, slika: 'Dozvoljeni formati: JPG, PNG, GIF, WEBP' }));
@@ -64,18 +62,15 @@ function AddCompetition() {
             return;
         }
 
-        // Validate file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
             setErrors(prev => ({ ...prev, slika: 'Slika mora biti manja od 5MB' }));
             showToast('Slika mora biti manja od 5MB', 'error');
             return;
         }
 
-        // Sačuvaj File objekat umjesto base64
         setState(prev => ({ ...prev, slika: file }));
         setErrors(prev => ({ ...prev, slika: '' }));
         
-        // Kreiraj preview za prikaz
         const reader = new FileReader();
         reader.onloadend = () => {
             setPreviewImage(reader.result);
@@ -94,7 +89,6 @@ function AddCompetition() {
         if (!state.svota.trim()) newErrors.svota = 'Svota je obavezna';
         if (!state.slika) newErrors.slika = 'Slika je obavezna';
 
-        // Date validation
         if (state.datum_poc && state.datum_kraja) {
             const startDate = new Date(state.datum_poc);
             const endDate = new Date(state.datum_kraja);
@@ -117,7 +111,6 @@ function AddCompetition() {
 
         setLoading(true);
         try {
-            // Kreiraj FormData objekat za slanje fajla
             const formData = new FormData();
             formData.append('naziv_takmicenja', state.naziv_takmicenja);
             formData.append('opis', state.opis);
@@ -126,7 +119,7 @@ function AddCompetition() {
             formData.append('naziv_kategorije_t', state.naziv_kategorije_t);
             formData.append('ime', state.ime);
             formData.append('svota', state.svota);
-            formData.append('slika', state.slika); // Šaljemo fajl direktno
+            formData.append('slika', state.slika); 
             
             const response = await api.post(`${API}/competitions/`, formData, {
                 headers: {
@@ -136,7 +129,6 @@ function AddCompetition() {
             
             if (response.data) {
                 showToast("Takmičenje je uspešno dodato!", "success");
-                // Reset form
                 setState({
                     naziv_kategorije_t: 'Slikarstvo',
                     naziv_takmicenja: '',
@@ -148,11 +140,8 @@ function AddCompetition() {
                     slika: null
                 });
                 setPreviewImage(null); // Reset preview
-                // Reset file input
                 const fileInput = document.querySelector('input[type="file"]');
-                if (fileInput) fileInput.value = '';
-                
-                // Reset errors
+                if (fileInput) fileInput.value = '';                
                 setErrors({});
             }
         } catch (error) {
@@ -299,7 +288,6 @@ function AddCompetition() {
                             {errors.slika && <span className="error-text">{errors.slika}</span>}
                             <div className="file-hint">Podržani formati: JPG, PNG, GIF, WEBP (max 5MB)</div>
                             
-                            {/* Preview slike */}
                             {previewImage && (
                                 <div className="image-preview" style={{ marginTop: '15px' }}>
                                     <img 
@@ -340,7 +328,6 @@ function AddCompetition() {
             </div>
         </div>
         
-        {/* Toast notifikacija */}
         {toast.show && (
             <Toast 
                 message={toast.message} 

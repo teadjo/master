@@ -22,15 +22,9 @@ useEffect(() => {
 
   const handleMessage = (event) => {
     if (event.data?.type === 'SYNC_COMPLETE') {
-      console.log('✅ Sync complete message');
-
       setSyncStatus('complete');
-
       setPendingCount(0);
-
       setLastSyncTime(Date.now());
-
-     
     }
   };
 
@@ -88,7 +82,6 @@ useEffect(() => {
     }
   }, [showToast]);
 
-  // POZIVA SE KAD KORISNIK OFFLINE POŠALJE ZAHTJEV
   const startOfflineSync = useCallback(async () => {
     setSyncStatus('pending');
     setPendingCount(prev => prev + 1);

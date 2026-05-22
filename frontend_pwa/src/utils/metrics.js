@@ -1,4 +1,3 @@
-// src/utils/metrics.js
 export class PWAMetrics {
   constructor() {
     this.metrics = {
@@ -28,7 +27,6 @@ export class PWAMetrics {
   }
   
   measureLoadTime() {
-    // First paint
     const paintObserver = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
         if (entry.name === 'first-contentful-paint') {
@@ -39,7 +37,6 @@ export class PWAMetrics {
     
     paintObserver.observe({ type: 'paint', buffered: true });
     
-    // Time to Interactive
     window.addEventListener('load', () => {
       const navigationEntry = performance.getEntriesByType('navigation')[0];
       this.metrics.loadTime.domContentLoaded = navigationEntry.domContentLoadedEventEnd;

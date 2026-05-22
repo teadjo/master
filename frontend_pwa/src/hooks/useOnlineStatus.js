@@ -9,7 +9,6 @@ export function useOnlineStatus() {
     window.addEventListener('online', updateOnline)
     window.addEventListener('offline', updateOffline)
 
-    // fallback ping
     const interval = setInterval(async () => {
       try {
         await fetch('/favicon.svg', { cache: 'no-store' })

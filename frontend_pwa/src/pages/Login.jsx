@@ -22,10 +22,8 @@ function Login() {
     
     const handleToggleForm = () => {
         setLoginFormVisible(!isLoginFormVisible);
-        // Resetuj formu pri prebacivanju
         setState({Type: 1,slika:null});
         setPreviewImage(null);
-        // Resetuj toast
         closeToast();
     };
 
@@ -86,10 +84,8 @@ function Login() {
             return;
         }
 
-        // Sačuvaj File objekat
         setState((prevState) => ({ ...prevState, slika: file }));
         
-        // Kreiraj preview
         const reader = new FileReader();
         reader.onloadend = () => {
             setPreviewImage(reader.result);
@@ -104,7 +100,6 @@ function Login() {
         
         if(!(typeof state.Username === 'undefined') && !(typeof state.Password === 'undefined')&& !(typeof state.Name === 'undefined') && !(typeof state.Surname === 'undefined') && !(typeof state.Email === 'undefined')){
             try{
-                // Kreiraj FormData za slanje
                 const formData = new FormData();
                 formData.append('Name', state.Name);
                 formData.append('Surname', state.Surname);
@@ -116,9 +111,7 @@ function Login() {
                 formData.append('Description', state.Description || '');
                 if (state.slika) {
                     formData.append('slika', state.slika);
-                    console.log('Slika dodata:', state.slika.name);
                 }
-                console.log(state)
                 
                 const response = await api.post(`${API}/add/`, formData, {
                         headers: {
@@ -338,7 +331,6 @@ function Login() {
                 </div>
             </div>
             
-            {/* Toast notifikacija */}
             {toast.show && (
                 <Toast 
                     message={toast.message} 

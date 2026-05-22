@@ -6,9 +6,7 @@ import {api} from '../utils/api'
 function Picture(props) {
   const API = import.meta.env.VITE_API_URL
 
-
   return (
-    // <li className='artwork-card'>
       <Link className='card-link' to={props.link}>
         <div className='card-image-section'>
           <div className='image-wrapper'>
@@ -45,7 +43,6 @@ function Picture(props) {
           </div>
         </div>
       </Link> 
-    // </li>
   )
 }
 

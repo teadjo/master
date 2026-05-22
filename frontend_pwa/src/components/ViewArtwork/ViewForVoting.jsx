@@ -11,7 +11,7 @@ import Toast from '../../Toast'
 import { useToast } from '../../ToastContext'
 
 function ViewForVoting() {
-    const { id, artID } = useParams(); // competition ID i artwork ID
+    const { id, artID } = useParams(); 
     const navigate = useNavigate();
     const [art, setArt] = useState({});
     const [grade, setGrade] = useState(0);
@@ -63,9 +63,6 @@ function ViewForVoting() {
                     api.get(`${API}/competitions/compID/${id}`)
                 ]);
 
-                console.log("Artwork data:", artworkRes.data);
-                console.log("Competition data:", competitionRes.data);
-
                 if (!artworkRes.data[0]) {
                     showToast("Rad nije pronađen!", "error");
                     navigate('/competitions');
@@ -79,7 +76,6 @@ function ViewForVoting() {
                 setAllCompetitions(normalizeArray(specRes.data) || []);
                 setComp(competitionRes.data[0] || {});
 
-                // Provjeri da li je trenutni korisnik već glasao
                 const userID = localStorage.getItem('userID');
                 const userGrades = gradesRes.data.filter(grade => 
                     grade.id_ocenjivaca == userID
@@ -90,10 +86,8 @@ function ViewForVoting() {
                     console.log("Korisnik je već glasao");
                 }
 
-                // Provjeri da li je korisnik vlasnik rada
                 if (userID == artworkRes.data[0].id_umjetnika) {
                     setValidV(false);
-                    console.log("Korisnik je vlasnik rada, ne može glasati");
                 }
 
             } catch (err) {
@@ -109,16 +103,12 @@ function ViewForVoting() {
         }
     }, [artID, id, navigate]);
 
-    // Update state when grade changes
     useEffect(() => {
         setState(prev => ({...prev, ocjena: grade}));
     }, [grade]);
 
     function onClickSubmit(e) {
         e.preventDefault();
-        
-        console.log("Submitting grade:", grade);
-        console.log("User ID:", state.id_ocenjivaca, "Artist ID:", idGraded);
         
         if (state.id_ocenjivaca == idGraded) {
             showToast("Ne možete ocijeniti svoj rad!", "error");
@@ -132,15 +122,12 @@ function ViewForVoting() {
 
         const writeGrade = async () => {
             try {
-                console.log("Sending data:", state);
                 const write = await api.post(`${API}/grades/`, state);
                 if (write.data) {
                     showToast("Uspješno ste ocijenili rad!", "success");
                     setValidV(false);
-                    // Refresh comments to show the new one
                     const gradesRes = await api.get(`${API}/grades/compID/${id}/artID/${artID}`);
                     setComments(gradesRes.data);
-                    // Reset grade and comment
                     setGrade(0);
                     setState(prev => ({ ...prev, komentar: '', ocjena: 0 }));
                 } else {
@@ -174,7 +161,6 @@ function ViewForVoting() {
     return (
         <>    
             <div className='artwork-container voting'>
-                {/* Competition Info Banner */}
                 <div className='competition-banner'>
                     <div className='banner-content'>
                         <h2>Takmičenje: {comp.naziv_takmicenja}</h2>
@@ -212,7 +198,6 @@ function ViewForVoting() {
                     </div>
                 </div>
 
-                {/* Voting Section */}
                 {canVote ? (
                     <div className='voting-section'>
                         <div className='rating-section'>
@@ -291,7 +276,6 @@ function ViewForVoting() {
             </div>
             <Footer />  
 
-            {/* Toast notifikacija */}
             {toast.show && (
                 <Toast 
                     message={toast.message} 

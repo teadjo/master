@@ -138,7 +138,6 @@
 
 .artwork-card:hover {
     transform: translateY(-5px);
-    /* box-shadow: 0 10px 30px rgba(138, 43, 226, 0.2); */
 }
 
 .artwork-card.selected {
@@ -263,7 +262,6 @@
     font-size: 1.2rem;
 }
 
-/* Animations */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -284,11 +282,10 @@
     }
 }
 
-/* Responsive Design */
 @media screen and (max-width: 768px) {
     .apply-form-overlay {
         padding: 0.5rem;
-        align-items: flex-start; /* VAŽNO: Počni od vrha */
+        align-items: flex-start; 
         margin-top: 70px;
         background: rgba(0, 0, 0, 0.7);
         backdrop-filter: blur(8px);
@@ -298,13 +295,13 @@
         width: 100%;
         max-height: 100vh;
         border-radius: 16px;
-        margin-top: env(safe-area-inset-top, 10px); /* Za iPhone notch */
+        margin-top: env(safe-area-inset-top, 10px); 
     }
     
     .apply-form-content {
         padding: 1.2rem 1rem;
         max-height: 100vh;
-        overflow-y: auto; /* Omogući skrolovanje */
+        overflow-y: auto; 
         display: flex;
         flex-direction: column;
     }
@@ -324,7 +321,7 @@
     .artworks-selection {
         flex: 1;
         margin-bottom: 1rem;
-        min-height: 0; /* VAŽNO za flex */
+        min-height: 0; 
     }
     
     .selection-header {
@@ -340,20 +337,20 @@
     .artworks-grid1 {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 0.8rem;
-        max-height: 280px; /* Manji grid */
+        max-height: 280px; 
         padding: 0.5rem;
     }
     
     .form-actions {
         display: flex;
-        flex-direction: row; /* UVIJEK u redu */
+        flex-direction: row; 
         gap: 12px;
         padding: 12px 0 0 0;
         border-top: 2px solid #f0f0f0;
         position: sticky;
         bottom: 0;
         background: white;
-        margin-top: auto; /* Guraj na dno */
+        margin-top: auto;
     }
     
     .submit-btn {
@@ -365,12 +362,12 @@
     }
     
     .cancel-link {
-        flex-shrink: 0; /* Ne skupljaj se */
-        min-width: 100px; /* Minimalna širina */
+        flex-shrink: 0; 
+        min-width: 100px; 
         padding: 14px 16px;
         font-size: 0.95rem;
         border-radius: 12px;
-        background: #f5f5f5; /* Siva pozadina da se vidi */
+        background: #f5f5f5; 
         color: #666;
         border: 2px solid #e0e0e0;
         display: flex;
@@ -418,7 +415,7 @@
     }
     
     .artworks-grid1 {
-        grid-template-columns: repeat(2, 1fr); /* 2 kolone */
+        grid-template-columns: repeat(2, 1fr); 
         gap: 0.5rem;
         max-height: 220px;
     }
@@ -450,7 +447,6 @@
     }
 }
 
-/* Za veoma male ekrane (320px) */
 @media screen and (max-width: 350px) {
     .artworks-grid1 {
         grid-template-columns: 1fr;

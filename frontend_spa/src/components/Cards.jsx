@@ -22,11 +22,8 @@ function Cards() {
         setLoading(true);
         const response = await api.get(`${API}/artworks/`);
         setArt(response.data); 
-        console.log(response.data);
         const usersData = await api.get(`${API}/type/1`);
-        console.log("DATA TYPE:", typeof usersData, usersData)
         setUsers(normalizeArray(usersData.data).splice(0,20));
-        console.log(usersData.data);
       } catch (error) {
         console.error('Greška u dobavljanju podataka:', error);
       } finally {
@@ -37,7 +34,7 @@ function Cards() {
   },[]);
 
   const handleClick = () => {
-    navigate('/login'); // Navigates to the /new-page route within your app
+    navigate('/login'); 
   };
 
   const indexOfLast = currentPage * imagesPerPage;
@@ -48,7 +45,6 @@ function Cards() {
 
   return (
     <div className='cards_comp'>
-      {/* Hero Section */}
       <div className='hero-section'>
         <div className='hero-content'>
           <p className='hero-subtitle'>Otkrijte nevjerovatne umjetničke radove i talentovane umjetnike iz cijelog svijeta</p>
@@ -69,7 +65,6 @@ function Cards() {
         </div>
       </div>
 
-      {/* Umjetnička Djela Sekcija */}
       <section className='art-section'>
         <div className='section-header'>
           <div className='title-wrapper'>
@@ -123,7 +118,6 @@ function Cards() {
         )}
       </section>
 
-      {/* Umjetnici Sekcija */}
       <section className='artists-section'>
         <div className='section-header'>
           <div className='title-wrapper'>
@@ -167,7 +161,6 @@ function Cards() {
         )}
       </section>
 
-      {/* CTA Section */}
       <div className='cta-section'>
         <div className='cta-content'>
           <h3>Spremni da se pridružite našoj zajednici?</h3>

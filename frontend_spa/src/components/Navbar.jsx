@@ -15,14 +15,11 @@ function Navbar() {
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
 
-  // ✅ 1. Koristi matchMedia umjesto innerWidth (NEMA REFLOW!)
   const showButton = useCallback(() => {
-    // matchMedia ne izaziva reflow - mnogo brže!
     const isMobile = window.matchMedia('(max-width: 960px)').matches;
     setButton(!isMobile);
   }, []);
 
-  // ✅ 2. Debounce za resize event
   const debounce = (func, wait) => {
     let timeout;
     return function executedFunction(...args) {
@@ -47,10 +44,8 @@ function Navbar() {
   }
 
   useEffect(() => {
-    // ✅ 3. Inicijalno pozivanje
     showButton();
     
-    // ✅ 4. Session storage za notlogedIn (brže od localStorage)
     if (sessionStorage.getItem('notlogedIn') === null) {
       sessionStorage.setItem('notlogedIn', 'true');
     }
@@ -69,10 +64,8 @@ function Navbar() {
       setIsScrolled(window.scrollY > 50);
     };
     
-    // ✅ 5. Passivni scroll listener (bolje performanse)
     window.addEventListener('scroll', handleScroll, { passive: true });
     
-    // ✅ 6. Debounced resize listener
     const debouncedResize = debounce(showButton, 150);
     window.addEventListener('resize', debouncedResize);
     
@@ -80,9 +73,8 @@ function Navbar() {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', debouncedResize);
     };
-  }, [showButton]); // showButton u dependency array
-
-  // ✅ 7. Umjesto da provjeravaš localStorage svaki render - memoizacija
+  }, [showButton]); 
+  
   const isLoggedIn = localStorage.getItem('notlogedIn') === 'false';
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
   const userId = localStorage.getItem('userID');

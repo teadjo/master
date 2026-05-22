@@ -1,4 +1,3 @@
-/* InstallPrompt.css */
 .install-prompt-overlay {
   position: fixed;
   bottom: 0;
@@ -209,7 +208,6 @@
   }
 }
 
-/* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .install-prompt-card {
     background: #1e1e1e;

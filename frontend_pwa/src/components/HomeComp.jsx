@@ -17,7 +17,6 @@ function HomeComp() {
 
   return (
     <div className='hero-container'>
-      {/* Background Image */}
       <div className='hero-background'>
         <img 
           src={heroImage} 
@@ -26,14 +25,11 @@ function HomeComp() {
           fetchpriority="high"
           loading="eager"
         />
-        {/* DODAJ OVO - tamni gradijent preko slike (vraća originalni izgled) */}
         <div className='hero-gradient-overlay'></div>
-        {/* Ovo je ljubičasti accent overlay (isti kao prije) */}
         <div className='background-overlay'></div>
        
       </div>
       
-      {/* Ostali sadržaj ostaje isti */}
       <div className='hero-content1'>
         <div className='hero-badge'>
           <span className='badge-icon'>🎨</span>
