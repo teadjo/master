@@ -2,30 +2,25 @@
 export const desktopConfig = {
   extends: 'lighthouse:default',
   settings: {
-    // Only audits, ne koristimo emulaciju (Playwright će to raditi)
     onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo'],
     
     // 🔥 OVO JE KLJUČNO - ne resetujemo storage između navigacija
-    disableStorageReset: false,  // false = čuvamo keš, indexDB, localStorage
-    
-    // Throttling settings (opciono - simulira slabiju mrežu)
-    throttling: {
-      rttMs: 150,           // Kašnjenje od 150ms (3G/4G)
-      throughputKbps: 1638, // 1.6 Mbps (3G)
-      cpuSlowdownMultiplier: 4,
-      requestLatencyMs: 0,
-      downloadThroughputKbps: 0,
-      uploadThroughputKbps: 0,
-    },
-    
-    // Form factors
-    formFactor: 'desktop',
-    screenEmulation: {
-      disabled: true,  // Playwright će kontrolisati veličinu
-    },
+    disableStorageReset: false,
     
     // Output formats
     output: ['html', 'json'],
+    
+    // Isključi throttling da dobiješ realne metrike
+    throttling: {
+      rttMs: 0,
+      throughputKbps: 0,
+      cpuSlowdownMultiplier: 1,
+    },
+    
+    formFactor: 'desktop',
+    screenEmulation: {
+      disabled: true,
+    },
   },
 };
 
@@ -33,12 +28,12 @@ export const mobileConfig = {
   extends: 'lighthouse:default',
   settings: {
     onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo'],
-    disableStorageReset: false,  // 🔥 KLJUČNO ZA RETURNING USER
+    disableStorageReset: false,
     formFactor: 'mobile',
     throttling: {
-      rttMs: 150,
-      throughputKbps: 1638,
-      cpuSlowdownMultiplier: 4,
+      rttMs: 0,
+      throughputKbps: 0,
+      cpuSlowdownMultiplier: 1,
     },
     screenEmulation: {
       mobile: true,
