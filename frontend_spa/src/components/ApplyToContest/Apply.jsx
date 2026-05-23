@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
+import React, {lazy,  useState, useEffect, useMemo, useCallback, Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 import './Apply.css';
 const Picture = React.lazy(() => import('../Picture'));

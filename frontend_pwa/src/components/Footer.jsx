@@ -3,21 +3,20 @@ import './Footer.css';
 import Button from './Button';
 import { Link } from 'react-router-dom';
 
-// 🔥 Samo importuj ikonice koje ti trebaju
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
-  faMapMarkerAlt,      // lokacija
-  faPhone,             // telefon
-  faEnvelopeOpen,      // email
-  faPaperPlane,        // newsletter dugme
+  faMapMarkerAlt,      
+  faPhone,             
+  faEnvelopeOpen,     
+  faPaperPlane,        
 } from '@fortawesome/free-solid-svg-icons';
 import { 
-  faInstagram,         // Instagram
-  faFacebookF,         // Facebook
-  faTwitter,           // Twitter
-  faYoutube,           // YouTube
+  faInstagram,         
+  faFacebookF,         
+  faTwitter,        
+  faYoutube,      
 } from '@fortawesome/free-brands-svg-icons';
-import { faEnvelope } from '@fortawesome/free-regular-svg-icons'; // ako treba outline verzija
+import { faEnvelope } from '@fortawesome/free-regular-svg-icons'; 
 
 function Footer() {
   return (

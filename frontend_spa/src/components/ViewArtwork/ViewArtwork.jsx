@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {lazy, useState, useEffect} from 'react'
 import { Link, useParams } from 'react-router-dom'
 import './ViewArtwork.css'
 const CompetitionCard = lazy(() => import('../CompetitionCard'));

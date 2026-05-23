@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {lazy, useState, useEffect} from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import './ViewForVoting.css'
 const StarRatingComp = lazy(() => import('../StarRatingComp'));
