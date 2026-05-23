@@ -2,7 +2,7 @@
 import puppeteer from 'puppeteer';
 import { writeFileSync, mkdirSync } from 'fs';
 import path from 'path';
-import { startFlow, desktopConfig } from 'lighthouse';
+import { startFlow } from 'lighthouse';
 import { desktopConfig } from './config.js';
 
 const REPORT_DIR = './tests/lighthouse/reports';
