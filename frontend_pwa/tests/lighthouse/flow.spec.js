@@ -21,7 +21,7 @@ async function simulateReturningUser() {
 
   // Pokrećemo browser sa Puppeteer
   const browser = await puppeteer.launch({
-    headless: false, // false da vidimo šta se dešava
+    headless: 'new', 
     defaultViewport: null,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
@@ -36,19 +36,29 @@ async function simulateReturningUser() {
 
   // 📊 PRVI KORAK: Cold load (prvi put - nema keša)
   console.log('📊 1/3: Cold navigation (first visit - no cache)...');
-  await flow.navigate(APP_URL, {
-    stepName: '🏠 Home page - First visit (cold)',
-  });
+  const client = await page.target().createCDPSession();
+
+    await client.send('Network.clearBrowserCache');
+    await client.send('Network.clearBrowserCookies');
+
+    await client.send('Storage.clearDataForOrigin',{
+    origin:APP_URL,
+    storageTypes:'all'
+    });
+    await flow.navigate(APP_URL, {
+        stepName: '🏠 Home page - First visit (cold)',
+    });
 
   // 🔥 waitForTimeout ne postoji u Puppeteer, koristimo sleep
-  await sleep(2000);
+  await page.waitForNetworkIdle({
+    idleTime:1500
+    });
 
   // 📊 DRUGI KORAK: Warm load (returning user)
   console.log('📊 2/3: Warm navigation (returning user - warm cache)...');
   
   // Idemo na about:blank pa se vraćamo (čuvamo keš)
   await page.goto('about:blank');
-  await sleep(1000);
 
   await flow.navigate(APP_URL, {
     stepName: '🏠 Home page - Returning visit (WARM CACHE) ✨',
@@ -59,21 +69,15 @@ async function simulateReturningUser() {
     },
   });
 
+  await page.waitForNetworkIdle();
   // 📊 TREĆI KORAK: Navigacija na takmičenja (warm cache)
   console.log('📊 3/3: Competitions page - returning user...');
   
-  // Pokušaj da klikneš na link
-  const competitionsLink = await page.$('a[href="/competitions"], [data-testid="competitions-link"]');
-  if (competitionsLink) {
-    await competitionsLink.click();
-  } else {
-    await page.goto(`${APP_URL}/competitions`);
-  }
-
-  await sleep(2000);
-  await flow.snapshot({
-    stepName: '🏆 Competitions page - Warm navigation',
-  });
+    await flow.navigate(
+    `${APP_URL}/competitions`,
+    {
+    stepName:'Competition warm'
+    });
 
   // Generiši izveštaj
   console.log('\n📝 Generišem Lighthouse izveštaj...');
