@@ -177,9 +177,9 @@ function ViewForVoting() {
                 <div className='artwork-header'>
                     <div className='artwork-image'>
                         {art?.slika ? (
-                            <img fetchPriority="high" src={`${API}${art.slika}`} alt={art.naziv} />
+                            <img loading='eager' fetchPriority="high" src={`${API}${art.slika}`} alt={art.naziv} />
                         ) : (
-                            <img fetchPriority="high" src='./../../../back.jpg' alt="Zadana slika" />
+                            <img loading='eager' fetchPriority="high" src='./../../../back.jpg' alt="Zadana slika" />
                         )}
                     </div>
                     

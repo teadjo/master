@@ -19,6 +19,18 @@ cleanupOutdatedCaches();
 self.__WB_DISABLE_DEV_LOGS = true;
 precacheAndRoute(self.__WB_MANIFEST);
 
+self.addEventListener('activate',(event)=>{
+
+  event.waitUntil(
+    (async()=>{
+      if(self.registration.navigationPreload){
+        await self.registration
+        .navigationPreload.enable()
+      }
+    })()
+    );
+  });
+
 // BACKEND SLIKE
 
 registerRoute(
@@ -64,22 +76,21 @@ registerRoute(
 // API GET
 
 registerRoute(
-  ({ url, request }) =>
-    url.origin === 'https://master-4-xbzp.onrender.com' &&
-    !url.pathname.startsWith('/uploads') &&
-    request.method === 'GET',
+ ({url,request}) =>
+   url.origin==="https://master-4-xbzp.onrender.com" &&
+   !url.pathname.startsWith('/uploads') &&
+   request.method==="GET",
 
-    new NetworkFirst({
-      cacheName: 'api-cache',
-      networkTimeoutSeconds: 3,
+ new StaleWhileRevalidate({
+   cacheName:'api-cache',
 
-    plugins:[
+   plugins:[
       new ExpirationPlugin({
-          maxEntries:50,
-          maxAgeSeconds:60*50
+         maxEntries:50,
+         maxAgeSeconds:60*60
       })
-    ]
-    })
+   ]
+ })
 );
 
 // PAGE NAVIGATION
@@ -89,7 +100,7 @@ registerRoute(
 
   new NetworkFirst({
     cacheName:"pages",
-    networkTimeoutSeconds:3,
+    networkTimeoutSeconds:2,
 
     plugins: [
       {
