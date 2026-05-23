@@ -1,7 +1,23 @@
-import React from 'react'
+import React from 'react';
 import './Footer.css';
-import Button from './Button'
+import Button from './Button';
 import { Link } from 'react-router-dom';
+
+// 🔥 Samo importuj ikonice koje ti trebaju
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { 
+  faMapMarkerAlt,      // lokacija
+  faPhone,             // telefon
+  faEnvelopeOpen,      // email
+  faPaperPlane,        // newsletter dugme
+} from '@fortawesome/free-solid-svg-icons';
+import { 
+  faInstagram,         // Instagram
+  faFacebookF,         // Facebook
+  faTwitter,           // Twitter
+  faYoutube,           // YouTube
+} from '@fortawesome/free-brands-svg-icons';
+import { faEnvelope } from '@fortawesome/free-regular-svg-icons'; // ako treba outline verzija
 
 function Footer() {
   return (
@@ -36,7 +52,8 @@ function Footer() {
             <div className='contact-info'>
               <div className='contact-item'>
                 <div className='contact-icon'>
-                  <i className='fas fa-map-marker-alt'/>
+                  {/* 🔥 Umesto <i className='fas fa-map-marker-alt'/> */}
+                  <FontAwesomeIcon icon={faMapMarkerAlt} />
                 </div>
                 <div className='contact-text'>
                   <span className='contact-label'>Lokacija</span>
@@ -45,7 +62,7 @@ function Footer() {
               </div>
               <div className='contact-item'>
                 <div className='contact-icon'>
-                  <i className='fas fa-phone'/>
+                  <FontAwesomeIcon icon={faPhone} />
                 </div>
                 <div className='contact-text'>
                   <span className='contact-label'>Telefon</span>
@@ -54,7 +71,7 @@ function Footer() {
               </div>
               <div className='contact-item'>
                 <div className='contact-icon'>
-                  <i className='far fa-envelope-open'/>
+                  <FontAwesomeIcon icon={faEnvelopeOpen} />
                 </div>
                 <div className='contact-text'>
                   <span className='contact-label'>Email</span>
@@ -96,7 +113,7 @@ function Footer() {
                 aria-label='Instagram'
               >
                 <div className='social-icon'>
-                  <i className='fab fa-instagram' />
+                  <FontAwesomeIcon icon={faInstagram} />
                 </div>
                 <span className='social-text'>Instagram</span>
               </Link>
@@ -107,7 +124,7 @@ function Footer() {
                 aria-label='Facebook'
               >
                 <div className='social-icon'>
-                  <i className='fab fa-facebook-f' />
+                  <FontAwesomeIcon icon={faFacebookF} />
                 </div>
                 <span className='social-text'>Facebook</span>
               </Link>
@@ -118,7 +135,7 @@ function Footer() {
                 aria-label='Twitter'
               >
                 <div className='social-icon'>
-                  <i className='fab fa-twitter' />
+                  <FontAwesomeIcon icon={faTwitter} />
                 </div>
                 <span className='social-text'>Twitter</span>
               </Link>
@@ -129,7 +146,7 @@ function Footer() {
                 aria-label='YouTube'
               >
                 <div className='social-icon'>
-                  <i className='fab fa-youtube' />
+                  <FontAwesomeIcon icon={faYoutube} />
                 </div>
                 <span className='social-text'>YouTube</span>
               </Link>
@@ -146,7 +163,7 @@ function Footer() {
                 className='newsletter-input'
               />
               <button type='submit' className='newsletter-btn' aria-label="Prijavi se na newsletter">
-                <i className='fas fa-paper-plane' />
+                <FontAwesomeIcon icon={faPaperPlane} />
               </button>
             </div>
           </div>
@@ -176,4 +193,4 @@ function Footer() {
   );
 }
 
-export default Footer
+export default Footer;

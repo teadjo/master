@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import { Link, useParams } from 'react-router-dom'
 import './ViewArtwork.css'
-import Comment from './Comment'
-import Footer from '../Footer'
-import CompetitionCard from '../CompetitionCard'
+const CompetitionCard = lazy(() => import('../CompetitionCard'));
+const Comment = lazy(() => import('./Comment'));
+const Footer = lazy(() => import('./components/Footer'));
 import { normalizeArray } from '../../utils/normalize'
 import {api} from '../../utils/api'
 

@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import './ViewForVoting.css'
-import StarRatingComp from '../StarRatingComp'
-import CompetitionCard from '../CompetitionCard'
-import Comment from './Comment'
-import Footer from '../Footer'
+const StarRatingComp = lazy(() => import('../StarRatingComp'));
+const CompetitionCard = lazy(() => import('../CompetitionCard'));
+const Comment = lazy(() => import('./Comment'));
+const Footer = lazy(() => import('./components/Footer'));
 import { normalizeArray } from '../../utils/normalize'
 import {api} from '../../utils/api' 
 import Toast from '../../Toast'

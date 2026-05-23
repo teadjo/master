@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 import './Apply.css';
-import Picture from '../Picture';
+const Picture = React.lazy(() => import('../Picture'));
 const ApplyForm = React.lazy(() => import('./ApplyForm'));
 const Footer = React.lazy(() => import('../Footer'));
 import { normalizeArray } from '../../utils/normalize';
