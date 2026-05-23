@@ -16,12 +16,12 @@ function sendToAnalytics(metric) {
 }
 
 if ('requestIdleCallback' in window) {
-  requestIdleCallback(() => {
+  // requestIdleCallback(() => {
     onCLS(sendToAnalytics);
     onLCP(sendToAnalytics);
     onTTFB(sendToAnalytics);
     onINP(sendToAnalytics);
-  });
+  // });
 }
 
 window.addEventListener('load', () => {

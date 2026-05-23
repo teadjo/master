@@ -66,6 +66,7 @@ registerRoute(
 registerRoute(
   ({ url, request }) =>
     url.origin === 'https://master-4-xbzp.onrender.com' &&
+    !url.pathname.startsWith('/uploads') &&
     request.method === 'GET',
 
     new NetworkFirst({
