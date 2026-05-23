@@ -4,7 +4,7 @@ import './ViewForVoting.css'
 const StarRatingComp = lazy(() => import('../StarRatingComp'));
 const CompetitionCard = lazy(() => import('../CompetitionCard'));
 const Comment = lazy(() => import('./Comment'));
-const Footer = lazy(() => import('./components/Footer'));
+const Footer = lazy(() => import('../Footer'));
 import { normalizeArray } from '../../utils/normalize'
 import {api} from '../../utils/api' 
 import Toast from '../../Toast'
