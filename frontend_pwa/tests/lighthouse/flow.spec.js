@@ -10,7 +10,6 @@ mkdirSync(REPORT_DIR, { recursive: true });
 
 const APP_URL = "https://master-azure-two.vercel.app";
 
-const APP_URL = process.env.APP_URL || 'http://localhost:5173';
 
 // Helper funkcija za sleep (zamena za waitForTimeout)
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
