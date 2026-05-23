@@ -36,7 +36,7 @@ registerRoute(
       }),
 
       new CacheableResponsePlugin({
-        statuses: [200]
+        statuses: [200,206]
       })
     ]
   })
@@ -68,13 +68,14 @@ registerRoute(
     url.origin === 'https://master-4-xbzp.onrender.com' &&
     request.method === 'GET',
 
-    new StaleWhileRevalidate({
-    cacheName:'api-cache',
+    new NetworkFirst({
+      cacheName: 'api-cache',
+      networkTimeoutSeconds: 3,
 
     plugins:[
       new ExpirationPlugin({
           maxEntries:50,
-          maxAgeSeconds:60*30
+          maxAgeSeconds:60*50
       })
     ]
     })

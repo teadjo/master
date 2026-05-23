@@ -8,7 +8,7 @@ import { desktopConfig } from './config.js';
 const REPORT_DIR = './tests/lighthouse/reports';
 mkdirSync(REPORT_DIR, { recursive: true });
 
-const APP_URL = "https://master-azure-two.vercel.app";
+const APP_URL = "https://master-spa2.vercel.app";
 
 
 // Helper funkcija za sleep (zamena za waitForTimeout)
