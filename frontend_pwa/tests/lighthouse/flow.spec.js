@@ -5,100 +5,94 @@ import path from 'path';
 import { startFlow } from 'lighthouse';
 import { desktopConfig } from './config.js';
 
-// Kreiraj folder za izveštaje ako ne postoji
 const REPORT_DIR = './tests/lighthouse/reports';
 mkdirSync(REPORT_DIR, { recursive: true });
 
-// URL vaše aplikacije - može se podesiti preko env varijable
 const APP_URL = process.env.APP_URL || 'http://localhost:5173';
 
-/**
- * Glavna funkcija koja pokreće test
- */
 async function simulateReturningUser() {
   console.log('\n🚀 Pokrećem Lighthouse User Flow test...');
   console.log(`📍 Testiram: ${APP_URL}`);
   console.log('👥 Scenarij: Returning user (warm cache)\n');
-  
-  // 1. Pokreni Playwright browser
+
+  // 🔥 Povezivanje Playwright-a sa Lighthouse-om - ISPRAVNA SINTARKSA
   const browser = await chromium.launch({
-    headless: false, // Promeni u true ako želiš headless mod
-    args: ['--disable-dev-shm-usage'],
+    headless: false,
+    args: ['--remote-debugging-port=9222'], // 🔥 KLJUČNO za Lighthouse
   });
+
+  const page = await browser.newPage();
   
-  // 2. Napravi novi context
-  const context = await browser.newContext({
-    viewport: { width: 1280, height: 720 },
-  });
+  // 🔥 Lighthouse zahteva CDP (Chrome DevTools Protocol) sesiju
+  const session = await page.context().newCDPSession(page);
   
-  const page = await context.newPage();
-  
-  // 3. Kreiraj UserFlow
+  // Kreiraj flow sa CDP sesijom
   const flow = await startFlow(page, {
     name: 'Art Competition App - Returning User Flow',
     config: desktopConfig,
+    driver: session, // 🔥 Prosledi CDP sesiju
   });
-  
-  // 📊 PRVI KORAK: Cold load (prvi put - bez keša)
+
+  // 📊 PRVI KORAK: Cold load
   console.log('📊 1/3: Cold navigation (first visit - no cache)...');
   await flow.navigate(APP_URL, {
     stepName: '🏠 Home page - First visit (cold)',
   });
-  
-  // Sačekaj malo da se sve učita
+
   await page.waitForTimeout(2000);
-  
-  // 📊 DRUGI KORAK: Simuliramo returning user (warm load)
+
+  // 📊 DRUGI KORAK: Warm load (returning user)
   console.log('📊 2/3: Warm navigation (returning user - warm cache)...');
   
-  // Idemo na about:blank pa se vraćamo (čuvamo keš)
+  // Idi na about:blank pa se vrati (čuvamo keš)
   await page.goto('about:blank');
   await page.waitForTimeout(1000);
-  
-  // 🔥 OVO JE RETURNING USER SCENARIO - keš je još uvek tu!
+
   await flow.navigate(APP_URL, {
     stepName: '🏠 Home page - Returning visit (WARM CACHE) ✨',
     configContext: {
       settingsOverrides: {
-        disableStorageReset: true, // 🔥 KLJUČNO - ne brišemo keš!
+        disableStorageReset: true, // 🔥 Čuvamo keš
       },
     },
   });
-  
-  // 📊 TREĆI KORAK: Navigacija na takmičenja (warm cache)
+
+  // 📊 TREĆI KORAK: Navigacija na takmičenja
   console.log('📊 3/3: Competitions page - returning user...');
   
-  // Pokušaj da klikneš na link, ako ne postoji - idi direktno
   const competitionsLink = await page.$('a[href="/competitions"], [data-testid="competitions-link"]');
   if (competitionsLink) {
     await competitionsLink.click();
   } else {
     await page.goto(`${APP_URL}/competitions`);
   }
-  
+
   await page.waitForTimeout(2000);
   await flow.snapshot({
     stepName: '🏆 Competitions page - Warm navigation',
   });
-  
-  // 4. Generiši izveštaj
+
+  // Generiši izveštaj
   console.log('\n📝 Generišem Lighthouse izveštaj...');
   const report = await flow.generateReport();
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  
-  // Sačuvaj HTML izveštaj
+
   const htmlPath = path.join(REPORT_DIR, `lighthouse-returning-user-${timestamp}.html`);
   writeFileSync(htmlPath, report);
   console.log(`✅ HTML izveštaj sačuvan: ${htmlPath}`);
-  
-  // 5. Zatvori browser
+
   await browser.close();
-  
+
   console.log('\n✨ Test završen!');
   console.log(`📂 Izveštaji se nalaze u: ${REPORT_DIR}`);
-  
-  return { htmlPath };
 }
 
-// Pokreni test
-simulateReturningUser().catch(console.error);
+// Pokretanje
+(async () => {
+  try {
+    await simulateReturningUser();
+  } catch (error) {
+    console.error('❌ Greška:', error);
+    process.exit(1);
+  }
+})();
