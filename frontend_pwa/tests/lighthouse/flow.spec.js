@@ -3,27 +3,33 @@ import puppeteer from 'puppeteer';
 import { writeFileSync, mkdirSync } from 'fs';
 import path from 'path';
 import { startFlow, desktopConfig } from 'lighthouse';
+import { desktopConfig } from './config.js';
 
 const REPORT_DIR = './tests/lighthouse/reports';
 mkdirSync(REPORT_DIR, { recursive: true });
 
 const APP_URL = "https://master-azure-two.vercel.app";
 
+const APP_URL = process.env.APP_URL || 'http://localhost:5173';
+
+// Helper funkcija za sleep (zamena za waitForTimeout)
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 async function simulateReturningUser() {
   console.log('\n🚀 Pokrećem Lighthouse User Flow test sa Puppeteer...');
   console.log(`📍 Testiram: ${APP_URL}`);
   console.log('👥 Scenarij: Returning user (warm cache)\n');
 
-  // 🔥 Pokrećemo browser sa Puppeteer (LIGHTHOUSE GA OVO OČEKUJE!)
+  // Pokrećemo browser sa Puppeteer
   const browser = await puppeteer.launch({
-    headless: false, // 'new' za headless, false da vidimo šta se dešava
-    defaultViewport: null, // Koristi puni viewport
+    headless: false, // false da vidimo šta se dešava
+    defaultViewport: null,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
 
   const page = await browser.newPage();
   
-  // 🔥 START FLOW - OVAKO RADI SA PUPPETEER
+  // Start Flow
   const flow = await startFlow(page, {
     name: 'Art Competition App - Returning User Flow',
     config: desktopConfig,
@@ -35,14 +41,15 @@ async function simulateReturningUser() {
     stepName: '🏠 Home page - First visit (cold)',
   });
 
-  await page.waitForTimeout(2000);
+  // 🔥 waitForTimeout ne postoji u Puppeteer, koristimo sleep
+  await sleep(2000);
 
   // 📊 DRUGI KORAK: Warm load (returning user)
   console.log('📊 2/3: Warm navigation (returning user - warm cache)...');
   
   // Idemo na about:blank pa se vraćamo (čuvamo keš)
   await page.goto('about:blank');
-  await page.waitForTimeout(1000);
+  await sleep(1000);
 
   await flow.navigate(APP_URL, {
     stepName: '🏠 Home page - Returning visit (WARM CACHE) ✨',
@@ -64,7 +71,7 @@ async function simulateReturningUser() {
     await page.goto(`${APP_URL}/competitions`);
   }
 
-  await page.waitForTimeout(2000);
+  await sleep(2000);
   await flow.snapshot({
     stepName: '🏆 Competitions page - Warm navigation',
   });

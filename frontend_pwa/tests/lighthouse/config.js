@@ -17,7 +17,7 @@ export const desktopConfig = {
       cpuSlowdownMultiplier: 1,
     },
     
-    formFactor: 'desktop',
+    formFactor: 'mobile',
     screenEmulation: {
       disabled: true,
     },
