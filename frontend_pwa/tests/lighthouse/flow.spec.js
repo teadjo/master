@@ -7,7 +7,7 @@ import { startFlow, desktopConfig } from 'lighthouse';
 const REPORT_DIR = './tests/lighthouse/reports';
 mkdirSync(REPORT_DIR, { recursive: true });
 
-const APP_URL = process.env.VITE_URL;
+const APP_URL = "https://master-azure-two.vercel.app npm run test:lighthouse:returning";
 
 async function simulateReturningUser() {
   console.log('\n🚀 Pokrećem Lighthouse User Flow test sa Puppeteer...');
