@@ -8,7 +8,7 @@ import { desktopConfig } from './config.js';
 const REPORT_DIR = './tests/lighthouse/reports';
 mkdirSync(REPORT_DIR, { recursive: true });
 
-const APP_URL = "https://master-azure-two.vercel.app/artwork/27/profile";
+const APP_URL = "https://master-azure-two.vercel.app";
 
 
 // Helper funkcija za sleep (zamena za waitForTimeout)
@@ -70,7 +70,6 @@ async function simulateReturningUser() {
   });
 
   await page.waitForNetworkIdle();
-  
   // Generiši izveštaj
   console.log('\n📝 Generišem Lighthouse izveštaj...');
   const report = await flow.generateReport();
