@@ -73,9 +73,13 @@ export default defineConfig(() => ({
     rollupOptions: {
     output: {
       manualChunks: {
-        'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+        'vendor-react': ['react', 'react-dom', 'react-router-dom','react-dom/client',],
         'vendor-workbox': ['workbox-window'],
-      }
+        'ui-vendor': ['react-icons'],
+        'api-vendor': ['axios',],
+      },
+      entryFileNames: 'assets/[name].[hash].js',
+      chunkFileNames: 'assets/[name].[hash].js',
     }
   }
   }

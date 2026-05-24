@@ -6,7 +6,7 @@ import { startFlow } from 'lighthouse';
 const REPORT_DIR = './tests/lighthouse/reports';
 mkdirSync(REPORT_DIR, { recursive: true });
 
-const APP_URL = "https://master-spa2.vercel.app/competition/19";
+const APP_URL = "https://master-spa2.vercel.app/competition/12/27/myprofile";
 
 // Helper funkcija za sleep
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
