@@ -9,6 +9,7 @@ export default defineConfig(() => ({
       strategies: 'injectManifest',
       srcDir: 'public',
       filename: 'sw.js',
+      manifestFilename:'manifest.webmanifest',
       injectManifest: {
         injectionPoint: 'self.__WB_MANIFEST'
       },

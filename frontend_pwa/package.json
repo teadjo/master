@@ -8,8 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test:lighthouse:cold": "lighthouse https://tvoj-frontend.vercel.app --view --preset=desktop",
-    "test:lighthouse:warm": "lighthouse https://tvoj-frontend.vercel.app --view --preset=desktop --chrome-flags='--disable-features=IsolateOrigins'",
+    "test:lighthouse:cold": "lighthouse https://master-git-main-teadjos-projects.vercel.app/p --view --preset=desktop",
+    "test:lighthouse:warm": "lighthouse https://master-git-main-teadjos-projects.vercel.app/ --view --preset=desktop --chrome-flags='--disable-features=IsolateOrigins'",
     "test:lighthouse:returning": "node tests/lighthouse/flow.spec.js",
     "test:lighthouse:compare": "node -e \"import('./tests/lighthouse/flow.spec.js').then(m => m.compareColdVsWarm())\"",
     "test:pwa:all": "npm run test:lighthouse:returning"
