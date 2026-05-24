@@ -9,7 +9,6 @@ import {
   incrementMetric
 } from './utils/analyticsStore';
 
-
 function sendToAnalytics(metric) {
   console.log(metric);
 
@@ -27,11 +26,13 @@ if ('requestIdleCallback' in window) {
   // });
 }
 
-if ('serviceWorker' in navigator) {
-  import('virtual:pwa-register').then(({ registerSW }) => {
-    registerSW({
-      immediate: true,
-      onNeedRefresh() {
+performance.mark('app-start');
+
+window.addEventListener('load', () => {
+   if ('serviceWorker' in navigator) {
+    import('virtual:pwa-register').then(({ registerSW }) => {
+      registerSW({ immediate: false,
+        onNeedRefresh() {
         console.log('Nova verzija dostupna');
       },
       onOfflineReady() {
@@ -61,15 +62,9 @@ if ('serviceWorker' in navigator) {
           }
         }, 30000); 
       }
-    })
-  })
-}
-
-
-
-performance.mark('app-start');
-
-window.addEventListener('load', () => {
+       });
+    });
+  }
   performance.mark('app-loaded');
   performance.measure('app-load-time', 'app-start', 'app-loaded');
 
