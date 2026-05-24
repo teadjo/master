@@ -51,6 +51,6 @@ app.use("/spec/", trroutes);
 app.use("/rk/", artwork_userrouter);
 app.use("/", userrouter);
 
-app.listen(3021, () => {
+app.listen(3019, () => {
     console.log("server slusa na portu 3021");
 });
