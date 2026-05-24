@@ -28,8 +28,8 @@ app.use(cors({
     'https://master-spa2.vercel.app',
     'https://master-azure-two.vercel.app',
     'http://localhost:5173',
-    'https://master-spa2-git-main-teadjos-projects.vercel.app/',
-    'https://master-git-main-teadjos-projects.vercel.app/'
+    'https://master-spa2-git-main-teadjos-projects.vercel.app',
+    'https://master-git-main-teadjos-projects.vercel.app'
   ],
   credentials: true
 }));
