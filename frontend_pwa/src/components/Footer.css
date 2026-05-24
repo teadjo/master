@@ -11,6 +11,10 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.social-icon, .contact-icon {
+  color: white;
+}
+
 .subscription-content {
   max-width: 1200px;
   margin: 0 auto;

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, {lazy, useEffect, useState } from 'react'
 import './Cards.css'
-import Picture from './Picture'
-import Pagination from './Pagination';
+const Picture = lazy(() => import('./Picture'));
+const Pagination = lazy(() => import('./Pagination'));
 import { useNavigate } from 'react-router-dom';
 import { normalizeArray } from '../utils/normalize'
 import {api} from '../utils/api'

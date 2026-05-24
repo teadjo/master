@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {lazy, useState, useEffect} from 'react';
 import { useParams} from 'react-router-dom'
 import './MyProfile.css'
-import Footer from '../Footer';
+const Footer = lazy(() => import('../Footer'));
 import Picture from '../Picture';
 import AddPainting from './AddPainting';
 import CompetitonCard from '../CompetitionCard'

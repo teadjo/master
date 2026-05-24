@@ -1,23 +1,10 @@
-import React from 'react';
+import React, {lazy} from 'react';
 import './Footer.css';
-import Button from './Button';
+const Button = lazy(() => import('./Button'));
 import { Link } from 'react-router-dom';
-
-// 🔥 Samo importuj ikonice koje ti trebaju
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faMapMarkerAlt,      // lokacija
-  faPhone,             // telefon
-  faEnvelopeOpen,      // email
-  faPaperPlane,        // newsletter dugme
-} from '@fortawesome/free-solid-svg-icons';
-import { 
-  faInstagram,         // Instagram
-  faFacebookF,         // Facebook
-  faTwitter,           // Twitter
-  faYoutube,           // YouTube
-} from '@fortawesome/free-brands-svg-icons';
-import { faEnvelope } from '@fortawesome/free-regular-svg-icons'; // ako treba outline verzija
+import { HiLocationMarker, HiPhone, HiMail } from 'react-icons/hi';
+import { FaInstagram, FaFacebookF, FaTwitter, FaYoutube } from 'react-icons/fa';
+import { IoSend } from 'react-icons/io5';
 
 function Footer() {
   return (
@@ -52,8 +39,7 @@ function Footer() {
             <div className='contact-info'>
               <div className='contact-item'>
                 <div className='contact-icon'>
-                  {/* 🔥 Umesto <i className='fas fa-map-marker-alt'/> */}
-                  <FontAwesomeIcon icon={faMapMarkerAlt} />
+                  <HiLocationMarker />
                 </div>
                 <div className='contact-text'>
                   <span className='contact-label'>Lokacija</span>
@@ -62,7 +48,7 @@ function Footer() {
               </div>
               <div className='contact-item'>
                 <div className='contact-icon'>
-                  <FontAwesomeIcon icon={faPhone} />
+                  <HiPhone />
                 </div>
                 <div className='contact-text'>
                   <span className='contact-label'>Telefon</span>
@@ -71,8 +57,8 @@ function Footer() {
               </div>
               <div className='contact-item'>
                 <div className='contact-icon'>
-                  <FontAwesomeIcon icon={faEnvelopeOpen} />
-                </div>
+                    <HiMail />
+                  </div>
                 <div className='contact-text'>
                   <span className='contact-label'>Email</span>
                   <span className='contact-value'>ArtConnection@gmail.com</span>
@@ -112,8 +98,8 @@ function Footer() {
                 target='_blank'
                 aria-label='Instagram'
               >
-                <div className='social-icon'>
-                  <FontAwesomeIcon icon={faInstagram} />
+               <div className='social-icon'>
+                  <FaInstagram />
                 </div>
                 <span className='social-text'>Instagram</span>
               </Link>
@@ -124,8 +110,8 @@ function Footer() {
                 aria-label='Facebook'
               >
                 <div className='social-icon'>
-                  <FontAwesomeIcon icon={faFacebookF} />
-                </div>
+                    <FaFacebookF />
+                  </div>
                 <span className='social-text'>Facebook</span>
               </Link>
               <Link
@@ -135,7 +121,7 @@ function Footer() {
                 aria-label='Twitter'
               >
                 <div className='social-icon'>
-                  <FontAwesomeIcon icon={faTwitter} />
+                  <FaTwitter />
                 </div>
                 <span className='social-text'>Twitter</span>
               </Link>
@@ -146,7 +132,7 @@ function Footer() {
                 aria-label='YouTube'
               >
                 <div className='social-icon'>
-                  <FontAwesomeIcon icon={faYoutube} />
+                  <FaYoutube />
                 </div>
                 <span className='social-text'>YouTube</span>
               </Link>
@@ -163,7 +149,7 @@ function Footer() {
                 className='newsletter-input'
               />
               <button type='submit' className='newsletter-btn' aria-label="Prijavi se na newsletter">
-                <FontAwesomeIcon icon={faPaperPlane} />
+                <IoSend />
               </button>
             </div>
           </div>

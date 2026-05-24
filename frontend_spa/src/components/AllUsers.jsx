@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, {lazy, useEffect, useState } from 'react'
 import "./AllUsers.css"
-import Footer from './Footer';
+const Footer = lazy(() => import('./Footer'));
 import { normalizeArray } from '../utils/normalize'
 import {api} from '../utils/api' 
 import Toast from '../Toast';
