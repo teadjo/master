@@ -36,7 +36,7 @@ registerRoute(
       }),
 
       new CacheableResponsePlugin({
-        statuses: [200,206]
+        statuses: [200]
       })
     ]
   })
@@ -106,10 +106,11 @@ registerRoute(
             })
           );
         }
-      },   new ExpirationPlugin({
-    maxEntries: 20,
-    maxAgeSeconds: 60 * 60 * 24
-  }),
+      },   
+      new ExpirationPlugin({
+        maxEntries: 20,
+        maxAgeSeconds: 60 * 60 * 24
+      }),
     ]
   })
 );

@@ -3,11 +3,11 @@ import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import { ToastProvider } from './ToastContext.jsx';
-import { onCLS, onLCP, onTTFB, onINP } from 'web-vitals';
-import { pwaMetrics } from './utils/metrics';
-import {
-  incrementMetric
-} from './utils/analyticsStore';
+// import { onCLS, onLCP, onTTFB, onINP } from 'web-vitals';
+// import { pwaMetrics } from './utils/metrics';
+// import {
+//   incrementMetric
+// } from './utils/analyticsStore';
 
 function sendToAnalytics(metric) {
   console.log(metric);
@@ -17,16 +17,16 @@ function sendToAnalytics(metric) {
   localStorage.setItem('metrics', JSON.stringify(existing))
 }
 
-if ('requestIdleCallback' in window) {
-  // requestIdleCallback(() => {
-    onCLS(sendToAnalytics);
-    onLCP(sendToAnalytics);
-    onTTFB(sendToAnalytics);
-    onINP(sendToAnalytics);
-  // });
-}
+// if ('requestIdleCallback' in window) {
+//   // requestIdleCallback(() => {
+//     onCLS(sendToAnalytics);
+//     onLCP(sendToAnalytics);
+//     onTTFB(sendToAnalytics);
+//     onINP(sendToAnalytics);
+//   // });
+// }
 
-performance.mark('app-start');
+// performance.mark('app-start');
 
 window.addEventListener('load', () => {
    if ('serviceWorker' in navigator) {
@@ -41,128 +41,128 @@ window.addEventListener('load', () => {
       onRegistered(registration) {
         console.log('✅ SW registrovan, provjeravam sync...');
         
-        if (registration && 'sync' in registration) {
-          registration.sync.getTags().then(tags => {
-            if (tags.length > 0) {
-              console.log('📋 Pending sync tags:', tags);
-            }
-          });
-        }
+        // if (registration && 'sync' in registration) {
+        //   registration.sync.getTags().then(tags => {
+        //     if (tags.length > 0) {
+        //       console.log('📋 Pending sync tags:', tags);
+        //     }
+        //   });
+        // }
         
-        setInterval(async () => {
-          if (navigator.onLine && registration && registration.active) {
-            try {
-              const tags = await registration.sync.getTags();
-              if (tags.length > 0) {
-                console.log('📋 Aktivni syncovi:', tags);
-              }
-            } catch (error) {
-              // SyncManager možda nije dostupan
-            }
-          }
-        }, 30000); 
+        // setInterval(async () => {
+        //   if (navigator.onLine && registration && registration.active) {
+        //     try {
+        //       const tags = await registration.sync.getTags();
+        //       if (tags.length > 0) {
+        //         console.log('📋 Aktivni syncovi:', tags);
+        //       }
+        //     } catch (error) {
+        //       // SyncManager možda nije dostupan
+        //     }
+        //   }
+        // }, 30000); 
       }
        });
     });
   }
-  performance.mark('app-loaded');
-  performance.measure('app-load-time', 'app-start', 'app-loaded');
+  // performance.mark('app-loaded');
+  // performance.measure('app-load-time', 'app-start', 'app-loaded');
 
-  const measures = performance.getEntriesByName('app-load-time');
+  // const measures = performance.getEntriesByName('app-load-time');
 
-  const existing = JSON.parse(localStorage.getItem('metrics') || '[]')
-  existing.push(measures[0])
-  localStorage.setItem('metrics', JSON.stringify(existing))
-   const allMetrics = JSON.parse(localStorage.getItem('pwa-metrics-history') || '[]');
-  allMetrics.push(pwaMetrics.getReport());
-  localStorage.setItem('pwa-metrics-history', JSON.stringify(allMetrics));
+  // const existing = JSON.parse(localStorage.getItem('metrics') || '[]')
+  // existing.push(measures[0])
+  // localStorage.setItem('metrics', JSON.stringify(existing))
+  //  const allMetrics = JSON.parse(localStorage.getItem('pwa-metrics-history') || '[]');
+  // allMetrics.push(pwaMetrics.getReport());
+  // localStorage.setItem('pwa-metrics-history', JSON.stringify(allMetrics));
 });
 
-window.addEventListener('online', () => {
-  console.log('🟢 Online - SW će automatski pokrenuti sync');
+// window.addEventListener('online', () => {
+//   console.log('🟢 Online - SW će automatski pokrenuti sync');
   
-  if (navigator.serviceWorker.controller) {
-    navigator.serviceWorker.controller.postMessage({
-      type: 'CHECK_SYNC'
-    });
-  }
-});
+//   if (navigator.serviceWorker.controller) {
+//     navigator.serviceWorker.controller.postMessage({
+//       type: 'CHECK_SYNC'
+//     });
+//   }
+// });
 
-window.addEventListener('offline', () => {
-  console.log('🔴 Offline - POST zahtjevi će biti sačuvani');
-});
+// window.addEventListener('offline', () => {
+//   console.log('🔴 Offline - POST zahtjevi će biti sačuvani');
+// });
 
-performance.mark('sw-installed')
+// performance.mark('sw-installed')
 
-navigator.serviceWorker.ready.then((registration) => {
-  performance.mark('sw-ready')
-  performance.measure('sw-activation', 'app-start', 'sw-ready')
+// navigator.serviceWorker.ready.then((registration) => {
+//   performance.mark('sw-ready')
+//   performance.measure('sw-activation', 'app-start', 'sw-ready')
   
-  if ('sync' in registration) {
-    registration.sync.getTags().then(tags => {
-      console.log('📋 Sync stanje pri startu:', tags);
-    });
-  }
-})
+//   if ('sync' in registration) {
+//     registration.sync.getTags().then(tags => {
+//       console.log('📋 Sync stanje pri startu:', tags);
+//     });
+//   }
+// })
 
-navigator.serviceWorker.addEventListener('message', (event) => {
+// navigator.serviceWorker.addEventListener('message', (event) => {
 
-  switch (event.data?.type) {
+//   switch (event.data?.type) {
 
-    case 'CACHE_HIT':
-      incrementMetric('cacheHits');
-      break;
+//     case 'CACHE_HIT':
+//       incrementMetric('cacheHits');
+//       break;
 
-    case 'CACHE_MISS':
-      incrementMetric('cacheMisses');
-      break;
+//     case 'CACHE_MISS':
+//       incrementMetric('cacheMisses');
+//       break;
 
-    case 'SYNC_SUCCESS':
-      incrementMetric('syncSuccess');
-      break;
+//     case 'SYNC_SUCCESS':
+//       incrementMetric('syncSuccess');
+//       break;
 
-    case 'SYNC_FAILED':
-      incrementMetric('syncFailed');
-      break;
-    case 'PUSH_RECEIVED':
-      incrementMetric('pushNotifications');
-      break;
+//     case 'SYNC_FAILED':
+//       incrementMetric('syncFailed');
+//       break;
+//     case 'PUSH_RECEIVED':
+//       incrementMetric('pushNotifications');
+//       break;
 
-    default:
-      break;
-  }
-});
+//     default:
+//       break;
+//   }
+// });
 
 
-navigator.serviceWorker.ready.then(async (registration) => {
-  console.log('✅ SW spreman');
+// navigator.serviceWorker.ready.then(async (registration) => {
+//   console.log('✅ SW spreman');
   
-  if ('periodicSync' in registration) {
-    try {
-      const status = await navigator.permissions.query({
-        name: 'periodic-background-sync',
-      });
+//   if ('periodicSync' in registration) {
+//     try {
+//       const status = await navigator.permissions.query({
+//         name: 'periodic-background-sync',
+//       });
       
-      if (status.state === 'granted') {
-        await registration.periodicSync.register('update-competitions', {
-          minInterval: 60 * 60 * 1000 // 1 sat
-        });
-        console.log('✅ Periodic sync registrovan');
-      } else {
-        console.log('⚠️ Periodic sync nema permisiju:', status.state);
-      }
-    } catch (error) {
-      console.log('ℹ️ Periodic sync nije dostupan:', error.message);
-    }
-  } else {
-    console.log('ℹ️ Periodic sync API nije podržan');
-  }
-}).catch(error => {
-  console.error('❌ Greška pri registraciji periodic sync:', error);
-});
+//       if (status.state === 'granted') {
+//         await registration.periodicSync.register('update-competitions', {
+//           minInterval: 60 * 60 * 1000 // 1 sat
+//         });
+//         console.log('✅ Periodic sync registrovan');
+//       } else {
+//         console.log('⚠️ Periodic sync nema permisiju:', status.state);
+//       }
+//     } catch (error) {
+//       console.log('ℹ️ Periodic sync nije dostupan:', error.message);
+//     }
+//   } else {
+//     console.log('ℹ️ Periodic sync API nije podržan');
+//   }
+// }).catch(error => {
+//   console.error('❌ Greška pri registraciji periodic sync:', error);
+// });
 
 
-performance.mark(navigator.onLine ? 'online-load' : 'offline-load')
+// performance.mark(navigator.onLine ? 'online-load' : 'offline-load')
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

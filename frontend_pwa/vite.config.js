@@ -73,7 +73,7 @@ export default defineConfig(() => ({
     rollupOptions: {
     output: {
       manualChunks: {
-        'vendor-react': ['react', 'react-dom', 'react-router-dom','react-dom/client',],
+        'vendor-react': ['react', 'react-dom', 'react-router-dom'],
         'vendor-workbox': ['workbox-window'],
         'ui-vendor': ['react-icons'],
         'api-vendor': ['axios',],

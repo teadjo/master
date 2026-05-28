@@ -14,27 +14,27 @@ function sendToAnalytics(metric) {
   localStorage.setItem('metrics', JSON.stringify(existing))
 }
 
-if ('requestIdleCallback' in window) {
-  // requestIdleCallback(() => {
-    onCLS(sendToAnalytics);
-    onLCP(sendToAnalytics);
-    onTTFB(sendToAnalytics);
-    onINP(sendToAnalytics);
-  // });
-}
+// if ('requestIdleCallback' in window) {
+//   // requestIdleCallback(() => {
+//     onCLS(sendToAnalytics);
+//     onLCP(sendToAnalytics);
+//     onTTFB(sendToAnalytics);
+//     onINP(sendToAnalytics);
+//   // });
+// }
 
-window.addEventListener('load', () => {
-  performance.mark('app-loaded');
-  performance.measure('app-load-time', 'app-start', 'app-loaded');
+// window.addEventListener('load', () => {
+//   performance.mark('app-loaded');
+//   performance.measure('app-load-time', 'app-start', 'app-loaded');
 
-  const measures = performance.getEntriesByName('app-load-time');
+//   const measures = performance.getEntriesByName('app-load-time');
 
-  const existing = JSON.parse(localStorage.getItem('metrics') || '[]')
-  existing.push(measures[0])
-  localStorage.setItem('metrics', JSON.stringify(existing))
-});
+//   const existing = JSON.parse(localStorage.getItem('metrics') || '[]')
+//   existing.push(measures[0])
+//   localStorage.setItem('metrics', JSON.stringify(existing))
+// });
 
-performance.mark('app-start');
+// performance.mark('app-start');
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
