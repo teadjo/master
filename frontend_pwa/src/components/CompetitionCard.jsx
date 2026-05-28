@@ -50,6 +50,7 @@ function CompetitionCard(props) {
       <div className="card-image-container">
         <img 
           loading="lazy"
+          crossOrigin="anonymous"
           className="card-image"
           src={props.value.slika 
             ? `${API}${props.value.slika}` 

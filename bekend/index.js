@@ -37,7 +37,10 @@ app.use(compression());
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
   setHeaders: (res) => {
-    res.set('Cache-Control', 'public, max-age=31536000, immutable')
+    res.set('Cache-Control', 'public, max-age=31536000, immutable');
+    res.set('Access-Control-Allow-Origin', '*'); 
+    res.set('Access-Control-Allow-Credentials', 'true');
+    res.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
   }
 }));
 

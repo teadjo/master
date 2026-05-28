@@ -51,7 +51,7 @@ function ViewArtwork() {
                 <div className='artwork-header'>
                     <div className='artwork-image'>
                         {art.slika ? (
-                            <img loading='eager' fetchPriority="high" src={`${API}${art.slika}`} alt={art.naziv} />
+                            <img loading='eager' crossOrigin="anonymous" fetchPriority="high" src={`${API}${art.slika}`} alt={art.naziv} />
                         ) : (
                             <img loading='eager' fetchPriority="high" src='./../../../back.jpg' alt="Zadana slika" />
                         )}

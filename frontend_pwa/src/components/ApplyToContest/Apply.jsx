@@ -317,6 +317,7 @@ function Apply() {
                                     <div className='winner-image-container'>
                                         <img 
                                             fetchPriority="high"
+                                            crossOrigin="anonymous"
                                             src={winnerData.slika ? `${API}${winnerData.slika}` : './../../../back.jpg'}
                                             alt={winnerData.naziv}
                                             className='winner-image'

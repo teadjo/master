@@ -13,6 +13,7 @@ function Picture(props) {
             <img
               loading="lazy"
               className='card-image'
+              crossOrigin="anonymous" 
               alt={props.title}
               src={props.src == null ? "./../../back.jpg" : `${API}${props.src}`}
             />
