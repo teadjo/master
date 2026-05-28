@@ -19,18 +19,6 @@ cleanupOutdatedCaches();
 self.__WB_DISABLE_DEV_LOGS = true;
 precacheAndRoute(self.__WB_MANIFEST);
 
-self.addEventListener('activate',(event)=>{
-
-  event.waitUntil(
-    (async()=>{
-      if(self.registration.navigationPreload){
-        await self.registration
-        .navigationPreload.enable()
-      }
-    })()
-    );
-  });
-
 // BACKEND SLIKE
 
 registerRoute(
