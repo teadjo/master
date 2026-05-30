@@ -4,6 +4,7 @@ import { useState } from "react";
 import Toast from '../Toast';
 import { useToast } from './../ToastContext';
 import {api} from '../utils/api' 
+import { subscribeToPush } from '../utils/pushNotifications';
 
 function Login() {
     let [state, setState] = useState({Type: 1, slika:null});
