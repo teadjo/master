@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-
+const sharp = require('sharp');
 const takmicenjaKontroleri = require("../controlers/takmicenje_controler");
 
 
