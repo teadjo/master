@@ -1,5 +1,6 @@
 const webpush = require('web-push');
 const pool = require('../DBconnection/dbconnection');
+const express = require("express");
 const router = express.Router();
 // Podesi VAPID ključeve
 webpush.setVapidDetails(
