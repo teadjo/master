@@ -94,6 +94,16 @@ const onClickSave = async (e) => {
     e.preventDefault();
     
     try {
+         if (!navigator.onLine || error.message?.includes('Network Error')) {
+            showToast(
+                'Vaše izmjene će biti sačuvane kada budete ponovo online! 📱',
+                'info'
+            );
+            
+            startOfflineSync('profile', window.location.pathname);
+            setForm(false);
+            return;
+        } 
         const response = await api.put(`${API}/user/${id}`, userState);
         if (response.status === 200) {
             showToast("Profil je uspešno izmenjen!", "success");
@@ -103,19 +113,7 @@ const onClickSave = async (e) => {
         }
     } catch (error) {
         console.error('Greška pri izmjeni:', error);
-        if (!navigator.onLine || error.message?.includes('Network Error')) {
-            showToast(
-                'Vaše izmjene će biti sačuvane kada budete ponovo online! 📱',
-                'info'
-            );
-            
-           
-            // Pokreni offline sync
-            startOfflineSync('profile', window.location.pathname);
-            setForm(false);
-        } else {
-            showToast("Greška pri izmjeni profila!", "error");
-        }
+        showToast("Greška pri izmjeni profila!", "error");
     }
 };
   const onClickAdd = () => {

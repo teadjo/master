@@ -111,7 +111,19 @@ const onEditBtnCLick = async (e) => {
         formData.append('id_umjetnika', state.id_umjetnika);
         formData.append('slika', state.slika);
         formData.append('datum_slanja', state.datum_slanja);
-        
+         if (!navigator.onLine || error.message?.includes('Network Error')) {
+            showToast(
+                'Vaše djelo će biti dodano kada budete ponovo online! 📱',
+                'info'
+            );
+            console.log("pozivamm ofline sync")
+             startOfflineSync(
+                'artwork',
+                `${API1}/profile/${props.artist}`
+            );
+            return;
+
+        }  
         const response = await api.post(`${API}/artworks/`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -131,26 +143,14 @@ const onEditBtnCLick = async (e) => {
         }
     } catch (error) {
         console.error('Greška:', error);
-        if (!navigator.onLine || error.message?.includes('Network Error')) {
-            showToast(
-                'Vaše djelo će biti dodano kada budete ponovo online! 📱',
-                'info'
-            );
-            console.log("pozivamm ofline sync")
-             startOfflineSync(
-                'artwork',
-                `${API1}/profile/${props.artist}`
-            );
-                    
+           
             setTimeout(() => {
                 handleCancel();
             }, 1500);
-        } else {
+       
             showToast('Došlo je do greške pri dodavanju djela', 'error');
         }
-    } finally {
         setLoading(false);
-    }
 };
 
     const handleCancel = () => {
