@@ -2,6 +2,7 @@ const pool = require("../DBconnection/dbconnection");
 const competition = require("../repository/tekmicenje_repository");
 const path = require('path');
 const fs = require('fs');
+const webpush = require('web-push');
 
 const getAllCompetitions = async (request, response) => {
     const results = await competition.getAllCompetitions();
