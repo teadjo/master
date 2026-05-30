@@ -52,7 +52,50 @@ const insertCompetition = async (request, response) => {
         };
         
         const results = await competition.insertCompetition(competitionData);
-    response.send(results); 
+     try {
+        // Dobavi sve subscription-e
+        const subscriptions = await pool.query(
+            `SELECT endpoint, p256dh, auth FROM public."PushSubscriptions"`
+        );
+        
+        const payload = JSON.stringify({
+            title: '🏆 Novo takmičenje!',
+            body: `${competitionData.naziv_takmicenja} - Prijavite se na vrijeme!`,
+            icon: '/icons/192.png',
+            badge: '/icons/192.png',
+            url: `/competitions/${results[0]?.id || ''}`,
+            vibrate: [200, 100, 200]
+        });
+        
+        // Pošalji svim pretplatnicima
+        const notifications = subscriptions.rows.map(async (sub) => {
+            try {
+                const pushSubscription = {
+                    endpoint: sub.endpoint,
+                    keys: {
+                        p256dh: sub.p256dh,
+                        auth: sub.auth
+                    }
+                };
+                await webpush.sendNotification(pushSubscription, payload);
+            } catch (error) {
+                console.error('Greška pri slanju notifikacije:', error);
+                // Ako subscription nije više validan, obriši ga
+                if (error.statusCode === 410 || error.statusCode === 404) {
+                    await pool.query('DELETE FROM public."PushSubscriptions" WHERE endpoint = $1', [sub.endpoint]);
+                }
+            }
+        });
+        
+        await Promise.all(notifications);
+        console.log(`✅ Notifikacije poslate na ${subscriptions.rows.length} uređaja`);
+    } catch (error) {
+        console.error('Greška pri slanju notifikacija:', error);
+    }
+    // ===== KRAJ PUSH LOGIKE =====
+    
+    response.send(results);
+ 
 };
 
 const getCompetitionBySearch = async (request, response) => {

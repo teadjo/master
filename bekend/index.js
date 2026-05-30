@@ -15,6 +15,7 @@ const gradesrouter = require("./routes/ocjene_routes");
 const artwork_userrouter = require("./routes/rad_korisnik_routes");
 const artwork_user_award = require("./routes/rad_korisnik_nagrada_routes");
 const trroutes = require("./routes/takmicenje_rad_routes");
+const webroutes = require("./routes/web_router")
 
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
@@ -52,6 +53,7 @@ app.use("/awards/", awardrouter);
 app.use("/grades/", gradesrouter);
 app.use("/spec/", trroutes);
 app.use("/rk/", artwork_userrouter);
+app.use("/app", webroutes);
 app.use("/", userrouter);
 
 app.listen(3019, () => {

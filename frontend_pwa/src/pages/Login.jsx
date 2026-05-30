@@ -19,6 +19,17 @@ function Login() {
     const closeToast = () => {
         setToast({ show: false, message: '', type: 'error' });
     };
+
+    const checkIfUserHasSubscription = async (userId) => {
+        try {
+            const response = await fetch(`${API}/api/subscription/check/${userId}`);
+            const data = await response.json();
+            return data.hasSubscription;
+        } catch (error) {
+            console.error('Greška pri proveri pretplate:', error);
+            return false;
+        }
+        };
     
     const handleToggleForm = () => {
         setLoginFormVisible(!isLoginFormVisible);
@@ -166,6 +177,18 @@ function Login() {
                     localStorage.setItem("isVisitor", response.data.tip===2);
                     localStorage.setItem("isAdmin", response.data.tip===0);
                     localStorage.setItem("notlogedIn", 'false');
+                    const userID = response.data.id;
+                    if (userID && 'serviceWorker' in navigator) {
+                        const hasSubscription = await checkIfUserHasSubscription(userID);
+                        
+                        if (!hasSubscription) {
+                            // Pitaj korisnika
+                            const permission = await Notification.requestPermission();
+                            if (permission === 'granted') {
+                            await subscribeToPush(userID);
+                            }
+                        }
+                        }
                     setTimeout(() => {
                         window.location = "/";
                     }, 1500);

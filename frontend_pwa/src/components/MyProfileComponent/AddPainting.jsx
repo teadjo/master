@@ -145,7 +145,6 @@ const onEditBtnCLick = async (e) => {
         }
     } catch (error) {
         console.error('Greška:', error);
-           startOfflineSync(id, `${API1}/competition/${id}`);
             setTimeout(() => {
                 handleCancel();
             }, 1500);
