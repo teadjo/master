@@ -3,6 +3,7 @@ import './SyncStatus.css';
 
 function SyncStatus() {
   const { syncStatus, pendingCount, lastSyncTime } = useSyncNotification();
+  console.log("statis", pendingCount)
   
   if (syncStatus === 'idle' && !lastSyncTime) return null;
   

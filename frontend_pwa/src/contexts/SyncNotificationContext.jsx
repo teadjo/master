@@ -15,7 +15,6 @@ export function SyncNotificationProvider({ children }) {
   const [pendingCount, setPendingCount] = useState(0); 
   const [lastSyncTime, setLastSyncTime] = useState(null);
   const [syncStatus, setSyncStatus] = useState('idle');
-  const [pendingActions, setPendingActions] = useState([]);
 
   useEffect(() => {
   if (!('serviceWorker' in navigator)) return;
@@ -95,11 +94,6 @@ useEffect(() => {
 
   const showNotification = useCallback(async (title, body, tag = 'default') => {
     try {
-      if (!('Notification' in window)) {
-        showToast(body, 'info');
-        return false;
-      }
-
       let permission = Notification.permission;
 
       if (permission !== 'granted') {
@@ -196,49 +190,10 @@ useEffect(() => {
       `offline-${actionType}`
     );
     
-    showToast(notificationBody, 'info');
+    // showToast(notificationBody, 'info');
     
   }, [showNotification]);
 
-  // Ručna provjera i pokretanje sync-a
-  const checkAndSync = useCallback(async () => {
-    if (!navigator.onLine) {
-      showToast('Niste online, pokušajte kasnije', 'error');
-      return false;
-    }
-    
-    if ('serviceWorker' in navigator && 'SyncManager' in window) {
-      try {
-        const registration = await navigator.serviceWorker.ready;
-        
-        // Pokušaj pokrenuti sve tipove sync-ova
-        const syncTags = ['post-sync', 'artworks-sync', 'profile-sync'];
-        
-        for (const tag of syncTags) {
-          try {
-            await registration.sync.register(tag);
-          } catch (error) {
-            console.log(`Could not register ${tag}:`, error);
-          }
-        }
-        
-        showToast('Provjera offline promjena...', 'info');
-        return true;
-      } catch (error) {
-        console.error('Error during manual sync:', error);
-        showToast('Greška pri sinhronizaciji', 'error');
-        return false;
-      }
-    }
-    
-    return false;
-  }, [showToast]);
-
-  const clearPendingActions = useCallback(() => {
-    setPendingActions([]);
-    setPendingCount(0);
-    localStorage.removeItem('pendingSync');
-  }, []);
 
   const value = {
     syncStatus,
@@ -247,9 +202,6 @@ useEffect(() => {
     setSyncStatus,
     pendingCount,
     lastSyncTime,
-    pendingActions,
-    checkAndSync,
-    clearPendingActions
   };
 
   return (
