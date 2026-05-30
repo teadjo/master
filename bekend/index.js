@@ -53,7 +53,7 @@ app.use("/awards/", awardrouter);
 app.use("/grades/", gradesrouter);
 app.use("/spec/", trroutes);
 app.use("/rk/", artwork_userrouter);
-app.use("/app", webroutes);
+app.use("/api", webroutes);
 app.use("/", userrouter);
 
 app.listen(3019, () => {
