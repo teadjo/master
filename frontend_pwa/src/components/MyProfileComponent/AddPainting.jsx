@@ -118,11 +118,6 @@ const onEditBtnCLick = async (e) => {
             }
         });
 
-        if (response.data && response.data[0]?.id) {
-            await api.post(`${API}/rk/`, {
-                id_umjetnika_rk: state.id_umjetnika,
-                id_rada_rk: response.data[0].id
-            });
             if (response.data && response.data.queued) {
                 console.log('📱 Offline - zahtjev sačuvan');
                 
@@ -137,7 +132,12 @@ const onEditBtnCLick = async (e) => {
                 }, 1000);
                 return;
             }
-
+        
+            if (response.data && response.data[0]?.id) {
+                await api.post(`${API}/rk/`, {
+                    id_umjetnika_rk: state.id_umjetnika,
+                    id_rada_rk: response.data[0].id
+                });
             showToast('✨ Umjetničko djelo je uspješno dodano!', 'success');
             setTimeout(() => {
                 handleCancel();
