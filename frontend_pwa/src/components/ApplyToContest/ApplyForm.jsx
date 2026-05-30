@@ -108,28 +108,7 @@ function ApplyForm({ closeForm }) {
                 );
                 
                 startOfflineSync(id, `${API1}/competition/${id}`);
-                
-                try {
-                    const dbRequest = indexedDB.open('BackgroundSyncDB', 1);
-                    dbRequest.onsuccess = (event) => {
-                        const db = event.target.result;
-                        const tx = db.transaction('pendingRequests', 'readwrite');
-                        const store = tx.objectStore('pendingRequests');
-                        
-                        store.add({
-                            url: `${API}/spec/`,
-                            method: 'POST',
-                            data: {
-                                id_takmicenja_tr: id,
-                                id_rada_tr: state.art_id
-                            },
-                            headers: { 'Content-Type': 'application/json' },
-                            timestamp: Date.now()
-                        });
-                    };
-                } catch (dbError) {
-                    console.error('❌ IndexedDB greška:', dbError);
-                }
+               
             } else {
                 showToast('Došlo je do greške pri prijavi', 'error');
             }

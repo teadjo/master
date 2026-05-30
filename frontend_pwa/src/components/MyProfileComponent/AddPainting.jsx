@@ -111,19 +111,7 @@ const onEditBtnCLick = async (e) => {
         formData.append('id_umjetnika', state.id_umjetnika);
         formData.append('slika', state.slika);
         formData.append('datum_slanja', state.datum_slanja);
-         if (!navigator.onLine || error.message?.includes('Network Error')) {
-            showToast(
-                'Vaše djelo će biti dodano kada budete ponovo online! 📱',
-                'info'
-            );
-            console.log("pozivamm ofline sync")
-             startOfflineSync(
-                'artwork',
-                `${API1}/profile/${props.artist}`
-            );
-            return;
-
-        }  
+        
         const response = await api.post(`${API}/artworks/`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -135,6 +123,20 @@ const onEditBtnCLick = async (e) => {
                 id_umjetnika_rk: state.id_umjetnika,
                 id_rada_rk: response.data[0].id
             });
+            if (response.data && response.data.queued) {
+                console.log('📱 Offline - zahtjev sačuvan');
+                
+                showToast(
+                    'Vaše djelo će biti dodano kada budete ponovo online! 📱',
+                    'info'
+                );
+
+                startOfflineSync('artwork',`${API1}/profile/${props.artist}`);
+                setTimeout(() => {
+                    handleCancel();
+                }, 1000);
+                return;
+            }
 
             showToast('✨ Umjetničko djelo je uspješno dodano!', 'success');
             setTimeout(() => {
@@ -143,7 +145,7 @@ const onEditBtnCLick = async (e) => {
         }
     } catch (error) {
         console.error('Greška:', error);
-           
+           startOfflineSync(id, `${API1}/competition/${id}`);
             setTimeout(() => {
                 handleCancel();
             }, 1500);

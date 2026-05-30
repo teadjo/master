@@ -186,6 +186,10 @@ const artworksBgSync = new BackgroundSyncPlugin('artworksQueue', {
           throw new Error('Request failed');
         }
         
+        sendMetricToClient({
+          type: 'ARTWORK_SYNC_COMPLETE'
+        });
+
         const responseData = await response.clone().json();
         
         // Pošalji notifikaciju o uspjehu
@@ -195,7 +199,6 @@ const artworksBgSync = new BackgroundSyncPlugin('artworksQueue', {
             body: 'Vaše umjetničko djelo je uspješno dodano!',
             icon: '/icons/192.png',
             badge: '/icons/192.png',
-            data: { url: '/' }
           }
         );
         
@@ -204,7 +207,7 @@ const artworksBgSync = new BackgroundSyncPlugin('artworksQueue', {
         clients.forEach(client => {
           client.postMessage({
             type: 'ARTWORK_SYNC_COMPLETE',
-            data: responseData
+            url: request.url
           });
         });
         
@@ -213,7 +216,7 @@ const artworksBgSync = new BackgroundSyncPlugin('artworksQueue', {
         clients.forEach(client => {
           client.postMessage({
             type: 'ARTWORK_SYNC_FAILED',
-            error: error.message
+            url: entry.request.url
           });
         });
         
@@ -238,21 +241,24 @@ const profileBgSync = new BackgroundSyncPlugin('profileQueue', {
         if (!response.ok) {
           throw new Error('Request failed');
         }
-        
+        sendMetricToClient({
+          type: 'PROFILE_SYNC_COMPLETE'
+        });
+
         await self.registration.showNotification(
           '✅ Profil ažuriran! 👤',
           {
             body: 'Vaš profil je uspješno ažuriran!',
             icon: '/icons/192.png',
             badge: '/icons/192.png',
-            data: { url: '/' }
           }
         );
         
         const clients = await self.clients.matchAll();
         clients.forEach(client => {
           client.postMessage({
-            type: 'PROFILE_SYNC_COMPLETE'
+            type: 'PROFILE_SYNC_COMPLETE',
+            url: request.url
           });
         });
         
@@ -261,7 +267,7 @@ const profileBgSync = new BackgroundSyncPlugin('profileQueue', {
         clients.forEach(client => {
           client.postMessage({
             type: 'PROFILE_SYNC_FAILED',
-            error: error.message
+            url: entry.request.url
           });
         });
         
@@ -273,7 +279,6 @@ const profileBgSync = new BackgroundSyncPlugin('profileQueue', {
 });
 
 // POST REQUESTS
-
 registerRoute(
   ({ url, request }) =>
     url.origin === 'https://master-4-xbzp.onrender.com' &&
@@ -286,7 +291,7 @@ registerRoute(
   'POST'
 );
 
-// DODAJTE NOVI registerRoute ZA PROFILE UPDATE
+// PROFILE UPDATE
 registerRoute(
   ({ url, request }) =>
     url.origin === 'https://master-4-xbzp.onrender.com' &&

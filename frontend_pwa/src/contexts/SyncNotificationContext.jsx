@@ -18,13 +18,17 @@ export function SyncNotificationProvider({ children }) {
   const [pendingActions, setPendingActions] = useState([]);
 
   useEffect(() => {
-
+  if (!('serviceWorker' in navigator)) return;
    const handleMessage = (event) => {
 
       switch(event.data.type){
 
          case 'ARTWORK_SYNC_COMPLETE':
-
+            if (event.data?.type === 'SYNC_COMPLETE') {
+              setSyncStatus('complete');
+              setPendingCount(0);
+              setLastSyncTime(Date.now());
+            }
             showToast(
                '✨ Umjetničko djelo uspješno dodano!',
                'success'
@@ -42,7 +46,11 @@ export function SyncNotificationProvider({ children }) {
             break;
 
          case 'PROFILE_SYNC_COMPLETE':
-
+            if (event.data?.type === 'SYNC_COMPLETE') {
+              setSyncStatus('complete');
+              setPendingCount(0);
+              setLastSyncTime(Date.now());
+            }
             showToast(
                'Profil uspješno ažuriran!',
                'success'
@@ -75,6 +83,16 @@ export function SyncNotificationProvider({ children }) {
 
 }, []);
 
+useEffect(() => {
+  if (syncStatus !== 'complete') return;
+
+  const timeout = setTimeout(() => {
+    setSyncStatus('idle');
+  }, 4000);
+
+  return () => clearTimeout(timeout);
+}, [syncStatus]);
+
   const showNotification = useCallback(async (title, body, tag = 'default') => {
     try {
       if (!('Notification' in window)) {
@@ -103,10 +121,6 @@ export function SyncNotificationProvider({ children }) {
         renotify: true,
         requireInteraction: true,
         vibrate: [200, 100, 200],
-        data: {
-          url: '/',
-          timestamp: Date.now()
-        }
       });
 
       return true;
