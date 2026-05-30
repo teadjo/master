@@ -1,6 +1,6 @@
 const webpush = require('web-push');
 const pool = require('../DBconnection/dbconnection');
-
+const router = express.Router();
 // Podesi VAPID ključeve
 webpush.setVapidDetails(
   process.env.VAPID_SUBJECT,
@@ -9,7 +9,7 @@ webpush.setVapidDetails(
 );
 
 // Endpoint za subscription
-app.post('/subscribe', async (req, res) => {
+router.post('/subscribe', async (req, res) => {
   const { subscription, userId } = req.body;
   
   try {
@@ -28,7 +28,7 @@ app.post('/subscribe', async (req, res) => {
 });
 
 // Proveri da li korisnik već ima pretplatu
-app.get('/subscription/check/:userId', async (req, res) => {
+router.get('/subscription/check/:userId', async (req, res) => {
   const { userId } = req.params;
   const result = await pool.query(
     `SELECT id FROM public."PushSubscriptions" WHERE user_id = $1`,
@@ -36,3 +36,5 @@ app.get('/subscription/check/:userId', async (req, res) => {
   );
   res.json({ hasSubscription: result.rows.length > 0 });
 });
+
+module.exports = router;
