@@ -75,7 +75,7 @@ function Apply() {
 
                     const competitionEnded = compData.datum_kraja && 
                         new Date(compData.datum_kraja) <= currentDate;
-
+                    console.log(compData)
                     if (competitionEnded && winnerInfo) {
                         try {
                             const existingAward = await api.get(`${API}/aua/check/${winnerInfo.id_rada_tr}/${id}`);

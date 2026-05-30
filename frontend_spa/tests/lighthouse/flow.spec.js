@@ -6,7 +6,7 @@ import { startFlow } from 'lighthouse';
 const REPORT_DIR='./tests/lighthouse/reports';
 mkdirSync(REPORT_DIR,{recursive:true});
 
-const APP_URL="https://master-azure-two.vercel.app/competition/12/27/myprofile";
+const APP_URL="https://master-spa2.vercel.app";
 
 const sleep=(ms)=>
    new Promise(resolve=>setTimeout(resolve,ms));
@@ -95,6 +95,7 @@ async function waitForSW(page){
    try{
       await page.evaluate(async()=>{
          if('serviceWorker'in navigator){
+            console.log("usaoo")
             await navigator.serviceWorker.ready;
          }
       });
