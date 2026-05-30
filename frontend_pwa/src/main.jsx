@@ -1,4 +1,4 @@
-import { StrictMode, useEffect } from 'react'
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
@@ -8,50 +8,7 @@ import { ToastProvider } from './ToastContext.jsx';
 // import {
 //   incrementMetric
 // } from './utils/analyticsStore';
-function ServiceWorkerListener() {
-  const { showToast } = useToast();
 
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      const handleMessage = (event) => {
-        if (event.data?.type === 'ADD_TO_ARTWORK_QUEUE') {
-          // Service worker traži da dodamo u queue - šaljemo mu nazad
-          navigator.serviceWorker.controller?.postMessage({
-            type: 'ADD_TO_ARTWORK_QUEUE',
-            payload: event.data.payload
-          });
-        }
-        
-        if (event.data?.type === 'ADD_TO_PROFILE_QUEUE') {
-          navigator.serviceWorker.controller?.postMessage({
-            type: 'ADD_TO_PROFILE_QUEUE',
-            payload: event.data.payload
-          });
-        }
-        
-        if (event.data?.type === 'ARTWORK_SYNC_COMPLETE') {
-          showToast('✨ Umjetničko djelo je uspješno dodano!', 'success');
-        }
-        
-        if (event.data?.type === 'PROFILE_SYNC_COMPLETE') {
-          showToast('✅ Profil je uspješno ažuriran!', 'success');
-        }
-
-        if (event.data?.type === 'APPLICATION_SYNC_COMPLETE') {
-          showToast('✅ Prijava na takmičenje je uspješna!', 'success');
-        }
-      };
-
-      navigator.serviceWorker.addEventListener('message', handleMessage);
-      
-      return () => {
-        navigator.serviceWorker.removeEventListener('message', handleMessage);
-      };
-    }
-  }, [showToast]);
-
-  return null;
-}
 
 function sendToAnalytics(metric) {
   console.log(metric);

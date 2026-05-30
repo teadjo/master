@@ -172,6 +172,57 @@ const postBgSync = new BackgroundSyncPlugin('postQueue', {
   }
 });
 
+const artworksBgSync = new BackgroundSyncPlugin('artworksQueue', {
+  maxRetentionTime: 24 * 60,
+  onSync: async ({ queue }) => {
+    let entry;
+    
+    while ((entry = await queue.shiftRequest())) {
+      try {
+        const request = entry.request.clone();
+        const response = await fetch(request);
+        
+        if (!response.ok) {
+          throw new Error('Request failed');
+        }
+        
+        const responseData = await response.clone().json();
+        
+        // Pošalji notifikaciju o uspjehu
+        await self.registration.showNotification(
+          '✅ Umjetničko djelo dodano! 🎨',
+          {
+            body: 'Vaše umjetničko djelo je uspješno dodano!',
+            icon: '/icons/192.png',
+            badge: '/icons/192.png',
+            data: { url: '/' }
+          }
+        );
+        
+        // Obavijesti klijente
+        const clients = await self.clients.matchAll();
+        clients.forEach(client => {
+          client.postMessage({
+            type: 'ARTWORK_SYNC_COMPLETE',
+            data: responseData
+          });
+        });
+        
+      } catch (error) {
+        const clients = await self.clients.matchAll();
+        clients.forEach(client => {
+          client.postMessage({
+            type: 'ARTWORK_SYNC_FAILED',
+            error: error.message
+          });
+        });
+        
+        await queue.unshiftRequest(entry);
+        throw error;
+      }
+    }
+  }
+});
 
 // SPECIFIČNI PLUGIN ZA PROFILE UPDATE
 const profileBgSync = new BackgroundSyncPlugin('profileQueue', {
@@ -223,336 +274,30 @@ const profileBgSync = new BackgroundSyncPlugin('profileQueue', {
 
 // POST REQUESTS
 
-// Custom queue za artworks sa slikama
-const artworkQueue = [];
-let isProcessingArtworkQueue = false;
-
-async function processArtworkQueue() {
-  if (isProcessingArtworkQueue) return;
-  if (!navigator.onLine) return;
-  if (artworkQueue.length === 0) return;
-  
-  isProcessingArtworkQueue = true;
-  
-  while (artworkQueue.length > 0) {
-    const item = artworkQueue[0];
-    
-    try {
-      // Rekonstruiši FormData iz sačuvanih podataka
-      const formData = new FormData();
-      formData.append('naziv', item.data.naziv);
-      formData.append('opis_djela', item.data.opis_djela);
-      formData.append('naziv_kategorije', item.data.naziv_kategorije);
-      formData.append('id_umjetnika', item.data.id_umjetnika);
-      formData.append('datum_slanja', item.data.datum_slanja);
-      
-      // Konvertuj base64 nazad u Blob
-      if (item.data.slika_base64) {
-        const response = await fetch(item.data.slika_base64);
-        const blob = await response.blob();
-        formData.append('slika', blob, 'image.jpg');
-      }
-      
-      const response = await fetch(item.url, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
-      
-      if (!response.ok) throw new Error('Upload failed');
-      
-      const responseData = await response.json();
-      
-      // Ako je potrebno, pošalji i RK zahtjev
-      if (item.requiresRk && responseData[0]?.id) {
-        await fetch('https://master-4-xbzp.onrender.com/rk/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            id_umjetnika_rk: item.data.id_umjetnika,
-            id_rada_rk: responseData[0].id
-          })
-        });
-      }
-      
-      // Ukloni uspješni item iz queue-a
-      artworkQueue.shift();
-      await saveArtworkQueueToStorage();
-      
-      // Pošalji notifikaciju
-      await self.registration.showNotification(
-        '✅ Umjetničko djelo dodano! 🎨',
-        {
-          body: `Vaše djelo "${item.data.naziv}" je uspješno dodano!`,
-          icon: '/icons/192.png',
-          badge: '/icons/192.png',
-          data: { url: '/' }
-        }
-      );
-      
-      // Obavijesti klijente
-      const clients = await self.clients.matchAll();
-      clients.forEach(client => {
-        client.postMessage({
-          type: 'ARTWORK_SYNC_COMPLETE',
-          data: responseData
-        });
-      });
-      
-    } catch (error) {
-      console.error('Failed to process artwork:', error);
-      // Zaustavi procesiranje ako je network error
-      if (!navigator.onLine) break;
-      // Ako je drugi error, zadrži u queue-u za kasnije
-      break;
-    }
-  }
-  
-  isProcessingArtworkQueue = false;
-  
-  if (artworkQueue.length > 0 && navigator.onLine) {
-    setTimeout(processArtworkQueue, 5000);
-  }
-}
-
-// Sačuvaj artwork queue u IndexedDB
-async function saveArtworkQueueToStorage() {
-  const db = await openSyncDB();
-  const tx = db.transaction('artworkQueue', 'readwrite');
-  const store = tx.objectStore('artworkQueue');
-  store.clear();
-  for (const item of artworkQueue) {
-    store.add(item);
-  }
-}
-
-// Učitaj artwork queue iz IndexedDB
-async function loadArtworkQueueFromStorage() {
-  const db = await openSyncDB();
-  const tx = db.transaction('artworkQueue', 'readonly');
-  const store = tx.objectStore('artworkQueue');
-  const items = await store.getAll();
-  artworkQueue.push(...items);
-}
-
-// Custom queue za profile updates
-const profileQueue = [];
-let isProcessingProfileQueue = false;
-
-async function processProfileQueue() {
-  if (isProcessingProfileQueue) return;
-  if (!navigator.onLine) return;
-  if (profileQueue.length === 0) return;
-  
-  isProcessingProfileQueue = true;
-  
-  while (profileQueue.length > 0) {
-    const item = profileQueue[0];
-    
-    try {
-      const response = await fetch(item.url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(item.data)
-      });
-      
-      if (!response.ok) throw new Error('Update failed');
-      
-      profileQueue.shift();
-      await saveProfileQueueToStorage();
-      
-      await self.registration.showNotification(
-        '✅ Profil ažuriran! 👤',
-        {
-          body: 'Vaš profil je uspješno ažuriran!',
-          icon: '/icons/192.png',
-          badge: '/icons/192.png',
-          data: { url: '/' }
-        }
-      );
-      
-      const clients = await self.clients.matchAll();
-      clients.forEach(client => {
-        client.postMessage({
-          type: 'PROFILE_SYNC_COMPLETE'
-        });
-      });
-      
-    } catch (error) {
-      if (!navigator.onLine) break;
-      break;
-    }
-  }
-  
-  isProcessingProfileQueue = false;
-  
-  if (profileQueue.length > 0 && navigator.onLine) {
-    setTimeout(processProfileQueue, 5000);
-  }
-}
-
-async function saveProfileQueueToStorage() {
-  const db = await openSyncDB();
-  const tx = db.transaction('profileQueue', 'readwrite');
-  const store = tx.objectStore('profileQueue');
-  store.clear();
-  for (const item of profileQueue) {
-    store.add(item);
-  }
-}
-
-async function loadProfileQueueFromStorage() {
-  const db = await openSyncDB();
-  const tx = db.transaction('profileQueue', 'readonly');
-  const store = tx.objectStore('profileQueue');
-  const items = await store.getAll();
-  profileQueue.push(...items);
-}
-
-// Open IndexedDB helper
-function openSyncDB() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open('OfflineSyncDB', 1);
-    
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result);
-    
-    request.onupgradeneeded = (event) => {
-      const db = event.target.result;
-      if (!db.objectStoreNames.contains('artworkQueue')) {
-        db.createObjectStore('artworkQueue', { autoIncrement: true });
-      }
-      if (!db.objectStoreNames.contains('profileQueue')) {
-        db.createObjectStore('profileQueue', { autoIncrement: true });
-      }
-    };
-  });
-}
-
-// Slušaj online event
-self.addEventListener('online', () => {
-  processArtworkQueue();
-  processProfileQueue();
-});
-
-// Inicijalizacija
-(async () => {
-  await loadArtworkQueueFromStorage();
-  await loadProfileQueueFromStorage();
-  if (navigator.onLine) {
-    processArtworkQueue();
-    processProfileQueue();
-  }
-})();
-
-// Custom message handler za dodavanje u queue
-self.addEventListener('message', (event) => {
-  if (event.data?.type === 'ADD_TO_ARTWORK_QUEUE') {
-    artworkQueue.push(event.data.payload);
-    saveArtworkQueueToStorage();
-    if (navigator.onLine) {
-      processArtworkQueue();
-    }
-  }
-  
-  if (event.data?.type === 'ADD_TO_PROFILE_QUEUE') {
-    profileQueue.push(event.data.payload);
-    saveProfileQueueToStorage();
-    if (navigator.onLine) {
-      processProfileQueue();
-    }
-  }
-});
-
-// ZAMIJENITE POSTOJEĆI registerRoute ZA POST /artworks/ SA OVIM:
 registerRoute(
   ({ url, request }) =>
     url.origin === 'https://master-4-xbzp.onrender.com' &&
     request.method === 'POST' &&
     url.pathname === '/artworks/',
-  
-  async ({ request }) => {
-    // Sačuvaj request u queue umjesto da ga šalješ odmah
-    const formData = await request.formData();
-    const artworkData = {};
-    
-    for (const [key, value] of formData.entries()) {
-      if (value instanceof File) {
-        // Konvertuj File u base64
-        const reader = new FileReader();
-        const base64 = await new Promise((resolve) => {
-          reader.onload = () => resolve(reader.result);
-          reader.readAsDataURL(value);
-        });
-        artworkData[key] = base64;
-      } else {
-        artworkData[key] = value;
-      }
-    }
-    
-    const queueItem = {
-      url: request.url,
-      data: artworkData,
-      timestamp: Date.now(),
-      requiresRk: true
-    };
-    
-    // Pošalji klijentu da doda u queue
-    const clients = await self.clients.matchAll();
-    clients.forEach(client => {
-      client.postMessage({
-        type: 'ADD_TO_ARTWORK_QUEUE',
-        payload: queueItem
-      });
-    });
-    
-    // Vrati response da se request ne bi ponavljao
-    return new Response(JSON.stringify({ queued: true, offline: true }), {
-      status: 202,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  },
+
+  new NetworkOnly({
+    plugins: [artworksBgSync]
+  }),
   'POST'
 );
 
-//  PUT ROUTA ZA PROFILE
+// DODAJTE NOVI registerRoute ZA PROFILE UPDATE
 registerRoute(
   ({ url, request }) =>
     url.origin === 'https://master-4-xbzp.onrender.com' &&
     request.method === 'PUT' &&
     url.pathname.match(/\/user\/\d+$/),
-  
-  async ({ request }) => {
-    const data = await request.json();
-    const queueItem = {
-      url: request.url,
-      data: data,
-      timestamp: Date.now()
-    };
-    
-    const clients = await self.clients.matchAll();
-    clients.forEach(client => {
-      client.postMessage({
-        type: 'ADD_TO_PROFILE_QUEUE',
-        payload: queueItem
-      });
-    });
-    
-    return new Response(JSON.stringify({ queued: true, offline: true }), {
-      status: 202,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  },
+
+  new NetworkOnly({
+    plugins: [profileBgSync]
+  }),
   'PUT'
 );
-
-
 
 // OSTALE POST RUTE (uključujući /spec/)
 registerRoute(

@@ -168,7 +168,10 @@ const onClickSave = async (e) => {
         }
     } catch (error) {
         console.error('Greška pri izmjeni:', error);
-        
+        showToast(
+                'Vaše djelo će biti dodano kada budete ponovo online! 📱',
+                'info'
+            );
         // OFFLINE HANDLING
         if (!navigator.onLine || error.message?.includes('Network Error')) {
             showToast(
