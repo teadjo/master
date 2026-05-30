@@ -80,7 +80,7 @@ function ApplyForm({ closeForm }) {
                     'info'
                 );
 
-                startOfflineSync(id, `${API1}/competition/${id}`);
+                startOfflineSync('application', `${API1}/competition/${id}`);
                 setTimeout(() => {
                     navigate(`/competition/${id}`);
                 }, 1500);

@@ -5,6 +5,7 @@ import Toast from '../../Toast';
 import { normalizeArray } from '../../utils/normalize'
 import {api} from '../../utils/api'
 import { useToast } from '../../ToastContext';
+import { useSyncNotification } from '../../contexts/SyncNotificationContext';
 
 function AddPainting(props) {
     const navigate = useNavigate();
@@ -16,6 +17,7 @@ function AddPainting(props) {
     
     const currentDate = new Date();
     const API = import.meta.env.VITE_API_URL
+    const API1 = import.meta.env.VITE_URL
     
     const [state, setState] = useState({
         datum_slanja: `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`,
@@ -27,6 +29,26 @@ function AddPainting(props) {
     });
 
     const { showToast } = useToast();
+    const { startOfflineSync } = useSyncNotification();
+
+    // Slušaj sync poruke
+    useEffect(() => {
+        const handleMessage = (event) => {
+            if (event.data.type === 'ARTWORK_SYNC_COMPLETE') {
+                showToast('✨ Vaše umjetničko djelo je uspješno dodano!', 'success');
+                setTimeout(() => {
+                    handleCancel();
+                }, 1500);
+            } else if (event.data.type === 'ARTWORK_SYNC_FAILED') {
+                showToast('Došlo je do greške pri sinhronizaciji djela', 'error');
+            }
+        };
+
+        navigator.serviceWorker.addEventListener('message', handleMessage);
+        return () => {
+            navigator.serviceWorker.removeEventListener('message', handleMessage);
+        };
+    }, []);
 
     useEffect(() => {
         const fetchCategory = async () => {
@@ -88,56 +110,153 @@ function AddPainting(props) {
         return Object.keys(newErrors).length === 0;
     };
 
-    const onEditBtnCLick = async (e) => {
-        e.preventDefault();
-        
-        if (!validateForm()) {
-            showToast('Molimo popravite greške u formi prije slanja', 'error');
-            return;
-        }
-
-        setLoading(true);
-        try {
-            const formData = new FormData();
-            formData.append('naziv', state.naziv);
-            formData.append('opis_djela', state.opis_djela);
-            formData.append('naziv_kategorije', state.naziv_kategorije);
-            formData.append('id_umjetnika', state.id_umjetnika);
-            formData.append('slika', state.slika);
-            formData.append('datum_slanja', state.datum_slanja)
+    const saveToIndexedDB = async (formData) => {
+        return new Promise((resolve, reject) => {
+            const dbRequest = indexedDB.open('BackgroundSyncDB', 1);
             
-            const response = await api.post(`${API}/artworks/`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
+            dbRequest.onerror = () => reject(dbRequest.error);
+            dbRequest.onsuccess = (event) => {
+                const db = event.target.result;
+                
+                // Provjeri da li store postoji
+                if (!db.objectStoreNames.contains('pendingArtworks')) {
+                    db.close();
+                    const newDbRequest = indexedDB.open('BackgroundSyncDB', 2);
+                    newDbRequest.onupgradeneeded = (e) => {
+                        const upgradedDb = e.target.result;
+                        if (!upgradedDb.objectStoreNames.contains('pendingArtworks')) {
+                            upgradedDb.createObjectStore('pendingArtworks', { autoIncrement: true });
+                        }
+                    };
+                    newDbRequest.onsuccess = (e) => {
+                        const newDb = e.target.result;
+                        const tx = newDb.transaction('pendingArtworks', 'readwrite');
+                        const store = tx.objectStore('pendingArtworks');
+                        store.add(formData);
+                        tx.oncomplete = () => {
+                            newDb.close();
+                            resolve();
+                        };
+                        tx.onerror = () => reject(tx.error);
+                    };
+                } else {
+                    const tx = db.transaction('pendingArtworks', 'readwrite');
+                    const store = tx.objectStore('pendingArtworks');
+                    store.add(formData);
+                    tx.oncomplete = () => {
+                        db.close();
+                        resolve();
+                    };
+                    tx.onerror = () => reject(tx.error);
                 }
+            };
+        });
+    };
+
+    // Samo zamijenite onEditBtnCLick funkciju u AddPainting.jsx:
+
+const onEditBtnCLick = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+        showToast('Molimo popravite greške u formi prije slanja', 'error');
+        return;
+    }
+
+    setLoading(true);
+    
+    try {
+        const formData = new FormData();
+        formData.append('naziv', state.naziv);
+        formData.append('opis_djela', state.opis_djela);
+        formData.append('naziv_kategorije', state.naziv_kategorije);
+        formData.append('id_umjetnika', state.id_umjetnika);
+        formData.append('slika', state.slika);
+        formData.append('datum_slanja', state.datum_slanja);
+        
+        const response = await api.post(`${API}/artworks/`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        if (response.data && response.data[0]?.id) {
+            await api.post(`${API}/rk/`, {
+                id_umjetnika_rk: state.id_umjetnika,
+                id_rada_rk: response.data[0].id
             });
 
-            
-            if (response.data && response.data[0].id) {
-                await api.post(`${API}/rk/`, {
-                    id_umjetnika_rk: state.id_umjetnika,
-                    id_rada_rk: response.data[0].id
-                });
-
-                showToast('✨ Umjetničko djelo je uspješno dodano!', 'success');
-               setTimeout(() => {
+            showToast('✨ Umjetničko djelo je uspješno dodano!', 'success');
+            setTimeout(() => {
                 handleCancel();
             }, 1000);
-        
-          
-        
-            }
-        } catch (error) {
-            console.error('Greška:', error);
-            if (error.response?.data?.error) {
-                showToast(`Greška: ${error.response.data.error}`, 'error');
-            } else {
-                showToast('Došlo je do greške pri dodavanju djela', 'error');
-            }
-        } finally {
-            setLoading(false);
         }
-    };
+    } catch (error) {
+        console.error('Greška:', error);
+        
+        // OFFLINE HANDLING
+        if (!navigator.onLine || error.message?.includes('Network Error')) {
+            showToast(
+                'Vaše djelo će biti dodano kada budete ponovo online! 📱',
+                'info'
+            );
+            
+            // Sačuvaj u IndexedDB
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+                const offlineData = {
+                    url: `${API}/artworks/`,
+                    method: 'POST',
+                    data: {
+                        naziv: state.naziv,
+                        opis_djela: state.opis_djela,
+                        naziv_kategorije: state.naziv_kategorije,
+                        id_umjetnika: state.id_umjetnika,
+                        datum_slanja: state.datum_slanja,
+                        slika_base64: reader.result
+                    },
+                    headers: { 'Content-Type': 'application/json' },
+                    timestamp: Date.now(),
+                    requiresRk: true
+                };
+                
+                // Sačuvaj u IndexedDB
+                const dbRequest = indexedDB.open('BackgroundSyncDB', 1);
+                dbRequest.onsuccess = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains('pendingArtworks')) {
+                        db.close();
+                        const newDbRequest = indexedDB.open('BackgroundSyncDB', 2);
+                        newDbRequest.onupgradeneeded = (e) => {
+                            if (!e.target.result.objectStoreNames.contains('pendingArtworks')) {
+                                e.target.result.createObjectStore('pendingArtworks', { autoIncrement: true });
+                            }
+                        };
+                        newDbRequest.onsuccess = (e) => {
+                            const tx = e.target.result.transaction('pendingArtworks', 'readwrite');
+                            tx.objectStore('pendingArtworks').add(offlineData);
+                        };
+                    } else {
+                        const tx = db.transaction('pendingArtworks', 'readwrite');
+                        tx.objectStore('pendingArtworks').add(offlineData);
+                    }
+                };
+                
+                // Pokreni offline sync
+                startOfflineSync('artwork', `${API1}/profile/${props.artist}`);
+            };
+            reader.readAsDataURL(state.slika);
+            
+            setTimeout(() => {
+                handleCancel();
+            }, 1500);
+        } else {
+            showToast('Došlo je do greške pri dodavanju djela', 'error');
+        }
+    } finally {
+        setLoading(false);
+    }
+};
 
     const handleCancel = () => {
         props.onClose?.() || navigate(`/${props.artist}/myProfile`);

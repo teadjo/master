@@ -116,55 +116,51 @@ registerRoute(
 );
 
 // BACKGROUND SYNC
-
-const postBgSync = new BackgroundSyncPlugin('postQueue', {
+const artworksBgSync = new BackgroundSyncPlugin('artworksQueue', {
   maxRetentionTime: 24 * 60,
-
   onSync: async ({ queue }) => {
     let entry;
-
+    
     while ((entry = await queue.shiftRequest())) {
       try {
         const request = entry.request.clone();
-
         const response = await fetch(request);
-
+        
         if (!response.ok) {
           throw new Error('Request failed');
         }
-
-        sendMetricToClient({
-          type: 'SYNC_SUCCESS'
-        });
-
+        
+        const responseData = await response.clone().json();
+        
+        // Pošalji notifikaciju o uspjehu
         await self.registration.showNotification(
-          '✅ Prijava uspješna! 🎉',
+          '✅ Umjetničko djelo dodano! 🎨',
           {
-            body: 'Vaš rad je uspješno prijavljen!',
-            icon: '/icons/192.png'
+            body: 'Vaše umjetničko djelo je uspješno dodano!',
+            icon: '/icons/192.png',
+            badge: '/icons/192.png',
+            data: { url: '/' }
           }
         );
-
+        
+        // Obavijesti klijente
         const clients = await self.clients.matchAll();
-
         clients.forEach(client => {
           client.postMessage({
-            type: 'SYNC_COMPLETE',
-            url: request.url
+            type: 'ARTWORK_SYNC_COMPLETE',
+            data: responseData
           });
         });
-
+        
       } catch (error) {
-
         const clients = await self.clients.matchAll();
-
         clients.forEach(client => {
           client.postMessage({
-            type: 'SYNC_FAILED',
-            url: entry.request.url
+            type: 'ARTWORK_SYNC_FAILED',
+            error: error.message
           });
         });
-
+        
         await queue.unshiftRequest(entry);
         throw error;
       }
@@ -172,19 +168,92 @@ const postBgSync = new BackgroundSyncPlugin('postQueue', {
   }
 });
 
-// POST REQUESTS
+// SPECIFIČNI PLUGIN ZA PROFILE UPDATE
+const profileBgSync = new BackgroundSyncPlugin('profileQueue', {
+  maxRetentionTime: 24 * 60,
+  onSync: async ({ queue }) => {
+    let entry;
+    
+    while ((entry = await queue.shiftRequest())) {
+      try {
+        const request = entry.request.clone();
+        const response = await fetch(request);
+        
+        if (!response.ok) {
+          throw new Error('Request failed');
+        }
+        
+        await self.registration.showNotification(
+          '✅ Profil ažuriran! 👤',
+          {
+            body: 'Vaš profil je uspješno ažuriran!',
+            icon: '/icons/192.png',
+            badge: '/icons/192.png',
+            data: { url: '/' }
+          }
+        );
+        
+        const clients = await self.clients.matchAll();
+        clients.forEach(client => {
+          client.postMessage({
+            type: 'PROFILE_SYNC_COMPLETE'
+          });
+        });
+        
+      } catch (error) {
+        const clients = await self.clients.matchAll();
+        clients.forEach(client => {
+          client.postMessage({
+            type: 'PROFILE_SYNC_FAILED',
+            error: error.message
+          });
+        });
+        
+        await queue.unshiftRequest(entry);
+        throw error;
+      }
+    }
+  }
+});
 
+// ZAMIJENITE POSTOJEĆI registerRoute ZA POST SA OVIM:
 registerRoute(
   ({ url, request }) =>
     url.origin === 'https://master-4-xbzp.onrender.com' &&
-    request.method === 'POST',
+    request.method === 'POST' &&
+    url.pathname === '/artworks/',
+
+  new NetworkOnly({
+    plugins: [artworksBgSync]
+  }),
+  'POST'
+);
+
+// DODAJTE NOVI registerRoute ZA PROFILE UPDATE
+registerRoute(
+  ({ url, request }) =>
+    url.origin === 'https://master-4-xbzp.onrender.com' &&
+    request.method === 'PUT' &&
+    url.pathname.match(/\/user\/\d+$/),
+
+  new NetworkOnly({
+    plugins: [profileBgSync]
+  }),
+  'PUT'
+);
+
+// OSTALE POST RUTE (uključujući /spec/)
+registerRoute(
+  ({ url, request }) =>
+    url.origin === 'https://master-4-xbzp.onrender.com' &&
+    request.method === 'POST' &&
+    url.pathname !== '/artworks/',
 
   new NetworkOnly({
     plugins: [postBgSync]
   }),
   'POST'
 );
-
 // PUT / PATCH / DELETE
 
 const mutateBgSync = new BackgroundSyncPlugin('mutateQueue', {
