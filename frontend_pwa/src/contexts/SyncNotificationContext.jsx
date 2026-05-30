@@ -142,7 +142,6 @@ useEffect(() => {
       redirectUrl,
       timestamp: Date.now()
     };
-    setPendingActions(prev => [...prev, pendingAction]);
     localStorage.setItem('pendingSync', JSON.stringify(pendingAction));
     
     // Registruj background sync sa service workerom
