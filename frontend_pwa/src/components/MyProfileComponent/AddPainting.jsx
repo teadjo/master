@@ -31,25 +31,7 @@ function AddPainting(props) {
     const { showToast } = useToast();
     const { startOfflineSync } = useSyncNotification();
 
-    // Slušaj sync poruke
-    useEffect(() => {
-        const handleMessage = (event) => {
-            if (event.data.type === 'ARTWORK_SYNC_COMPLETE') {
-                showToast('✨ Vaše umjetničko djelo je uspješno dodano!', 'success');
-                setTimeout(() => {
-                    handleCancel();
-                }, 1500);
-            } else if (event.data.type === 'ARTWORK_SYNC_FAILED') {
-                showToast('Došlo je do greške pri sinhronizaciji djela', 'error');
-            }
-        };
-
-        navigator.serviceWorker.addEventListener('message', handleMessage);
-        return () => {
-            navigator.serviceWorker.removeEventListener('message', handleMessage);
-        };
-    }, []);
-
+    
     useEffect(() => {
         const fetchCategory = async () => {
             try {
@@ -110,50 +92,6 @@ function AddPainting(props) {
         return Object.keys(newErrors).length === 0;
     };
 
-    const saveToIndexedDB = async (formData) => {
-        return new Promise((resolve, reject) => {
-            const dbRequest = indexedDB.open('BackgroundSyncDB', 1);
-            
-            dbRequest.onerror = () => reject(dbRequest.error);
-            dbRequest.onsuccess = (event) => {
-                const db = event.target.result;
-                
-                // Provjeri da li store postoji
-                if (!db.objectStoreNames.contains('pendingArtworks')) {
-                    db.close();
-                    const newDbRequest = indexedDB.open('BackgroundSyncDB', 2);
-                    newDbRequest.onupgradeneeded = (e) => {
-                        const upgradedDb = e.target.result;
-                        if (!upgradedDb.objectStoreNames.contains('pendingArtworks')) {
-                            upgradedDb.createObjectStore('pendingArtworks', { autoIncrement: true });
-                        }
-                    };
-                    newDbRequest.onsuccess = (e) => {
-                        const newDb = e.target.result;
-                        const tx = newDb.transaction('pendingArtworks', 'readwrite');
-                        const store = tx.objectStore('pendingArtworks');
-                        store.add(formData);
-                        tx.oncomplete = () => {
-                            newDb.close();
-                            resolve();
-                        };
-                        tx.onerror = () => reject(tx.error);
-                    };
-                } else {
-                    const tx = db.transaction('pendingArtworks', 'readwrite');
-                    const store = tx.objectStore('pendingArtworks');
-                    store.add(formData);
-                    tx.oncomplete = () => {
-                        db.close();
-                        resolve();
-                    };
-                    tx.onerror = () => reject(tx.error);
-                }
-            };
-        });
-    };
-
-    // Samo zamijenite onEditBtnCLick funkciju u AddPainting.jsx:
 
 const onEditBtnCLick = async (e) => {
     e.preventDefault();
@@ -192,65 +130,17 @@ const onEditBtnCLick = async (e) => {
             }, 1000);
         }
     } catch (error) {
-        showToast(
-                'Vaše djelo će biti dodano kada budete ponovo online! 📱',
-                'info'
-            );
         console.error('Greška:', error);
-        
-        // OFFLINE HANDLING
         if (!navigator.onLine || error.message?.includes('Network Error')) {
             showToast(
                 'Vaše djelo će biti dodano kada budete ponovo online! 📱',
                 'info'
             );
-            
-            // Sačuvaj u IndexedDB
-            const reader = new FileReader();
-            reader.onloadend = async () => {
-                const offlineData = {
-                    url: `${API}/artworks/`,
-                    method: 'POST',
-                    data: {
-                        naziv: state.naziv,
-                        opis_djela: state.opis_djela,
-                        naziv_kategorije: state.naziv_kategorije,
-                        id_umjetnika: state.id_umjetnika,
-                        datum_slanja: state.datum_slanja,
-                        slika_base64: reader.result
-                    },
-                    headers: { 'Content-Type': 'application/json' },
-                    timestamp: Date.now(),
-                    requiresRk: true
-                };
-                
-                // Sačuvaj u IndexedDB
-                const dbRequest = indexedDB.open('BackgroundSyncDB', 1);
-                dbRequest.onsuccess = (event) => {
-                    const db = event.target.result;
-                    if (!db.objectStoreNames.contains('pendingArtworks')) {
-                        db.close();
-                        const newDbRequest = indexedDB.open('BackgroundSyncDB', 2);
-                        newDbRequest.onupgradeneeded = (e) => {
-                            if (!e.target.result.objectStoreNames.contains('pendingArtworks')) {
-                                e.target.result.createObjectStore('pendingArtworks', { autoIncrement: true });
-                            }
-                        };
-                        newDbRequest.onsuccess = (e) => {
-                            const tx = e.target.result.transaction('pendingArtworks', 'readwrite');
-                            tx.objectStore('pendingArtworks').add(offlineData);
-                        };
-                    } else {
-                        const tx = db.transaction('pendingArtworks', 'readwrite');
-                        tx.objectStore('pendingArtworks').add(offlineData);
-                    }
-                };
-                
-                // Pokreni offline sync
-                startOfflineSync('artwork', `${API1}/profile/${props.artist}`);
-            };
-            reader.readAsDataURL(state.slika);
-            
+             startOfflineSync(
+                'artwork',
+                `${API1}/profile/${props.artist}`
+            );
+                    
             setTimeout(() => {
                 handleCancel();
             }, 1500);

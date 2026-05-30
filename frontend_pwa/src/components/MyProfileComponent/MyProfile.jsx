@@ -46,27 +46,6 @@ function MyProfile() {
     setToast({ show: false, message: '', type: 'error' });
   };
 
-  // Slušaj sync poruke za profile update
-  useEffect(() => {
-    const handleMessage = (event) => {
-      if (event.data.type === 'PROFILE_SYNC_COMPLETE') {
-        showToast('✅ Vaš profil je uspješno ažuriran!', 'success');
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
-      } else if (event.data.type === 'PROFILE_SYNC_FAILED') {
-        showToast('Greška pri ažuriranju profila', 'error');
-      }
-    };
-
-    if (navigator.serviceWorker) {
-      navigator.serviceWorker.addEventListener('message', handleMessage);
-      return () => {
-        navigator.serviceWorker.removeEventListener('message', handleMessage);
-      };
-    }
-  }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       try{
@@ -111,50 +90,6 @@ function MyProfile() {
     setUserState(prev => ({ ...prev, [name]: value }));
   }
 
-  const saveProfileToIndexedDB = async (profileData) => {
-    return new Promise((resolve, reject) => {
-      const dbRequest = indexedDB.open('BackgroundSyncDB', 1);
-      
-      dbRequest.onerror = () => reject(dbRequest.error);
-      dbRequest.onsuccess = (event) => {
-        const db = event.target.result;
-        
-        if (!db.objectStoreNames.contains('pendingProfiles')) {
-          db.close();
-          const newDbRequest = indexedDB.open('BackgroundSyncDB', 2);
-          newDbRequest.onupgradeneeded = (e) => {
-            const upgradedDb = e.target.result;
-            if (!upgradedDb.objectStoreNames.contains('pendingProfiles')) {
-              upgradedDb.createObjectStore('pendingProfiles', { autoIncrement: true });
-            }
-          };
-          newDbRequest.onsuccess = (e) => {
-            const newDb = e.target.result;
-            const tx = newDb.transaction('pendingProfiles', 'readwrite');
-            const store = tx.objectStore('pendingProfiles');
-            store.add(profileData);
-            tx.oncomplete = () => {
-              newDb.close();
-              resolve();
-            };
-            tx.onerror = () => reject(tx.error);
-          };
-        } else {
-          const tx = db.transaction('pendingProfiles', 'readwrite');
-          const store = tx.objectStore('pendingProfiles');
-          store.add(profileData);
-          tx.oncomplete = () => {
-            db.close();
-            resolve();
-          };
-          tx.onerror = () => reject(tx.error);
-        }
-      };
-    });
-  };
-
-  // Zamijenite onClickSave funkciju u MyProfile.jsx:
-
 const onClickSave = async (e) => {
     e.preventDefault();
     
@@ -168,47 +103,13 @@ const onClickSave = async (e) => {
         }
     } catch (error) {
         console.error('Greška pri izmjeni:', error);
-        showToast(
-                'Vaše djelo će biti dodano kada budete ponovo online! 📱',
-                'info'
-            );
-        // OFFLINE HANDLING
         if (!navigator.onLine || error.message?.includes('Network Error')) {
             showToast(
                 'Vaše izmjene će biti sačuvane kada budete ponovo online! 📱',
                 'info'
             );
             
-            const offlineData = {
-                url: `${API}/user/${id}`,
-                method: 'PUT',
-                data: userState,
-                headers: { 'Content-Type': 'application/json' },
-                timestamp: Date.now()
-            };
-            
-            // Sačuvaj u IndexedDB
-            const dbRequest = indexedDB.open('BackgroundSyncDB', 1);
-            dbRequest.onsuccess = (event) => {
-                const db = event.target.result;
-                if (!db.objectStoreNames.contains('pendingProfiles')) {
-                    db.close();
-                    const newDbRequest = indexedDB.open('BackgroundSyncDB', 2);
-                    newDbRequest.onupgradeneeded = (e) => {
-                        if (!e.target.result.objectStoreNames.contains('pendingProfiles')) {
-                            e.target.result.createObjectStore('pendingProfiles', { autoIncrement: true });
-                        }
-                    };
-                    newDbRequest.onsuccess = (e) => {
-                        const tx = e.target.result.transaction('pendingProfiles', 'readwrite');
-                        tx.objectStore('pendingProfiles').add(offlineData);
-                    };
-                } else {
-                    const tx = db.transaction('pendingProfiles', 'readwrite');
-                    tx.objectStore('pendingProfiles').add(offlineData);
-                }
-            };
-            
+           
             // Pokreni offline sync
             startOfflineSync('profile', window.location.pathname);
             setForm(false);

@@ -71,6 +71,85 @@ export function SyncNotificationProvider({ children }) {
     };
   }, []);
 
+  useEffect(() => {
+
+   const handleMessage = (event) => {
+
+      switch(event.data.type){
+
+         case 'ARTWORK_SYNC_COMPLETE':
+
+            showToast(
+               '✨ Umjetničko djelo uspješno dodano!',
+               'success'
+            );
+
+            break;
+
+         case 'ARTWORK_SYNC_FAILED':
+
+            showToast(
+               'Greška pri sinhronizaciji djela',
+               'error'
+            );
+
+            break;
+
+         case 'PROFILE_SYNC_COMPLETE':
+
+            showToast(
+               'Profil uspješno ažuriran!',
+               'success'
+            );
+
+            break;
+
+         case 'PROFILE_SYNC_FAILED':
+
+            showToast(
+               'Greška pri sinhronizaciji profila',
+               'error'
+            );
+
+            break;
+      }
+
+   };
+
+   navigator.serviceWorker.addEventListener(
+      'message',
+      handleMessage
+   );
+
+   return () =>
+      navigator.serviceWorker.removeEventListener(
+         'message',
+         handleMessage
+      );
+
+}, []);
+
+  // Slušaj sync poruke za profile update
+  useEffect(() => {
+    const handleMessage = (event) => {
+      if (event.data.type === 'PROFILE_SYNC_COMPLETE') {
+        showToast('✅ Vaš profil je uspješno ažuriran!', 'success');
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      } else if (event.data.type === 'PROFILE_SYNC_FAILED') {
+        showToast('Greška pri ažuriranju profila', 'error');
+      }
+    };
+
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.addEventListener('message', handleMessage);
+      return () => {
+        navigator.serviceWorker.removeEventListener('message', handleMessage);
+      };
+    }
+  }, []);
+
   // Timer za resetovanje statusa
   useEffect(() => {
     if (syncStatus !== 'complete') return;
