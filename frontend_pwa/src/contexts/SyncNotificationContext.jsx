@@ -17,60 +17,6 @@ export function SyncNotificationProvider({ children }) {
   const [syncStatus, setSyncStatus] = useState('idle');
   const [pendingActions, setPendingActions] = useState([]);
 
-  // Slušaj poruke od service workera
-  useEffect(() => {
-    if (!('serviceWorker' in navigator)) return;
-
-    const handleMessage = (event) => {
-      console.log('📨 SW Message:', event.data);
-      
-      if (event.data?.type === 'SYNC_COMPLETE') {
-        setSyncStatus('complete');
-        setPendingCount(0);
-        setLastSyncTime(Date.now());
-        
-        showNotification(
-          '✅ Sinhronizacija završena!',
-          'Sve vaše offline promjene su uspješno sinhronizovane.',
-          'sync-complete'
-        );
-      } 
-      else if (event.data?.type === 'ARTWORK_SYNC_COMPLETE') {
-        setPendingCount(prev => Math.max(0, prev - 1));
-        showNotification(
-          '✅ Umjetničko djelo dodano! 🎨',
-          'Vaše djelo je uspješno dodano na profil.',
-          'artwork-sync'
-        );
-      }
-      else if (event.data?.type === 'PROFILE_SYNC_COMPLETE') {
-        setPendingCount(prev => Math.max(0, prev - 1));
-        showNotification(
-          '✅ Profil ažuriran! 👤',
-          'Vaše izmjene profila su sačuvane.',
-          'profile-sync'
-        );
-      }
-      else if (event.data?.type === 'APPLICATION_SYNC_COMPLETE') {
-        setPendingCount(prev => Math.max(0, prev - 1));
-        showNotification(
-          '✅ Prijava na takmičenje uspješna! 🏆',
-          'Vaš rad je prijavljen na takmičenje.',
-          'application-sync'
-        );
-      }
-      else if (event.data?.type?.includes('SYNC_FAILED')) {
-        showToast('Greška pri sinhronizaciji, pokušaćemo ponovo', 'error');
-      }
-    };
-
-    navigator.serviceWorker.addEventListener('message', handleMessage);
-
-    return () => {
-      navigator.serviceWorker.removeEventListener('message', handleMessage);
-    };
-  }, []);
-
   useEffect(() => {
 
    const handleMessage = (event) => {
@@ -128,64 +74,6 @@ export function SyncNotificationProvider({ children }) {
       );
 
 }, []);
-
-  // Slušaj sync poruke za profile update
-  useEffect(() => {
-    const handleMessage = (event) => {
-      if (event.data.type === 'PROFILE_SYNC_COMPLETE') {
-        showToast('✅ Vaš profil je uspješno ažuriran!', 'success');
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
-      } else if (event.data.type === 'PROFILE_SYNC_FAILED') {
-        showToast('Greška pri ažuriranju profila', 'error');
-      }
-    };
-
-    if (navigator.serviceWorker) {
-      navigator.serviceWorker.addEventListener('message', handleMessage);
-      return () => {
-        navigator.serviceWorker.removeEventListener('message', handleMessage);
-      };
-    }
-  }, []);
-
-  // Timer za resetovanje statusa
-  useEffect(() => {
-    if (syncStatus !== 'complete') return;
-
-    const timeout = setTimeout(() => {
-      setSyncStatus('idle');
-    }, 4000);
-
-    return () => clearTimeout(timeout);
-  }, [syncStatus]);
-
-  // Provjeri pending sync na load
-  useEffect(() => {
-    const checkPendingSync = async () => {
-      const pending = localStorage.getItem('pendingSync');
-      if (pending) {
-        try {
-          const { type, timestamp } = JSON.parse(pending);
-          const timeSince = Date.now() - timestamp;
-          
-          if (timeSince < 1000 * 60 * 5) { // Manje od 5 minuta
-            setPendingCount(prev => prev + 1);
-            showToast(
-              `📱 Sinhronizacija (${type}) je u toku...`,
-              'info'
-            );
-          }
-          localStorage.removeItem('pendingSync');
-        } catch (error) {
-          console.error('Error checking pending sync:', error);
-        }
-      }
-    };
-    
-    checkPendingSync();
-  }, []);
 
   const showNotification = useCallback(async (title, body, tag = 'default') => {
     try {

@@ -136,6 +136,7 @@ const onEditBtnCLick = async (e) => {
                 'Vaše djelo će biti dodano kada budete ponovo online! 📱',
                 'info'
             );
+            console.log("pozivamm ofline sync")
              startOfflineSync(
                 'artwork',
                 `${API1}/profile/${props.artist}`
