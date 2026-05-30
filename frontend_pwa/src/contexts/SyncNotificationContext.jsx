@@ -23,15 +23,9 @@ export function SyncNotificationProvider({ children }) {
       switch(event.data.type){
 
          case 'ARTWORK_SYNC_COMPLETE':
-            if (event.data?.type === 'SYNC_COMPLETE') {
-              setSyncStatus('complete');
-              setPendingCount(0);
-              setLastSyncTime(Date.now());
-            }
-            showToast(
-               '✨ Umjetničko djelo uspješno dodano!',
-               'success'
-            );
+            setSyncStatus('complete');
+            setPendingCount(0);
+            setLastSyncTime(Date.now());
 
             break;
 
@@ -45,15 +39,9 @@ export function SyncNotificationProvider({ children }) {
             break;
 
          case 'PROFILE_SYNC_COMPLETE':
-            if (event.data?.type === 'SYNC_COMPLETE') {
-              setSyncStatus('complete');
-              setPendingCount(0);
-              setLastSyncTime(Date.now());
-            }
-            showToast(
-               'Profil uspješno ažuriran!',
-               'success'
-            );
+            setSyncStatus('complete');
+            setPendingCount(0);
+            setLastSyncTime(Date.now());
 
             break;
 
