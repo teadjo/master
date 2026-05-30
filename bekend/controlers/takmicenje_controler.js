@@ -64,7 +64,7 @@ const insertCompetition = async (request, response) => {
             body: `${competitionData.naziv_takmicenja} - Prijavite se na vrijeme!`,
             icon: '/icons/192.png',
             badge: '/icons/192.png',
-            url: `/competitions/${results[0]?.id || ''}`,
+            url: `/competition/${results[0]?.id || ''}`,
             vibrate: [200, 100, 200]
         });
         
