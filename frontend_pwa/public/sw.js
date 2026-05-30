@@ -116,6 +116,62 @@ registerRoute(
 );
 
 // BACKGROUND SYNC
+
+const postBgSync = new BackgroundSyncPlugin('postQueue', {
+  maxRetentionTime: 24 * 60,
+
+  onSync: async ({ queue }) => {
+    let entry;
+
+    while ((entry = await queue.shiftRequest())) {
+      try {
+        const request = entry.request.clone();
+
+        const response = await fetch(request);
+
+        if (!response.ok) {
+          throw new Error('Request failed');
+        }
+
+        sendMetricToClient({
+          type: 'SYNC_SUCCESS'
+        });
+
+        await self.registration.showNotification(
+          '✅ Prijava uspješna! 🎉',
+          {
+            body: 'Vaš rad je uspješno prijavljen!',
+            icon: '/icons/192.png'
+          }
+        );
+
+        const clients = await self.clients.matchAll();
+
+        clients.forEach(client => {
+          client.postMessage({
+            type: 'SYNC_COMPLETE',
+            url: request.url
+          });
+        });
+
+      } catch (error) {
+
+        const clients = await self.clients.matchAll();
+
+        clients.forEach(client => {
+          client.postMessage({
+            type: 'SYNC_FAILED',
+            url: entry.request.url
+          });
+        });
+
+        await queue.unshiftRequest(entry);
+        throw error;
+      }
+    }
+  }
+});
+
 const artworksBgSync = new BackgroundSyncPlugin('artworksQueue', {
   maxRetentionTime: 24 * 60,
   onSync: async ({ queue }) => {
@@ -216,7 +272,8 @@ const profileBgSync = new BackgroundSyncPlugin('profileQueue', {
   }
 });
 
-// ZAMIJENITE POSTOJEĆI registerRoute ZA POST SA OVIM:
+// POST REQUESTS
+
 registerRoute(
   ({ url, request }) =>
     url.origin === 'https://master-4-xbzp.onrender.com' &&
@@ -254,6 +311,7 @@ registerRoute(
   }),
   'POST'
 );
+
 // PUT / PATCH / DELETE
 
 const mutateBgSync = new BackgroundSyncPlugin('mutateQueue', {
