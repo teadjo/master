@@ -118,7 +118,6 @@ function AddPainting(props) {
             dbRequest.onsuccess = (event) => {
                 const db = event.target.result;
                 
-                // Provjeri da li store postoji
                 if (!db.objectStoreNames.contains('pendingArtworks')) {
                     db.close();
                     const newDbRequest = indexedDB.open('BackgroundSyncDB', 2);
@@ -152,8 +151,6 @@ function AddPainting(props) {
             };
         });
     };
-
-    // Samo zamijenite onEditBtnCLick funkciju u AddPainting.jsx:
 
 const onEditBtnCLick = async (e) => {
     e.preventDefault();
@@ -194,58 +191,44 @@ const onEditBtnCLick = async (e) => {
     } catch (error) {
         console.error('Greška:', error);
         
-        // OFFLINE HANDLING
-        if (!navigator.onLine || error.message?.includes('Network Error')) {
+        // OFFLINE HANDLING - pojednostavljeno
+        if (!navigator.onLine || error.code === 'ERR_NETWORK') {
             showToast(
                 'Vaše djelo će biti dodano kada budete ponovo online! 📱',
                 'info'
             );
             
-            // Sačuvaj u IndexedDB
-            const reader = new FileReader();
-            reader.onloadend = async () => {
-                const offlineData = {
-                    url: `${API}/artworks/`,
-                    method: 'POST',
-                    data: {
+            // Sačuvaj u IndexedDB preko service workera
+            if (navigator.serviceWorker) {
+                const formData = new FormData();
+                formData.append('naziv', state.naziv);
+                formData.append('opis_djela', state.opis_djela);
+                formData.append('naziv_kategorije', state.naziv_kategorije);
+                formData.append('id_umjetnika', state.id_umjetnika);
+                formData.append('datum_slanja', state.datum_slanja);
+                formData.append('slika', state.slika);
+                
+                const reader = new FileReader();
+                reader.onload = async () => {
+                    const artworkData = {
                         naziv: state.naziv,
                         opis_djela: state.opis_djela,
                         naziv_kategorije: state.naziv_kategorije,
                         id_umjetnika: state.id_umjetnika,
                         datum_slanja: state.datum_slanja,
                         slika_base64: reader.result
-                    },
-                    headers: { 'Content-Type': 'application/json' },
-                    timestamp: Date.now(),
-                    requiresRk: true
+                    };
+                    
+                    // Sačuvaj u localStorage da znamo da ima pending
+                    localStorage.setItem('pendingArtwork', JSON.stringify({
+                        data: artworkData,
+                        timestamp: Date.now()
+                    }));
+                    
+                    startOfflineSync('artwork', `${API1}/profile/${props.artist}`);
                 };
-                
-                // Sačuvaj u IndexedDB
-                const dbRequest = indexedDB.open('BackgroundSyncDB', 1);
-                dbRequest.onsuccess = (event) => {
-                    const db = event.target.result;
-                    if (!db.objectStoreNames.contains('pendingArtworks')) {
-                        db.close();
-                        const newDbRequest = indexedDB.open('BackgroundSyncDB', 2);
-                        newDbRequest.onupgradeneeded = (e) => {
-                            if (!e.target.result.objectStoreNames.contains('pendingArtworks')) {
-                                e.target.result.createObjectStore('pendingArtworks', { autoIncrement: true });
-                            }
-                        };
-                        newDbRequest.onsuccess = (e) => {
-                            const tx = e.target.result.transaction('pendingArtworks', 'readwrite');
-                            tx.objectStore('pendingArtworks').add(offlineData);
-                        };
-                    } else {
-                        const tx = db.transaction('pendingArtworks', 'readwrite');
-                        tx.objectStore('pendingArtworks').add(offlineData);
-                    }
-                };
-                
-                // Pokreni offline sync
-                startOfflineSync('artwork', `${API1}/profile/${props.artist}`);
-            };
-            reader.readAsDataURL(state.slika);
+                reader.readAsDataURL(state.slika);
+            }
             
             setTimeout(() => {
                 handleCancel();
@@ -257,7 +240,6 @@ const onEditBtnCLick = async (e) => {
         setLoading(false);
     }
 };
-
     const handleCancel = () => {
         props.onClose?.() || navigate(`/${props.artist}/myProfile`);
     };
