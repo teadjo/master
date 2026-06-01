@@ -82,44 +82,41 @@ registerRoute(
 );
 
 // PAGE NAVIGATION
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    (async () => {
+      if ('navigationPreload' in self.registration) {
+        await self.registration.navigationPreload.enable();
+      }
+    })()
+  );
+});
+// registerRoute(
+//   ({ request }) => request.mode === 'navigate',
 
-registerRoute(
-  ({ request }) => request.mode === 'navigate',
+//   new StaleWhileRevalidate({
+//     cacheName:"pages",
+//     // networkTimeoutSeconds:2,
 
-  new StaleWhileRevalidate({
-    cacheName:"pages",
-    // networkTimeoutSeconds:2,
-
-    plugins: [
-       new CacheableResponsePlugin({
-        statuses: [200],
-        headers: {
-          'Content-Type': 'text/html'
-        }
-      }),
-      {
-        handlerDidError: async () => {
-          const cache = await caches.open('pages');
-          const cached = await cache.match('/index.html');
-
-          return (
-            cached ||
-            new Response('Offline', {
-              status: 503,
-              headers: {
-                'Content-Type': 'text/html'
-              }
-            })
-          );
-        }
-      },   
-      new ExpirationPlugin({
-        maxEntries: 20,
-        maxAgeSeconds: 60 * 60 * 24
-      }),
-    ]
-  })
-);
+//     plugins: [
+//       //  new CacheableResponsePlugin({
+//       //   statuses: [200],
+//       //   headers: {
+//       //     'Content-Type': 'text/html'
+//       //   }
+//       // }),
+//       {
+//         handlerDidError: async () => {
+//           return caches.match('/index.html');
+//         }
+//       },   
+//       new ExpirationPlugin({
+//         maxEntries: 20,
+//         maxAgeSeconds: 60 * 60 * 24
+//       }),
+//     ]
+//   })
+// );
 
 // BACKGROUND SYNC
 
