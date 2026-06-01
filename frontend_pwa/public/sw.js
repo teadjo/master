@@ -91,6 +91,12 @@ registerRoute(
     // networkTimeoutSeconds:2,
 
     plugins: [
+       new CacheableResponsePlugin({
+        statuses: [200],
+        headers: {
+          'Content-Type': 'text/html'
+        }
+      }),
       {
         handlerDidError: async () => {
           const cache = await caches.open('pages');
