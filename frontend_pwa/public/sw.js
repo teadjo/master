@@ -82,15 +82,7 @@ registerRoute(
 );
 
 // PAGE NAVIGATION
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    (async () => {
-      if ('navigationPreload' in self.registration) {
-        await self.registration.navigationPreload.enable();
-      }
-    })()
-  );
-});
+
 // registerRoute(
 //   ({ request }) => request.mode === 'navigate',
 
