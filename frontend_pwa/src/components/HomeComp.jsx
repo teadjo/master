@@ -22,7 +22,7 @@ function HomeComp() {
           src={heroImage} 
           alt="Art hero background" 
           className='hero-image'
-          fetchpriority="high"
+          fetchPriority="high"
           loading="eager"
         />
         <div className='hero-gradient-overlay'></div>
