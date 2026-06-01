@@ -9,7 +9,7 @@ const takmicenjaKontroleri = require("../controlers/takmicenje_controler");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const uploadDir = path.join(__dirname, '../uploads');
+        const uploadDir = '/uploads';
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
         }

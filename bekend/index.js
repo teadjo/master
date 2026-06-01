@@ -36,7 +36,7 @@ app.use(cors({
 }));
 app.use(compression());
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+app.use('/uploads', express.static( 'uploads', {
   setHeaders: (res) => {
     res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.set('Access-Control-Allow-Origin', '*'); 
