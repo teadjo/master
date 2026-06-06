@@ -59,9 +59,10 @@ function ApplyForm({ closeForm }) {
                 if (typeof response.data == undefined || !response.data[0]) {
                     showToast("Nije uspjelo, slika je već prijavljena na ovom takmičenju", "error");
                 } else {
-                    showToast("Uspješno ste prijavili rad na takmičenje!", "success");
                     setArt(response.data);
                     closeForm()
+                    showToast("Uspješno ste prijavili rad na takmičenje!", "success");
+                    
                 }
             } else {
                 showToast('Morate izabrati sliku za prijavu!', 'error');
