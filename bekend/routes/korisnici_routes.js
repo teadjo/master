@@ -4,7 +4,7 @@ const korisnicikontroler = require("../controlers/korisnici_controler");
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-
+const sharp = require('sharp');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
