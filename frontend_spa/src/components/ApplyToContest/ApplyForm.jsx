@@ -63,6 +63,7 @@ function ApplyForm({ closeForm }) {
                     setArt(response.data);
                     setTimeout(() => {
                         navigate(`/competition/${id}`);
+                        closeForm()
                     }, 1500);
                 }
             } else {
