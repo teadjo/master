@@ -164,7 +164,7 @@ function Apply() {
                                         <h3>Vaš rad čeka na vas!</h3>
                                         <p>Prijavite se i osvojite {comp?.svota}€ + priliku za izlaganje</p>
                                     </div>
-                                    <button onClick={onClickApply} className='cta-button primary'>
+                                    <button type='button' onClick={onClickApply} className='cta-button primary'>
                                         Prijavi se odmah →
                                     </button>
                                 </div>
