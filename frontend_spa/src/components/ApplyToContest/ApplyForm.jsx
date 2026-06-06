@@ -62,7 +62,7 @@ function ApplyForm({ closeForm }) {
                     showToast("Uspješno ste prijavili rad na takmičenje!", "success");
                     setArt(response.data);
                     setTimeout(() => {
-                        window.location = `${API1}/competition/${id}`;
+                        navigate(`/competition/${id}`);
                     }, 1500);
                 }
             } else {
