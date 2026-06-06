@@ -434,7 +434,10 @@ function Apply() {
             
             {form && (
                 <Suspense fallback={<div className='form-loader'>Učitavanje forme...</div>}>
-                    <ApplyForm closeForm={() => setForm(false)} />
+                    <ApplyForm closeForm={() => {
+                            console.log("SET FORM FALSE");
+                            setForm(false);
+                        }} />
                 </Suspense>
             )}
             

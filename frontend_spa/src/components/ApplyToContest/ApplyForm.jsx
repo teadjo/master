@@ -60,7 +60,9 @@ function ApplyForm({ closeForm }) {
                     showToast("Nije uspjelo, slika je već prijavljena na ovom takmičenju", "error");
                 } else {
                     setArt(response.data);
+                    console.log("prijee close form", closeForm)
                     closeForm()
+                    console.log("posle close forms", closeForm)
                     showToast("Uspješno ste prijavili rad na takmičenje!", "success");
                     
                 }
