@@ -61,10 +61,7 @@ function ApplyForm({ closeForm }) {
                 } else {
                     showToast("Uspješno ste prijavili rad na takmičenje!", "success");
                     setArt(response.data);
-                    setTimeout(() => {
-                        navigate(`/competition/${id}`);
-                        closeForm()
-                    }, 1500);
+                    closeForm()
                 }
             } else {
                 showToast('Morate izabrati sliku za prijavu!', 'error');
