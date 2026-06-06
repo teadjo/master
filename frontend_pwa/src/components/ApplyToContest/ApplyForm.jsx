@@ -81,9 +81,7 @@ function ApplyForm({ closeForm }) {
                 );
 
                 startOfflineSync('application', `${API1}/competition/${id}`);
-                setTimeout(() => {
-                    navigate(`/competition/${id}`);
-                }, 1500);
+                closeForm()
                 return;
             }
 
@@ -93,9 +91,7 @@ function ApplyForm({ closeForm }) {
                     "success"
                 );
 
-                setTimeout(() => {
-                    navigate(`/competition/${id}`);
-                }, 1500);
+                closeForm()
             }
 
         } catch (error) {
