@@ -47,8 +47,7 @@ router.post("/", upload.single('slika'), async (req, res) => {
       req.file.filename.split('.')[0] + '.webp';
 
     const outputPath = path.join(
-      __dirname,
-      '../uploads',
+      '/uploads',
       webpFilename
     );
 

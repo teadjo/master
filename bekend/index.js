@@ -17,7 +17,7 @@ const artwork_user_award = require("./routes/rad_korisnik_nagrada_routes");
 const trroutes = require("./routes/takmicenje_rad_routes");
 const webroutes = require("./routes/web_router")
 
-const uploadDir = path.join(__dirname, 'uploads');
+const uploadDir = '/uploads';
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -36,7 +36,7 @@ app.use(cors({
 }));
 app.use(compression());
 
-app.use('/uploads', express.static( 'uploads', {
+app.use('/uploads', express.static( '/uploads', {
   setHeaders: (res) => {
     res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.set('Access-Control-Allow-Origin', '*'); 

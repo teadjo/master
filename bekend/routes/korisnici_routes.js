@@ -67,8 +67,7 @@ router
           req.file.filename.split('.')[0] + '.webp';
     
         const outputPath = path.join(
-          __dirname,
-          '../uploads',
+          '/uploads',
           webpFilename
         );
     
