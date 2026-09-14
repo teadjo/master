@@ -227,10 +227,12 @@ Serverski dio
 - cd backend
 - npm install
 - npm start
+
 SPA verzija
 - cd frontend_spa
 - npm install
 - npm run dev
+
 PWA verzija
 - cd frontend_pwa
 - npm install
