@@ -32,7 +32,7 @@ PWA verzija uključuje mogućnosti kao što su:
 ## 2. Struktura repozitorijuma
 
 Glavni direktorijumi projekta su:
-
+```
 master/
 │
 ├── backend/
@@ -48,7 +48,7 @@ master/
 │           └── flow.spec.js
 │
 └── new_metrics/
-
+```
 **backend/**
 
 Sadrži serverski dio aplikacije.
@@ -97,7 +97,7 @@ PWA verzija koristi Workbox za dio funkcionalnosti servisnog radnika i upravljan
 Direktorijum new_metrics sadrži podatke i skripte korišćene za obradu eksperimentalnih rezultata i izradu tabela i grafičkih prikaza predstavljenih u master radu.
 
 Njegova struktura je:
-
+```
 new_metrics/
 │
 ├── data/
@@ -119,7 +119,7 @@ new_metrics/
 ├── tabeleA1abc.py
 │
 └── PWA vs SPA - 1. одговори из упитника.csv
-
+```
 **data/**
 
 Sadrži podatke dobijene mjerenjem performansi aplikacija.
