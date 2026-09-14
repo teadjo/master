@@ -224,17 +224,17 @@ Projekat koristi sljedeće tehnologije i alate:
 Za pokretanje projekta potrebno je posebno pokrenuti serverski dio i odgovarajuću klijentsku verziju aplikacije.
 
 Serverski dio
-    - cd backend
-    - npm install
-    - npm start
+- cd backend
+- npm install
+- npm start
 SPA verzija
-    - cd frontend_spa
-    - npm install
-    - npm run dev
+- cd frontend_spa
+- npm install
+- npm run dev
 PWA verzija
-    - cd frontend_pwa
-    - npm install
-    - npm run dev
+- cd frontend_pwa
+- npm install
+- npm run dev
 
 Za pravilno povezivanje aplikacija sa serverskim dijelom potrebno je podesiti odgovarajuće varijable okruženja.
 
